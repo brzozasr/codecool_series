@@ -15,6 +15,11 @@ def index():
     return render_template('index.html', shows=shows)
 
 
+@app.route('/shows/most-rated')
+def shows():
+    pass
+
+
 @app.route('/design')
 def design():
     return render_template('design.html')
