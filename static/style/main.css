@@ -1,0 +1,14 @@
+/*project wide styling*/
+@import "site.css";
+@import "header.css";
+@import "footer.css";
+@import "background.css";
+@import "button.css";
+@import "card.css";
+@import "table.css";
+@import "form.css";
+@import "grid.css";
+@import "utils.css";
+
+/*page specific styling*/
+@import "detailed-view.css";
