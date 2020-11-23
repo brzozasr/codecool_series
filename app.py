@@ -1,16 +1,17 @@
-from flask import Flask, render_template, url_for
-from data import queries
-import math
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
+from flask import Flask, render_template
 
-load_dotenv()
+from data.database_handler import *
+from data.query import *
+
+# load_dotenv()
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 
 @app.route('/')
 def index():
-    shows = queries.get_shows()
+    shows = db.execute_sql_dict(query.shows_select_id_title)
     return render_template('index.html', shows=shows)
 
 
