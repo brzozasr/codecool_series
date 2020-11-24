@@ -15,7 +15,8 @@ __query_all = {
                 LEFT JOIN show_genres AS sg ON sh.id = sg.show_id
                 LEFT JOIN genres AS ge ON sg.genre_id = ge.id
             GROUP BY sh.id
-            ORDER BY sh.rating DESC;"""
+            ORDER BY sh.rating DESC
+            LIMIT 15 OFFSET 0;"""
 }
 
 

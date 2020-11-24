@@ -23,17 +23,25 @@
                 <tbody>
                     {% for show in shows_dict -%}
                     <tr>
-                        <td>{{ show.title }}</td>
+                        <td><a href="{{ url_for('show_detail', show_id=show.id) }}">{{ show.title }}</a></td>
                         <td>{{ show.year }}</td>
                         <td>{{ show.runtime }}</td>
                         <td>{{ show.round_rating }}</td>
                         {% if show.genres_name -%}
                         <td>{{ show.genres_name }}</td>
-                        {% else %}
+                        {%- else %}
                         <td>No Genres</td>
                         {%- endif %}
-                        <td>{{ show.trailer }}</td>
-                        <td>{{ show.homepage }}</td>
+                        {% if show.trailer -%}
+                        <td><a href="{{ show.trailer }}" target="_blank">Trailer</a></td>
+                        {%- else %}
+                        <td>No URL</td>
+                        {%- endif %}
+                        {% if show.homepage -%}
+                        <td><a href="{{ show.homepage }}" target="_blank">Homepage</a></td>
+                        {%- else %}
+                        <td>No URL</td>
+                        {%- endif %}
                     </tr>
                     {%- endfor %}
                 </tbody>
