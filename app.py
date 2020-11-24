@@ -17,7 +17,8 @@ def index():
 
 @app.route('/shows/most-rated')
 def get_shows():
-    return render_template('shows.html')
+    shows_dict = db.execute_sql_dict(query.shows_query)
+    return render_template('shows.html', shows_dict=shows_dict)
 
 
 @app.route('/design')

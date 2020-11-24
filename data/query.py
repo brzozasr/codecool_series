@@ -1,14 +1,14 @@
 __query_all = {
     'shows_select_id_title':
         """SELECT id, title FROM shows;""",
-    'shows_most-rated':
+    'shows_query':
         """SELECT 
                 sh.id, 
                 sh.title, 
                 sh.year, 
                 sh.runtime, 
-                sh.rating, 
-                STRING_AGG(ge.name, ',' ORDER BY ge.name) AS genres_name, 
+                ROUND(sh.rating, 1) AS round_rating,
+                STRING_AGG(ge.name, ', ' ORDER BY ge.name) AS genres_name, 
                 sh.trailer, 
                 sh.homepage
             FROM shows AS sh
