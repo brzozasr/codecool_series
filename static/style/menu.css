@@ -1,0 +1,24 @@
+#top-menu {
+    position: relative;
+    display: block;
+    margin-bottom: 5px;
+    margin-left: 20px;
+    padding: 10px;
+}
+
+.menu-button {
+    all: unset;
+    font-family: "Montserrat", sans-serif;
+    padding: 4px 12px;
+    color: #fff;
+    border: #fff solid 2px;
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0);
+}
+
+.menu-button:hover, .menu-button:active {
+    cursor: pointer;
+    color: rgb(203, 75, 70);
+    border: #fff solid 2px;
+    text-shadow: 0 0 4px rgba(255, 255, 255, .5), 0 0 6px rgba(255, 255, 255, .3);
+}

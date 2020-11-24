@@ -9,6 +9,7 @@
 @import "form.css";
 @import "grid.css";
 @import "utils.css";
+@import "menu.css";
 
 /*page specific styling*/
 @import "detailed-view.css";

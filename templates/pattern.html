@@ -10,6 +10,7 @@
     <!-- Normalize.css fixes lot of differences between browsers default styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
     <title>{% block title %} {% endblock %} - CsED</title>
 </head>
 <body>

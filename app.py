@@ -16,8 +16,8 @@ def index():
 
 
 @app.route('/shows/most-rated')
-def shows():
-    pass
+def get_shows():
+    return render_template('shows.html')
 
 
 @app.route('/design')
