@@ -36,7 +36,7 @@ export let actBtn = {
     },
 
     goToShowsBtn: function () {
-        window.location.href = "/shows/most-rated";
+        window.location.href = "/shows/most-rated/";
     },
 
     goToHomeBtn: function () {
