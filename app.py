@@ -32,37 +32,38 @@ def index():
 
 @app.route('/shows/', endpoint='shows')
 @app.route('/shows/most-rated/', endpoint='most-rated')
-@app.route('/shows/<string:column>/<string:order>/<int:offset>/', endpoint='ordered-pagination')
-def get_shows(column=COL_RATING, order=ORD_DESC, offset=0):
+@app.route('/shows/<string:column>/<string:order>/<int:page_no>/', endpoint='ordered-pagination')
+def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
     error = None
     shows_dict = list()
     sql = dict()
+    dict_webpages = dict()
 
     records = db.execute_sql(query.shows_count_records)
     count_records = records[0][0]
     if not is_positive_int(count_records):
         error = f'There is a problem with returned records:\n<br>{records}.'
-        return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql)
+        return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
-    if sql := get_shows_sql(column, order, offset):
-        shows_dict = db.execute_sql_dict(sql)
+    dict_webpages = pages_dict(count_records, SHOWS_LIMIT)
+    offset = dict_webpages.get(page_no)
+
+    # current_page_no = current_page(count_records, SHOWS_LIMIT, offset)
+
+    if sql_query := get_shows_sql(column, order, offset):
+        shows_dict = db.execute_sql_dict(sql_query)
         if type(shows_dict) != list:
             error = f'There is a problem with returned data:\n<br>{shows_dict}.'
             shows_dict = list()
-            return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql)
+            return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
     else:
         error = f'There is wrong data sent by route.'
-        return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql)
-
-    dict_webpages = pages_dict(count_records, SHOWS_LIMIT)
-
-    current_page_no = current_page(count_records, SHOWS_LIMIT, offset)
-    print(current_page_no)
+        return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
     sql = {
         'column': column,
         'order': order,
-        'offset': offset,
+        'page_no': page_no,
     }
 
     return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
