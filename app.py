@@ -50,6 +50,7 @@ def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
 
     # current_page_no = current_page(count_records, SHOWS_LIMIT, offset)
 
+
     if sql_query := get_shows_sql(column, order, offset):
         shows_dict = db.execute_sql_dict(sql_query)
         if type(shows_dict) != list:

@@ -16,7 +16,12 @@ def pages_dict(no_of_records, limit):
     return pages
 
 
-def pagination_len(current_page_no, all_pages, visible_pages=5):
+def pagination_len(current_page_no: int, all_pages: int, visible_pagination=5):
+    """Shows only part of pagination. The length of pagination depends on param "visible_pagination".
+    :param current_page_no: current page number,
+    :param all_pages: number all pages,
+    :param visible_pagination: length visible pagination (e.g. for value 5, << 2 3 4 5 6 >>).
+    WARNING:: USE ONLY ODD NUMBERS (e.g: 3, 5, 7, 9, 11, 13 etc.)."""
     pass
 
 
