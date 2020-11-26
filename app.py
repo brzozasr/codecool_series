@@ -45,11 +45,11 @@ def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
         error = f'There is a problem with returned records:\n<br>{records}.'
         return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
-    dict_webpages = pages_dict(count_records, SHOWS_LIMIT)
+    dict_webpages = pagination_len(count_records, page_no, SHOWS_LIMIT, visible_pagination=5)
+    # dict_webpages = pages_dict(count_records, SHOWS_LIMIT)  # all pages
     offset = dict_webpages.get(page_no)
-
     # current_page_no = current_page(count_records, SHOWS_LIMIT, offset)
-
+    all_pages = pages_number(count_records, SHOWS_LIMIT)
 
     if sql_query := get_shows_sql(column, order, offset):
         shows_dict = db.execute_sql_dict(sql_query)
@@ -65,6 +65,7 @@ def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
         'column': column,
         'order': order,
         'page_no': page_no,
+        'pages': all_pages
     }
 
     return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)

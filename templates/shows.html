@@ -80,9 +80,21 @@
         </div>
         <div class="card">
             <div class="pagination">
-                {% for key in dict_webpages.keys() %}
+                {% if sql.page_no > 1 -%}
+                <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=1) }}">&#10094;&#10094;</a>
+                <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=sql.page_no - 1) }}">&#10094;</a>
+                {%- endif %}
+                {% for key in dict_webpages.keys() -%}
+                    {% if key == sql.page_no -%}
+                <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=key) }}" class="active">{{ key }}</a>
+                    {%- else -%}
                 <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=key) }}">{{ key }}</a>
-                {% endfor %}
+                    {%- endif %}
+                {% endfor -%}
+                {% if sql.page_no < sql.pages -%}
+                <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=sql.page_no + 1) }}">&#10095;</a>
+                <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=sql.pages) }}">&#10095;&#10095;</a>
+                {%- endif %}
             </div>
         </div>
         {% endif %}
