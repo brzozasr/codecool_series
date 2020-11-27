@@ -1,10 +1,10 @@
 # from dotenv import load_dotenv
-from flask import Flask, render_template, request
+
+from flask import Flask, render_template, jsonify, json
 
 from data.database_handler import *
 from data.query import *
 from data.query_py import *
-import math
 
 # load_dotenv()
 app = Flask(__name__)
@@ -73,7 +73,11 @@ def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
 
 @app.route('/show/<int:show_id>/')
 def show_detail(show_id):
-    return render_template('show_detail.html', show_id=show_id)
+    result = db.execute_sql_dict(query.show_details, [show_id])
+    print(result)
+    print(result[0]['actors_name'])
+    print(json.loads('[' + result[0]['actors_name'] + ']'))
+    return render_template('show_detail.html')
 
 
 @app.route('/design')
