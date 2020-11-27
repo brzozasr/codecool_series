@@ -4,7 +4,7 @@ __query_all = {
     'shows_count_records':
         """SELECT COUNT(id) FROM shows;""",
     'show_details':
-        """SELECT id, title, round_rating, overview, genres_name, actors_name
+        """SELECT id, title, year, round_rating, rating, runtime, overview, trailer, homepage, genres_name, actors_name
         FROM show_details_view WHERE id = %s""",
 }
 

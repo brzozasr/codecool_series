@@ -1,38 +1,40 @@
 {% extends 'pattern.html' %}
 
-{% block title %}Show's detailed{% endblock %}
+{% if db_data %}
+    {% set browser_title = db_data.show_title %}
+{% else %}
+    {% set browser_title = 'Error page' %}
+{% endif %}
+
+{% block title %}{{ browser_title }}{% endblock %}
 {% block content %}
     <div id="top-menu">
         <button type="button" id="menu-btn-back" class="menu-button"><< Go Back Home Page</button>
         <button type="button" id="menu-btn-shows" class="menu-button">Go to Shows</button>
     </div>
     <section>
-        <nav class="breadcrumb">
-            <a href="#">Game of Thrones</a>
-            <span class="separator">&gt;</span>
-            <a href="#">Season 3</a>
-            <span class="separator">&gt;</span>
-            <a href="#">Episode 8</a>
-        </nav>
-        <h1 class="title text-center">Show's detailed<br>Deadpool</h1>
+        {% if error -%}
+        <div class="error">{{ error | safe }}</div>
+        {%- endif %}
+        {% if db_data -%}
+        <h1 class="title text-center">{{ db_data.show_title }}</h1>
         <div class="card detailed-view">
-            <p>And here is a "detailed" kind of view:</p>
+            <script type="text/javascript">
+                let videoId = '{{ db_data.show_trailer_id }}';
+            </script>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/embed-youtube.js') }}"></script>
             <div class="row">
-                <img src="http://www.impawards.com/2016/posters/deadpool_ver5.jpg" alt="Deadpool poster" class="poster col col-third">
                 <div class="col col-twothird">
-                    <h2>Deadpool</h2>
-                    <p class="small grayed">1h 48min <span class="separator">|</span> Action, Adventure, Comedy <span
-                            class="separator">|</span> 12 February 2016 (USA)</p>
-                    <p>A fast-talking mercenary with a morbid sense of humor is subjected to a rogue experiment that
-                        leaves
-                        him with accelerated healing powers and a quest for revenge.</p>
+                    <h2>{{ db_data.show_title }}</h2>
+                    <p class="small grayed">{{ db_data.show_runtime}} <span class="separator">|</span> {{ db_data.show_round_rating }}
+                        &#9734;
+                        <span class="separator">|</span>{% if db_data.show_genres %}{{ db_data.show_genres }}{% else %}No Genres{% endif %}</p>
+                    <p>{{ db_data.show_overview }}</p>
+                    <p><b>Stars:</b>&nbsp;
+                        {{ db_data.show_actors }}
+                    </p>
                 </div>
-            </div>
-            <div>
-                <p><b>Director:</b>&nbsp;<a href="#">Tim Miller</a></p>
-                <p><b>Writers:</b>&nbsp;<a href="#">Rhett Reese</a>, <a href="#">Paul Wernick</a></p>
-                <p><b>Stars:</b>&nbsp;<a href="#">Ryan Reynolds</a>, <a href="#">Morena Baccarin</a>, <a href="#">T.J.
-                    Miller</a></p>
+                <div {% if db_data.show_trailer %} id="player" {% endif %} class="trailer col col-third"></div>
             </div>
         </div>
         <div class="card">
@@ -136,5 +138,6 @@
                 </p>
             </form>
         </div>
+        {% endif %}
     </section>
 {% endblock %}

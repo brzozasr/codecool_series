@@ -1,4 +1,5 @@
 import math
+from flask import json
 
 
 def pages_dict(no_of_records, limit):
@@ -87,6 +88,57 @@ def is_positive_int(str_no):
     return True
 
 
+def get_dict(str_of_dict: str, order_key='', sort_dict=False) -> list:
+    """Function returns the list of dicts:
+    :param str_of_dict: string got form DB
+    (e.g. {"genre_id": 10, "genre_name": "name1"}, {"genre_id": 11, "genre_name": "name12"},...),
+    :param order_key: the key by which dictionaries will be sorted (required if flag 'sort_dict=True'),
+    :param sort_dict: flag for sorting the dictionary (boolean).
+    :return: list of dicts (e.g. [{"genre_id": 10, "genre_name": "name1"}, {"genre_id": 11, "genre_name": "name12"},...])"""
+    result_dict = list()
+    if str_of_dict:
+        result_dict = json.loads('[' + str_of_dict + ']')
+        if sort_dict and order_key:
+            try:
+                result_dict = sorted(result_dict, key=lambda i: i[order_key])
+                return result_dict
+            except KeyError:
+                return result_dict
+        return result_dict
+    else:
+        return result_dict
+
+
+def get_trailer_id(yt_url):
+    if yt_url and '?v=' in yt_url:
+        trailer_id = yt_url.split('?v=')
+        return trailer_id[1]
+    else:
+        return None
+
+
+def min_to_h_min(minutes: int):
+    if is_positive_int(minutes):
+        h = minutes // 60
+        m = minutes % 60
+
+        if h > 0 and m > 0:
+            if 0 < m < 10:
+                return f'{h}h 0{m}min'
+            else:
+                return f'{h}h {m}min'
+        elif h > 0 and m == 0:
+            return f'{h}h'
+        elif h == 0 and m > 0:
+            return f'{m}min'
+        else:
+            return None
+    else:
+        return None
+
+
 if __name__ == '__main__':
-    print(pages_dict(76, 15))
-    print(pagination_len(76, 6, 15, visible_pagination=5))
+    # print(pages_dict(76, 15))
+    # print(pagination_len(76, 6, 15, visible_pagination=5))
+    print(min_to_h_min(70))
+

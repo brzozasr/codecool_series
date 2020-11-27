@@ -1,6 +1,6 @@
 # from dotenv import load_dotenv
 
-from flask import Flask, render_template, jsonify, json
+from flask import Flask, render_template, json
 
 from data.database_handler import *
 from data.query import *
@@ -73,11 +73,40 @@ def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
 
 @app.route('/show/<int:show_id>/')
 def show_detail(show_id):
+    error = None
+    db_data = dict()
     result = db.execute_sql_dict(query.show_details, [show_id])
-    print(result)
-    print(result[0]['actors_name'])
-    print(json.loads('[' + result[0]['actors_name'] + ']'))
-    return render_template('show_detail.html')
+    if type(result) != list:
+        error = f'There is a problem with returned data:\n<br>{result}.'
+        return render_template('show_detail.html', error=error, db_data=db_data)
+
+    genres = get_dict(result[0].get('genres_name'), 'genre_name', sort_dict=True)
+    if genres:
+        genres_str = ''
+        for genre in genres:
+            for k, v in genre.items():
+                if k == 'genre_name':
+                    genres_str += f"{v}, "
+        genres_str = genres_str[:-2]
+    else:
+        genres_str = None
+
+    db_data = {
+        'show_id': show_id,
+        'show_title': result[0].get('title'),
+        'show_year': result[0].get('year'),
+        'show_round_rating': result[0].get('round_rating'),
+        'show_rating': result[0].get('rating'),
+        'show_runtime': min_to_h_min(result[0].get('runtime')),
+        'show_overview': result[0].get('overview'),
+        'show_trailer': result[0].get('trailer'),
+        'show_trailer_id': get_trailer_id(result[0].get('trailer')),
+        'show_homepage': result[0].get('homepage'),
+        'show_genres': genres_str,
+        'show_actors': get_dict(result[0].get('actors_name')),
+    }
+
+    return render_template('show_detail.html', error=error, db_data=db_data)
 
 
 @app.route('/design')
