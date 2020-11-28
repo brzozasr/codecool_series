@@ -11,7 +11,7 @@ COL_RATING = 'rating'
 ORD_ASC = 'ASC'
 ORD_DESC = 'DESC'
 # No of records on the website
-SHOWS_LIMIT = 15
+SHOWS_LIMIT = 15  # This value can not be set on 0 (zero)
 
 
 """Session variables"""

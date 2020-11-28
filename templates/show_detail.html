@@ -1,10 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Show's detailed view</title>
-</head>
-<body>
- <p>TEST</p>
-</body>
-</html>
+{% extends 'pattern.html' %}
+
+{% if db_data %}
+    {% set browser_title = db_data.show_title %}
+{% else %}
+    {% set browser_title = 'Error page' %}
+{% endif %}
+
+{% block title %}{{ browser_title }}{% endblock %}
+{% block content %}
+    <div id="top-menu">
+        <button type="button" id="menu-btn-back" class="menu-button"><< Go Back Home Page</button>
+        <button type="button" id="menu-btn-shows" class="menu-button">Go to Shows</button>
+    </div>
+    <section>
+        {% if error -%}
+        <div class="error">{{ error | safe }}</div>
+        {%- endif %}
+        {% if db_data and seasons -%}
+        <h1 class="title text-center">{{ db_data.show_title }}</h1>
+        <div class="card detailed-view">
+            <script type="text/javascript">
+                let videoId = '{{ db_data.show_trailer_id }}';
+            </script>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/embed-youtube.js') }}"></script>
+            <div class="row">
+                <div class="col col-twothird">
+                    <h2>{{ db_data.show_title }}</h2>
+                    <p class="small grayed">{{ db_data.show_runtime}} <span class="separator">|</span>
+                        {% if db_data.show_genres %}{{ db_data.show_genres | safe }}{% else %}No Genres{% endif %} <span class="separator">|</span>
+                        {{ db_data.show_round_rating }} {{ set_rating_stars(db_data.show_round_rating) | safe }} <span class="separator">|</span>
+                        {{ db_data.show_year }}
+                    </p>
+                    <p>{{ db_data.show_overview | trim }}</p>
+                    <p><b>Stars:</b>&nbsp;
+                        {% if db_data.show_actors %}{{ db_data.show_actors | safe }}{% else %}No Stars{% endif %}
+                    </p>
+                </div>
+                <div {% if db_data.show_trailer %} id="player" {% endif %} class="trailer col col-third"></div>
+            </div>
+        </div>
+        <div class="card">
+            Seasons
+            <table>
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Title</th>
+                        <th>Overview</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for season in seasons -%}
+                    <tr>
+                        <td>{{ season.season_number }}</td>
+                        <td style="white-space: nowrap;">{{ season.title }}</td>
+                        <td>{% if season.overview %}{{ season.overview }}{% else %}The season overview is not available{% endif %}</td>
+                    </tr>
+                    {%- endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </section>
+{% endblock %}

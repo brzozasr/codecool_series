@@ -5,7 +5,7 @@ from data.config import *
 def get_shows_sql(column=COL_RATING, order=ORD_DESC, offset=0):
     columns = [COL_TITLE, COL_YEAR, COL_RUNTIME, COL_RATING]
     orders = [ORD_ASC, ORD_DESC]
-    if column in columns and order in orders and is_positive_int(offset):
+    if column in columns and order in orders:
         query = f"""SELECT
                     sh.id,
                     sh.title,
