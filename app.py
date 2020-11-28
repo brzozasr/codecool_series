@@ -1,6 +1,7 @@
 # from dotenv import load_dotenv
 
-from flask import Flask, render_template
+import bcrypt
+from flask import Flask, render_template, request, session, jsonify
 
 from data.database_handler import *
 from data.query import *
@@ -10,6 +11,7 @@ from data.query_py import *
 app = Flask(__name__)
 app.jinja_env.globals.update(set_rating_stars=set_rating_stars)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.secret_key = SESSION_SECRET_KEY
 
 
 @app.context_processor
@@ -73,7 +75,8 @@ def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
         if type(shows_dict) != list:
             error = f'There is a problem with returned data:\n<br>{shows_dict}.'
             shows_dict = list()
-            return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+            return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql,
+                                   dict_webpages=dict_webpages)
     else:
         error = f'There is wrong data sent by route.'
         return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
@@ -156,8 +159,123 @@ def design():
     return render_template('design.html')
 
 
+@app.route('/user-login', methods=['POST'])
+def user_login():
+    data = request.get_json()
+    users_login = data['users_login']
+    users_pass = data['users_pass']
+
+    log_data = db.execute_sql(query.users_select_by_users_login, [users_login])
+
+    if log_data and type(log_data) == list and len(log_data) == 1:
+        user_data = {}
+        dict_key = [SESSION_USER_ID, SESSION_USER_LOGIN, 'users_pass']
+        i = 0
+        for data in log_data[0]:
+            user_data[dict_key[i]] = data
+            i += 1
+        if users_login == user_data[SESSION_USER_LOGIN] and \
+                bcrypt.checkpw(users_pass.encode('utf-8'), user_data['users_pass'].encode('utf-8')):
+            session[SESSION_USER_ID] = user_data[SESSION_USER_ID]
+            session[SESSION_USER_LOGIN] = user_data[SESSION_USER_LOGIN]
+            result = jsonify({
+                'users_id': user_data[SESSION_USER_ID],
+                'users_login': user_data[SESSION_USER_LOGIN],
+                'login': 'Success',
+                'error': None
+            })
+        else:
+            result = jsonify({
+                'users_id': None,
+                'users_login': None,
+                'login': 'Failure',
+                'error': 'Invalid email address or password!'
+            })
+    else:
+        if type(log_data) == list:
+            result = jsonify({
+                'users_id': None,
+                'users_login': None,
+                'login': 'Failure',
+                'error': 'Invalid email address or password!'
+            })
+        else:
+            result = jsonify({
+                'users_id': None,
+                'users_login': None,
+                'login': 'Failure',
+                'error': str(log_data)
+            })
+
+    return result
+
+
+@app.route('/is-user-login', methods=['POST'])
+def is_user_login():
+    data = request.get_json()
+
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        if int(data['users_id']) == session.get(SESSION_USER_ID) and \
+                data['users_login'] == session.get(SESSION_USER_LOGIN):
+            result = jsonify({
+                'is_login': True
+            })
+        else:
+            result = jsonify({
+                'is_login': False
+            })
+    else:
+        result = jsonify({
+            'is_login': False
+        })
+
+    return result
+
+
+@app.route('/user-register', methods=['POST'])
+def user_register():
+    data = request.get_json()
+    users_login = data['users_login']
+    users_pass = data['users_pass']
+
+    pass_hash = bcrypt.hashpw(users_pass.encode('utf-8'), bcrypt.gensalt())
+    error = db.execute_sql(query.users_insert_new_user, [users_login, pass_hash.decode('utf-8')], fetch=False)
+
+    if error:
+        result = jsonify({
+            'register': 'Failure',
+            'error': str(error)
+        })
+    else:
+        result = jsonify({
+            'register': 'Success',
+            'error': None
+        })
+
+    return result
+
+
+@app.route('/user-logout', methods=['POST'])
+def user_logout():
+    data = request.get_json()
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN) and data['command'] == 'LOGOUT':
+        session.pop(SESSION_USER_ID, None)
+        session.pop(SESSION_USER_LOGIN, None)
+        session.clear()
+
+        result = jsonify({
+            'logout': 'Success'
+        })
+    else:
+        result = jsonify({
+            'logout': 'Failure'
+        })
+
+    return result
+
+
 def main():
-    app.run(debug=False)
+    app.run(debug=True)
 
 
 if __name__ == '__main__':

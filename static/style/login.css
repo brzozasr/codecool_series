@@ -36,12 +36,15 @@ img#login-close {
     background-color: #ff8080;
 }
 
-#login-user-log {
+#bt-user-log {
     display: none;
-    color: #000;
-    background-color: #fff;
-    border: 1px #000;
-    border-style: none solid solid solid;
+    padding: 4px 12px;
+    color: #cb4b46;
+    border-radius: 2px;
+    border: #fff solid 2px;
+    background: rgba(150, 150, 150, .25);
+    text-shadow: 0 0 4px rgba(255, 255, 255, .5), 0 0 6px rgba(255, 255, 255, .3);
+    cursor: default;
 
 }
 

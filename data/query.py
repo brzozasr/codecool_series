@@ -9,6 +9,10 @@ __query_all = {
     'seasons_by_id_show':
     """SELECT id, season_number, title, overview, show_id FROM seasons 
     WHERE show_id = %s ORDER BY season_number""",
+    'users_select_by_users_login':
+        """SELECT users_id, users_login, users_pass FROM users WHERE users_login = %s;""",
+    'users_insert_new_user':
+        """INSERT INTO users (users_login, users_pass) VALUES (%s, %s);""",
 }
 
 

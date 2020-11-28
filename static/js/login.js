@@ -1,5 +1,4 @@
-// import {dataHandler} from "./data_handler.js";
-// import {dom} from "./dom.js";
+import {dataHandler} from "./data_handler.js";
 
 export let login = {
     loginForm: `
@@ -23,6 +22,7 @@ export let login = {
         </div>
     </div>
     `,
+
     registerForm: `
     <div id="login-main">
         <div id="login-log">
@@ -51,34 +51,18 @@ export let login = {
 
     divTopBar: document.getElementById('body-wrapper'),
 
-    // loginButton: document.getElementById('popup-login'),
+    loginButton: document.getElementById('bt-login'),
 
-    // logButtonAddListener: function () {
-    //     login.loginButton.addEventListener('click', this.divLoginShow);
-    // },
+    registerButton: document.getElementById('bt-register'),
 
+    logoutButton: document.getElementById('bt-logout'),
 
-    // registerButton: document.getElementById('popup-register'),
+    userLoginButton: document.getElementById('bt-user-log'),
 
-    // regButtonAddListener: function () {
-    //     login.registerButton.addEventListener('click', this.divRegisterShow);
-    // },
-
-    // logoutButton: document.getElementById('popup-logout'),
-
-    // logoutButtonAddListener: function () {
-    //     login.logoutButton.addEventListener('click', this.logoutUser);
-    // },
-
-    // All listener in one function
-    popupAddListeners: function () {
-        // login.logButtonAddListener();
-        // login.regButtonAddListener();
-        // login.logoutButtonAddListener();
+    // Checkin that the user is login
+    verificationIsUserLogin: function () {
         login.jsIsUserLogin(sessionStorage.getItem('users_login'));
     },
-
-    // userLoginButton: document.getElementById('popup-user-log'),
 
     //Function To Display Popup Login
     divLoginShow: function () {
@@ -115,7 +99,7 @@ export let login = {
         let divForm = document.getElementById('login-main');
         let formId = divForm.getElementsByTagName('form')[0].id;
 
-        if (formId === 'popup-form-log') {
+        if (formId === 'login-form-log') {
             let emailValue = document.getElementById('login-email').value;
             let emailCorrect = login.validateEmail(emailValue);
 
@@ -136,13 +120,6 @@ export let login = {
                         login.jsSetSession(dataLogForm['users_id'], dataLogForm['users_login']);
                         login.removeForm();
                         login.jsIsUserLogin(dataLogForm['users_login']);
-
-                        /* Reload the page */
-                        // dataHandler.getAllData(function(boards) {
-                        //     let boardContainer = document.querySelector(".board-container");
-                        //     boardContainer.innerHTML = '';
-                        //     dom.showAllData(boards);
-                        // });
                     } else {
                         let divError = document.getElementById('login-error');
                         divError.innerText = dataLogForm['error'];
@@ -311,16 +288,9 @@ export let login = {
             if (dataLogout['logout'] === 'Success') {
                 login.topBarBtnAppearance(false, '');
                 sessionStorage.clear();
-                /* Reload page function */
-                // dataHandler.getAllData(function(boards) {
-                //     let boardContainer = document.querySelector(".board-container");
-                //     boardContainer.innerHTML = '';
-                //     dom.showAllData(boards);
-                // });
             } else {
                 login.topBarBtnAppearance(true, sessionStorage.getItem('users_login'));
             }
         });
-
     },
 };
