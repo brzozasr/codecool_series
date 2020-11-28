@@ -1,6 +1,6 @@
 # from dotenv import load_dotenv
 
-from flask import Flask, render_template, json
+from flask import Flask, render_template
 
 from data.database_handler import *
 from data.query import *
@@ -8,6 +8,7 @@ from data.query_py import *
 
 # load_dotenv()
 app = Flask(__name__)
+app.jinja_env.globals.update(set_rating_stars=set_rating_stars)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 
@@ -75,26 +76,46 @@ def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
 def show_detail(show_id):
     error = None
     db_data = dict()
+    seasons = list()
+
     result = db.execute_sql_dict(query.show_details, [show_id])
     if type(result) != list:
         error = f'There is a problem with returned data:\n<br>{result}.'
-        return render_template('show_detail.html', error=error, db_data=db_data)
+        return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
+
+    seasons = db.execute_sql_dict(query.seasons_by_id_show, [show_id])
+    if type(seasons) != list:
+        error = f'There is a problem with returned data:\n<br>{seasons}.'
+        return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
     genres = get_dict(result[0].get('genres_name'), 'genre_name', sort_dict=True)
     if genres:
         genres_str = ''
         for genre in genres:
-            for k, v in genre.items():
-                if k == 'genre_name':
-                    genres_str += f"{v}, "
+            genres_str += f"{genre.get('genre_name')}, "
+            # genres_str += f"<a href=\"/genre/{genre.get('genre_id')}/\">{genre.get('genre_name')}</a>, "
         genres_str = genres_str[:-2]
     else:
         genres_str = None
 
+    actors = get_dict(result[0].get('actors_name'), 'actor_name', sort_dict=True)
+    if actors:
+        actors_str = ''
+        counter = 0
+        for actor_dict in actors:
+            actors_str += f"{actor_dict.get('actor_name')}, "
+            # actors_str += f"<a href=\"/actor/{actor_dict.get('actor_id')}/\">{actor_dict.get('actor_name')}</a>, "
+            counter += 1
+            if counter >= 3:
+                break
+        actors_str = actors_str[:-2]
+    else:
+        actors_str = None
+
     db_data = {
         'show_id': show_id,
         'show_title': result[0].get('title'),
-        'show_year': result[0].get('year'),
+        'show_year': date_formater(result[0].get('year')),
         'show_round_rating': result[0].get('round_rating'),
         'show_rating': result[0].get('rating'),
         'show_runtime': min_to_h_min(result[0].get('runtime')),
@@ -103,10 +124,15 @@ def show_detail(show_id):
         'show_trailer_id': get_trailer_id(result[0].get('trailer')),
         'show_homepage': result[0].get('homepage'),
         'show_genres': genres_str,
-        'show_actors': get_dict(result[0].get('actors_name')),
+        'show_actors': actors_str,
     }
 
-    return render_template('show_detail.html', error=error, db_data=db_data)
+    return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
+
+
+# @app.route('/actor/<int:actor_id>')
+# def actor(actor_id):
+#     return render_template('actor.html')
 
 
 @app.route('/design')

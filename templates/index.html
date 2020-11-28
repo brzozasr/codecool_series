@@ -22,7 +22,7 @@
             <ul>
                 {% for show in shows %}
                     <li>
-                        <a href="{{ '/tv-show/' + (show.id | string) }}">{{ show.title }}</a>
+                        <a href="{{ url_for('show_detail', show_id=show.id) }}">{{ show.title }}</a>
                     </li>
                 {% endfor %}
             </ul>

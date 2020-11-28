@@ -6,6 +6,9 @@ __query_all = {
     'show_details':
         """SELECT id, title, year, round_rating, rating, runtime, overview, trailer, homepage, genres_name, actors_name
         FROM show_details_view WHERE id = %s""",
+    'seasons_by_id_show':
+    """SELECT id, season_number, title, overview, show_id FROM seasons 
+    WHERE show_id = %s ORDER BY season_number""",
 }
 
 

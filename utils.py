@@ -1,5 +1,6 @@
 import math
 from flask import json
+from datetime import *
 
 
 def pages_dict(no_of_records, limit):
@@ -135,6 +136,23 @@ def min_to_h_min(minutes: int):
             return None
     else:
         return None
+
+
+def set_rating_stars(rating):
+    stars = int(rating)
+    rest = rating - stars
+
+    star = '<img src="/static/assets/star.png">'
+    half_star = '<img src="/static/assets/half_star.png">'
+
+    if rest >= 0.5:
+        return star * stars + half_star
+    else:
+        return star * stars
+
+
+def date_formater(date):
+    return date.strftime("%Y %B %d")
 
 
 if __name__ == '__main__':

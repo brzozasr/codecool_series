@@ -16,7 +16,7 @@
         {% if error -%}
         <div class="error">{{ error | safe }}</div>
         {%- endif %}
-        {% if db_data -%}
+        {% if db_data and seasons -%}
         <h1 class="title text-center">{{ db_data.show_title }}</h1>
         <div class="card detailed-view">
             <script type="text/javascript">
@@ -26,117 +26,39 @@
             <div class="row">
                 <div class="col col-twothird">
                     <h2>{{ db_data.show_title }}</h2>
-                    <p class="small grayed">{{ db_data.show_runtime}} <span class="separator">|</span> {{ db_data.show_round_rating }}
-                        &#9734;
-                        <span class="separator">|</span>{% if db_data.show_genres %}{{ db_data.show_genres }}{% else %}No Genres{% endif %}</p>
-                    <p>{{ db_data.show_overview }}</p>
+                    <p class="small grayed">{{ db_data.show_runtime}} <span class="separator">|</span>
+                        {% if db_data.show_genres %}{{ db_data.show_genres | safe }}{% else %}No Genres{% endif %} <span class="separator">|</span>
+                        {{ db_data.show_round_rating }} {{ set_rating_stars(db_data.show_round_rating) | safe }} <span class="separator">|</span>
+                        {{ db_data.show_year }}
+                    </p>
+                    <p>{{ db_data.show_overview | trim }}</p>
                     <p><b>Stars:</b>&nbsp;
-                        {{ db_data.show_actors }}
+                        {% if db_data.show_actors %}{{ db_data.show_actors | safe }}{% else %}No Stars{% endif %}
                     </p>
                 </div>
                 <div {% if db_data.show_trailer %} id="player" {% endif %} class="trailer col col-third"></div>
             </div>
         </div>
         <div class="card">
-            This is an example for a table:
+            Seasons
             <table>
                 <thead>
-                <tr>
-                    <th>a</th>
-                    <th>b</th>
-                    <th>c</th>
-                    <th>d</th>
-                    <th class="action-column">e</th>
-                </tr>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Title</th>
+                        <th>Overview</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Lorem</td>
-                    <td>Ipsum</td>
-                    <td>Dolor</td>
-                    <td>Sit amet</td>
-                    <td class="action-column">
-                        <button type="button" class="icon-button"><i class="fa fa-edit fa-fw"></i></button>
-                        <button type="button" class="icon-button"><i class="fa fa-trash fa-fw"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Lorem</td>
-                    <td>Ipsum</td>
-                    <td>Dolor</td>
-                    <td>Sit amet</td>
-                    <td class="action-column">
-                        <button type="button" class="icon-button"><i class="fa fa-edit fa-fw"></i></button>
-                        <button type="button" class="icon-button"><i class="fa fa-trash fa-fw"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Lorem</td>
-                    <td>Ipsum</td>
-                    <td>Dolor</td>
-                    <td>Sit amet</td>
-                    <td class="action-column">
-                        <button type="button" class="icon-button"><i class="fa fa-edit fa-fw"></i></button>
-                        <button type="button" class="icon-button"><i class="fa fa-trash fa-fw"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Lorem</td>
-                    <td>Ipsum</td>
-                    <td>Dolor</td>
-                    <td>Sit amet</td>
-                    <td class="action-column">
-                        <button type="button" class="icon-button"><i class="fa fa-edit fa-fw"></i></button>
-                        <button type="button" class="icon-button"><i class="fa fa-trash fa-fw"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Lorem</td>
-                    <td>Ipsum</td>
-                    <td>Dolor</td>
-                    <td>Sit amet</td>
-                    <td class="action-column">
-                        <button type="button" class="icon-button"><i class="fa fa-edit fa-fw"></i></button>
-                        <button type="button" class="icon-button"><i class="fa fa-trash fa-fw"></i></button>
-                    </td>
-                </tr>
+                    {% for season in seasons -%}
+                    <tr>
+                        <td>{{ season.season_number }}</td>
+                        <td style="white-space: nowrap;">{{ season.title }}</td>
+                        <td>{% if season.overview %}{{ season.overview }}{% else %}The season overview is not available{% endif %}</td>
+                    </tr>
+                    {%- endfor %}
                 </tbody>
             </table>
-        </div>
-        <div class="card">
-            <p>A form example to edit a TV show's episode:</p>
-            <form action="#" method="post">
-                <p class="form-element">
-                    <label class="form-element-label" for="form-example-show">Show:</label>
-                    <select name="show" id="form-example-show">
-                        <option value="">Game of Thrones (2011)</option>
-                        <option value="">Lost (2004)</option>
-                        <option value="">South Park (1997)</option>
-                        <option value="">How I met your mother (2005)</option>
-                        <option value="">Legion (2017)</option>
-                    </select>
-                </p>
-                <p class="form-element">
-                    <label class="form-element-label" for="form-example-season">Season:</label>
-                    <input type="number" name="season" id="form-example-season" value="" min="1" max="30">
-                </p>
-                <p class="form-element">
-                    <label class="form-element-label" for="form-example-episode">Episode:</label>
-                    <input type="number" name="episode" id="form-example-episode" value="" min="1" max="100">
-                </p>
-                <p class="form-element">
-                    <label class="form-element-label" for="form-example-title">Title:</label>
-                    <input type="text" name="name" id="form-example-title" value="" placeholder="What the pencake?">
-                </p>
-                <p class="form-element">
-                    <label class="form-element-label" for="form-example-length">Length:</label>
-                    <input type="number" name="length" id="form-example-length" value="" min="1" max="999">
-                    <span>min.</span>
-                </p>
-                <p class="text-center">
-                    <button type="submit">Submit</button>
-                </p>
-            </form>
         </div>
         {% endif %}
     </section>
