@@ -12,6 +12,7 @@
 @import "menu.css";
 @import "error.css";
 @import "pagination.css";
+@import "login.css";
 
 /*page specific styling*/
 @import "detailed-view.css";

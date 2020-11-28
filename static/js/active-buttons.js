@@ -1,3 +1,5 @@
+import {login} from "./login.js";
+
 export let actBtn = {
 
     buttons: document.querySelectorAll("button"),
@@ -12,6 +14,7 @@ export let actBtn = {
         let objButtons = [
             {"bt-register": actBtn.registerBtn},
             {"bt-login": actBtn.loginBtn},
+            {"bt-logout": actBtn.logoutBtn},
             {"menu-btn-back": actBtn.goToHomeBtn},
             {"menu-btn-shows": actBtn.goToShowsBtn}
         ];
@@ -28,11 +31,15 @@ export let actBtn = {
     },
 
     loginBtn: function () {
-        console.log('login')
+        login.divLoginShow();
     },
 
     registerBtn: function () {
-        console.log('register')
+        login.divRegisterShow();
+    },
+
+    logoutBtn: function () {
+        login.logoutUser();
     },
 
     goToShowsBtn: function () {
