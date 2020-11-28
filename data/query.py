@@ -1,6 +1,6 @@
 __query_all = {
     'shows_select_id_title':
-        """SELECT id, title FROM shows;""",
+        """SELECT id, title FROM shows ORDER BY title;""",
     'shows_count_records':
         """SELECT COUNT(id) FROM shows;""",
     'show_details':

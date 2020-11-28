@@ -21,14 +21,30 @@ def inject_variable():
         COL_RATING=COL_RATING,
         ORD_ASC=ORD_ASC,
         ORD_DESC=ORD_DESC,
-        SHOWS_LIMIT=SHOWS_LIMIT
+        SHOWS_LIMIT=SHOWS_LIMIT,
+        HP_LIMIT=HP_LIMIT
     )
 
 
 @app.route('/')
-def index():
-    shows = db.execute_sql_dict(query.shows_select_id_title)
-    return render_template('index.html', shows=shows)
+@app.route('/<string:order>/<int:page_no>/', endpoint="hp_with_params")
+def index(page_no=1, order=ORD_DESC):
+    records = db.execute_sql(query.shows_count_records)
+    count_records = records[0][0]
+
+    dict_webpages = pagination_len(count_records, page_no, HP_LIMIT, visible_pagination=5)
+    all_pages = pages_number(count_records, HP_LIMIT)
+    offset = dict_webpages.get(page_no)
+
+    shows = db.execute_sql_dict(get_title_shows_sql(order, offset))
+
+    sql = {
+        'order': order,
+        'page_no': page_no,
+        'pages': all_pages
+    }
+
+    return render_template('index.html', shows=shows, sql=sql, dict_webpages=dict_webpages)
 
 
 @app.route('/shows/', endpoint='shows')
@@ -130,9 +146,9 @@ def show_detail(show_id):
     return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
 
-# @app.route('/actor/<int:actor_id>')
-# def actor(actor_id):
-#     return render_template('actor.html')
+@app.route('/actor/<int:actor_id>')
+def actor(actor_id):
+    return render_template('actor.html')
 
 
 @app.route('/design')

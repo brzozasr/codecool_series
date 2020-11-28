@@ -1,5 +1,8 @@
 {% extends 'pattern.html' %}
 
+{% set img_desc = 'assets/hp_desc.png' %}
+{% set img_asc = 'assets/hp_asc.png' %}
+
 {% block title %}Welcome Page{% endblock %}
 {% block content %}
     <div id="top-menu">
@@ -18,7 +21,11 @@
             </p>
         </div>
         <div class="card">
-            <h2>Shows' Titles</h2>
+            {% if sql.order == ORD_ASC -%}
+            <h2><a href="{{ url_for('hp_with_params', order=ORD_DESC, page_no=sql.page_no) }}">Shows' Titles <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_ASC }}"></a></h2>
+            {%- else %}
+            <h2><a href="{{ url_for('hp_with_params', order=ORD_ASC, page_no=sql.page_no) }}">Shows' Titles <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_DESC }}"></a></h2>
+            {% endif %}
             <ul>
                 {% for show in shows %}
                     <li>
@@ -26,6 +33,25 @@
                     </li>
                 {% endfor %}
             </ul>
+        </div>
+        <div class="card">
+            <div class="pagination">
+                {% if sql.page_no > 1 -%}
+                <a href="{{ url_for('hp_with_params', order=sql.order, page_no=1) }}">&#10094;&#10094;</a>
+                <a href="{{ url_for('hp_with_params', order=sql.order, page_no=sql.page_no - 1) }}">&#10094;</a>
+                {%- endif %}
+                {% for key in dict_webpages.keys() -%}
+                    {% if key == sql.page_no -%}
+                <a href="{{ url_for('hp_with_params', order=sql.order, page_no=key) }}" class="active">{{ key }}</a>
+                    {%- else -%}
+                <a href="{{ url_for('hp_with_params', order=sql.order, page_no=key) }}">{{ key }}</a>
+                    {%- endif %}
+                {% endfor -%}
+                {% if sql.page_no < sql.pages -%}
+                <a href="{{ url_for('hp_with_params', order=sql.order, page_no=sql.page_no + 1) }}">&#10095;</a>
+                <a href="{{ url_for('hp_with_params', order=sql.order, page_no=sql.pages) }}">&#10095;&#10095;</a>
+                {%- endif %}
+            </div>
         </div>
     </section>
 {% endblock %}
