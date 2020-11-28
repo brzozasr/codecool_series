@@ -15,7 +15,6 @@ SHOWS_LIMIT = 15  # This value can not be set on 0 (zero)
 HP_LIMIT = 15
 
 
-
 # Order direction
 ORD_ASC = 'ASC'
 ORD_DESC = 'DESC'
