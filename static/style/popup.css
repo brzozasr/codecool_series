@@ -1,0 +1,45 @@
+#popup-main {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: none;
+    position: fixed;
+    margin: auto;
+    z-index: 100;
+    background-color: #b4cee4;
+}
+
+#popup-div-iframe {
+    position: absolute;
+    min-width: 65vw;
+    min-height: 50vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 110;
+}
+
+#popup-iframe {
+    /*position: relative;*/
+    min-width: 100%;
+    height: 60vmax;
+    pointer-events: none;
+    z-index: 120;
+    border: none;
+}
+
+img#popup-close {
+    position: absolute;
+    right: -18px;
+    top: -18px;
+    cursor: pointer;
+}
+
+.popup-link {
+
+}
+
+
+
+

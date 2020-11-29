@@ -107,29 +107,21 @@ def show_detail(show_id):
         error = f'There is a problem with returned data:\n<br>{seasons}.'
         return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
-    genres = get_dict(result[0].get('genres_name'), 'genre_name', sort_dict=True)
-    if genres:
-        genres_str = ''
-        for genre in genres:
-            genres_str += f"{genre.get('genre_name')}, "
-            # genres_str += f"<a href=\"/genre/{genre.get('genre_id')}/\">{genre.get('genre_name')}</a>, "
-        genres_str = genres_str[:-2]
-    else:
-        genres_str = None
+    genres_dict = get_dict(result[0].get('genres_name'), 'genre_name', sort_dict=True)
 
-    actors = get_dict(result[0].get('actors_name'), 'actor_name', sort_dict=True)
-    if actors:
-        actors_str = ''
-        counter = 0
-        for actor_dict in actors:
-            actors_str += f"{actor_dict.get('actor_name')}, "
-            # actors_str += f"<a href=\"/actor/{actor_dict.get('actor_id')}/\">{actor_dict.get('actor_name')}</a>, "
-            counter += 1
-            if counter >= 3:
-                break
-        actors_str = actors_str[:-2]
-    else:
-        actors_str = None
+    actors_dict = get_dict(result[0].get('actors_name'), 'actor_name', sort_dict=True)
+    # if actors_dict:
+    #     actors_str = ''
+    #     counter = 0
+    #     for actor_dict in actors_dict:
+    #         actors_str += f"{actor_dict.get('actor_name')}, "
+    #         # actors_str += f"<a href=\"/actor/{actor_dict.get('actor_id')}/\">{actor_dict.get('actor_name')}</a>, "
+    #         counter += 1
+    #         if counter >= 3:
+    #             break
+    #     actors_str = actors_str[:-2]
+    # else:
+    #     actors_str = None
 
     db_data = {
         'show_id': show_id,
@@ -142,14 +134,19 @@ def show_detail(show_id):
         'show_trailer': result[0].get('trailer'),
         'show_trailer_id': get_trailer_id(result[0].get('trailer')),
         'show_homepage': result[0].get('homepage'),
-        'show_genres': genres_str,
-        'show_actors': actors_str,
+        'show_genres': genres_to_str(genres_dict, only_genres=False),
+        'show_actors': actors_to_string(actors_dict, return_no_actors='ALL', only_actors=False),
     }
 
     return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
 
-@app.route('/actor/<int:actor_id>')
+@app.route('/actors/')
+def actors():
+    return render_template('actors.html')
+
+
+@app.route('/actor/<int:actor_id>/')
 def actor(actor_id):
     return render_template('actor.html')
 
