@@ -1,6 +1,6 @@
 import math
 from flask import json
-from datetime import *
+from datetime import datetime
 
 
 def pages_dict(no_of_records, limit):
@@ -156,9 +156,12 @@ def set_rating_stars(rating):
         return star * stars
 
 
-def date_formater(date_to_format):
+def date_formater(date_to_format: datetime):
     """Format date from 2020-01-01 to 2020 January 01."""
-    return date_to_format.strftime("%Y %B %d")
+    if date_to_format:
+        return date_to_format.strftime("%Y %B %d")
+    else:
+        return None
 
 
 def genres_to_str(genres: list, only_genres=True) -> (str, None):

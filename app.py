@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, session, jsonify
 from data.database_handler import *
 from data.query import *
 from data.query_py import *
+from utils import *
 
 # load_dotenv()
 app = Flask(__name__)
@@ -24,7 +25,11 @@ def inject_variable():
         ORD_ASC=ORD_ASC,
         ORD_DESC=ORD_DESC,
         SHOWS_LIMIT=SHOWS_LIMIT,
-        HP_LIMIT=HP_LIMIT
+        HP_LIMIT=HP_LIMIT,
+        ACT_COL_NAME=ACT_COL_NAME,
+        ACT_COL_BIRTHDAY=ACT_COL_BIRTHDAY,
+        ACT_COL_DEATH=ACT_COL_DEATH,
+        ACT_LIMIT=ACT_LIMIT
     )
 
 
@@ -143,12 +148,31 @@ def show_detail(show_id):
 
 @app.route('/actors/')
 def actors():
+    actors_all = db.execute_sql_dict(query.actors_select_all, fetch=True)
     return render_template('actors.html')
 
 
 @app.route('/actor/<int:actor_id>/')
 def actor(actor_id):
-    return render_template('actor.html')
+    actor_dict = db.execute_sql_dict(query.actor_get_by_id, [actor_id], fetch=True)
+
+    print(actor_dict)
+
+    name = actor_dict[0].get('name')
+    birthday = date_formater(actor_dict[0].get('birthday'))
+    death = date_formater(actor_dict[0].get('death'))
+    biography = actor_dict[0].get('biography')
+
+    actor_details = {
+        'name': name,
+        'birthday': birthday,
+        'death': death,
+        'biography': biography,
+
+
+    }
+
+    return render_template('actor.html', actor_details=actor_details)
 
 
 @app.route('/design')

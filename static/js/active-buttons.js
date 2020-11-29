@@ -15,8 +15,9 @@ export let actBtn = {
             {"bt-register": actBtn.registerBtn},
             {"bt-login": actBtn.loginBtn},
             {"bt-logout": actBtn.logoutBtn},
-            {"menu-btn-back": actBtn.goToHomeBtn},
-            {"menu-btn-shows": actBtn.goToShowsBtn}
+            {"menu-btn-back": actBtn.homepageBtn},
+            {"menu-btn-shows": actBtn.showsBtn},
+            {"menu-btn-actors": actBtn.actorsBtn}
         ];
 
         let i = 0;
@@ -42,11 +43,15 @@ export let actBtn = {
         login.logoutUser();
     },
 
-    goToShowsBtn: function () {
+    showsBtn: function () {
         window.location.href = "/shows/most-rated/";
     },
 
-    goToHomeBtn: function () {
+    homepageBtn: function () {
         window.location.href = "/";
+    },
+
+    actorsBtn: function () {
+        window.location.href = "/actors/";
     },
 }

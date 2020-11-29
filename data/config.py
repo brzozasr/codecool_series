@@ -15,6 +15,14 @@ SHOWS_LIMIT = 15  # This value can not be set on 0 (zero)
 HP_LIMIT = 15
 
 
+# Columns' name for table "actors" (request for pagination)
+ACT_COL_NAME = 'name'
+ACT_COL_BIRTHDAY = 'birthday'
+ACT_COL_DEATH = 'death'
+# No of records limitation for the "actors" (request for pagination)
+ACT_LIMIT = 15
+
+
 # Order direction
 ORD_ASC = 'ASC'
 ORD_DESC = 'DESC'

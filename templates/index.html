@@ -6,7 +6,8 @@
 {% block title %}Welcome Page{% endblock %}
 {% block content %}
     <div id="top-menu">
-        <button type="button" id="menu-btn-shows" class="menu-button">Go to Shows</button>
+        <button type="button" id="menu-btn-shows" class="menu-button">Shows</button>
+        <button type="button" id="menu-btn-actors" class="menu-button">Actors</button>
     </div>
     <section>
         <h1 class="title text-center">Welcome Page</h1>
@@ -22,16 +23,16 @@
         </div>
         <div class="card">
             {% if sql.order == ORD_ASC -%}
-            <h2><a href="{{ url_for('hp_with_params', order=ORD_DESC, page_no=sql.page_no) }}">Shows' Titles <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_ASC }}"></a></h2>
+            <h2><a href="{{ url_for('hp_with_params', order=ORD_DESC, page_no=sql.page_no) }}">Shows' Titles <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></h2>
             {%- else %}
-            <h2><a href="{{ url_for('hp_with_params', order=ORD_ASC, page_no=sql.page_no) }}">Shows' Titles <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_DESC }}"></a></h2>
-            {% endif %}
+            <h2><a href="{{ url_for('hp_with_params', order=ORD_ASC, page_no=sql.page_no) }}">Shows' Titles <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></h2>
+            {%- endif %}
             <ul>
-                {% for show in shows %}
+                {% for show in shows -%}
                     <li>
                         <a href="{{ url_for('show_detail', show_id=show.id) }}">{{ show.title }}</a>
                     </li>
-                {% endfor %}
+                {%- endfor %}
             </ul>
         </div>
         <div class="card">

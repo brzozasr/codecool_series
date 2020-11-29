@@ -33,5 +33,6 @@ export let popup = {
     closePopup: function () {
         let popupDiv = document.getElementById('popup-main');
         popupDiv.style.display = 'none';
+        popupDiv.remove();
     },
 };

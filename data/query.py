@@ -13,6 +13,10 @@ __query_all = {
         """SELECT users_id, users_login, users_pass FROM users WHERE users_login = %s;""",
     'users_insert_new_user':
         """INSERT INTO users (users_login, users_pass) VALUES (%s, %s);""",
+    'actor_get_by_id':
+    """SELECT id, name, birthday, death, biography FROM actors WHERE id = %s;""",
+    'actors_select_all':
+    """SELECT id, name, birthday, death, biography FROM actors ORDER BY name"""
 }
 
 

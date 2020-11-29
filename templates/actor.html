@@ -10,21 +10,23 @@
     <!-- Normalize.css fixes lot of differences between browsers default styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
-    <title> - CsED</title>
+    <title>{{ actor_details.name }} - CsED</title>
 </head>
 <body>
 <div id="body-wrapper">
     <section>
-        <h1 class="title text-center">Welcome Page</h1>
+        <h1 class="title text-center">{{ actor_details.name }}</h1>
         <div class="card">
-            <h2>Welcome TV show lovers!</h2>
-            <p>This great site is happy to bring you your favourite TV show's <i>details</i>.</p>
+            <p>Birthday: {% if actor_details.birthday %}{{ actor_details.birthday }}{% else %}Not available{% endif %}</p>
+            {% if actor_details.death -%}
+            <p>Died: {{ actor_details.death }}</p>
+            {%- endif %}
             <p></p>
-            <p>Okay, actually this is a designed dumb page without any logic.</p>
-            <p>You can find a navigational element, the so called "breadcrumb" above the page's title. Use it for
-                in-depth
-                navigation.
-            </p>
+            {% if actor_details.biography | length > 0 -%}
+            <p><u>Biography:</u><br>{{ actor_details.biography }}</p>
+            {%- else %}
+            <p><u>Biography:</u><br>Not available</p>
+            {% endif -%}
         </div>
     </section>
     <footer>
