@@ -1,6 +1,6 @@
 import math
 from flask import json
-from datetime import *
+from datetime import datetime
 
 
 def pages_dict(no_of_records, limit):
@@ -111,6 +111,7 @@ def get_dict(str_of_dict: str, order_key='', sort_dict=False) -> list:
 
 
 def get_trailer_id(yt_url):
+    """Returns ID of trailer taken from YouTube's url."""
     if yt_url and '?v=' in yt_url:
         trailer_id = yt_url.split('?v=')
         return trailer_id[1]
@@ -119,6 +120,8 @@ def get_trailer_id(yt_url):
 
 
 def min_to_h_min(minutes: int):
+    """Changing integer to hours and minutes
+    and return in format: 1h 09min."""
     if is_positive_int(minutes):
         h = minutes // 60
         m = minutes % 60
@@ -139,6 +142,8 @@ def min_to_h_min(minutes: int):
 
 
 def set_rating_stars(rating):
+    """Returns HTML string with images of star,
+    the number of stars depend on passing argument "rating"."""
     stars = int(rating)
     rest = rating - stars
 
@@ -151,8 +156,57 @@ def set_rating_stars(rating):
         return star * stars
 
 
-def date_formater(date):
-    return date.strftime("%Y %B %d")
+def date_formater(date_to_format: datetime):
+    """Format date from 2020-01-01 to 2020 January 01."""
+    if date_to_format:
+        return date_to_format.strftime("%Y %B %d")
+    else:
+        return None
+
+
+def genres_to_str(genres: list, only_genres=True) -> (str, None):
+    """Changing the list of dictionaries "genres":
+    [{"genre_id": 5, "genre_name": "Comedy"}, {"genre_id": 8, "genre_name": "Documentary"},...]
+    to string: Comedy, Documentary,... or HTML string
+    """
+    if genres:
+        genres_str = ''
+        for genre in genres:
+            if only_genres:
+                genres_str += f"{genre.get('genre_name')}, "
+            else:
+                genres_str += f"<a href=\"/genre/{genre.get('genre_id')}/\" data-genre-id=\"{genre.get('actor_id')}\">{genre.get('genre_name')}</a>, "
+        return genres_str[:-2]
+    else:
+        return None
+
+
+def actors_to_string(actors: list, only_actors=True, return_no_actors=3) -> (str, None):
+    """Changing the list of dictionaries "actors":
+    [{"actor_id": 2, "actor_name": "Jan Nowak"}, {"actor_id": 3, "actor_name": "Ewa Test"},...]
+    to string: Jan Nowak, Ewa Test,... or HTML string.
+    :param actors: list of dictionaries,
+    :param only_actors: the flag that depend on function returns string of actors or
+    HTML string of actors,
+    :param return_no_actors: positive integer pointing how many actors returns or
+    if puts string 'ALL' returns all actors.
+    """
+    if actors:
+        actors_str = ''
+        counter = 0
+        for actor in actors:
+            if only_actors:
+                actors_str += f"{actor.get('actor_name')}, "
+            else:
+                # actors_str += f"<a href=\"/actor/{actor.get('actor_id')}/\" data-actor-id=\"{actor.get('actor_id')}\">{actor.get('actor_name')}</a>, "
+                actors_str += f"<a href=\"javascript:void(0)\" class=\"popup-link\" data-actor-id=\"{actor.get('actor_id')}\">{actor.get('actor_name')}</a>, "
+            counter += 1
+            if return_no_actors != 'ALL':
+                if counter >= return_no_actors:
+                    break
+        return actors_str[:-2]
+    else:
+        return None
 
 
 if __name__ == '__main__':

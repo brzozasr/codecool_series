@@ -10,24 +10,27 @@
     <!-- Normalize.css fixes lot of differences between browsers default styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
-    <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
-    <title>{% block title %} {% endblock %} - CsED</title>
+    <title>{{ actor_details.name }} - CsED</title>
 </head>
 <body>
 <div id="body-wrapper">
-    <header class="clearfix">
-        <a href="{{ url_for('index') }}"><img id="header-logo" src="{{ url_for('static', filename='assets/codecool-logo.png') }}" alt="Codecool Logo"></a>
-        <span id="header-title" class="title">Codecool Series DB</span>
-        <div id="header-auth">
-            <button type="button" id="bt-register">Register</button>
-            <button type="button" id="bt-login">Login</button>
-            <button type="button" id="bt-user-log" style="display: none">brzozasr@interia.pl</button>
-            <button type="button" id="bt-logout" style="display: none">Logout</button>
+    <section>
+        <h1 class="title text-center">{{ actor_details.name }}</h1>
+        <div class="card">
+            <p>Birthday: {% if actor_details.birthday %}{{ actor_details.birthday }}{% else %}Not available{% endif %}</p>
+            {% if actor_details.death -%}
+            <p>Died: {{ actor_details.death }}</p>
+            {%- endif %}
+            <p></p>
+            {% if actor_details.biography | length > 0 -%}
+            <p><u>Biography:</u><br>{{ actor_details.biography }}</p>
+            {%- else %}
+            <p><u>Biography:</u><br>Not available</p>
+            {% endif -%}
         </div>
-    </header>
-    {%- block content %} {% endblock %}
+    </section>
     <footer>
-        Copyright, brzozasr
+        &nbsp;
     </footer>
 </div>
 <div class="background">

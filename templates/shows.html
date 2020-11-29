@@ -6,7 +6,8 @@
 {% block title %}Shows{% endblock %}
 {% block content %}
     <div id="top-menu">
-        <button type="button" id="menu-btn-back" class="menu-button"><< Go Back Home Page</button>
+        <button type="button" id="menu-btn-back" class="menu-button">Homepage</button>
+        <button type="button" id="menu-btn-actors" class="menu-button">Actors</button>
     </div>
     <section>
         <h1 class="title text-center">Shows</h1>
@@ -19,32 +20,32 @@
                 <thead>
                     <tr>
                         {% if sql.column == COL_TITLE and sql.order == ORD_ASC -%}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_TITLE, order=ORD_DESC, page_no=sql.page_no) }}">Title <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
+                        <th><a href="{{ url_for('shows-pagination', column=COL_TITLE, order=ORD_DESC, page_no=sql.page_no) }}">Title <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
                         {%- elif sql.column == COL_TITLE and sql.order == ORD_DESC %}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_TITLE, order=ORD_ASC, page_no=sql.page_no) }}">Title <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
+                        <th><a href="{{ url_for('shows-pagination', column=COL_TITLE, order=ORD_ASC, page_no=sql.page_no) }}">Title <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
                         {%- else %}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_TITLE, order=ORD_DESC, page_no=sql.page_no) }}">Title</a></th>
+                        <th><a href="{{ url_for('shows-pagination', column=COL_TITLE, order=ORD_DESC, page_no=sql.page_no) }}">Title</a></th>
                         {%- endif -%}
                         {% if sql.column == COL_YEAR and sql.order == ORD_ASC -%}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_YEAR, order=ORD_DESC, page_no=sql.page_no) }}">Year <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
+                        <th><a href="{{ url_for('shows-pagination', column=COL_YEAR, order=ORD_DESC, page_no=sql.page_no) }}">Year <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
                         {%- elif sql.column == COL_YEAR and sql.order == ORD_DESC %}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_YEAR, order=ORD_ASC, page_no=sql.page_no) }}">Year <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
+                        <th><a href="{{ url_for('shows-pagination', column=COL_YEAR, order=ORD_ASC, page_no=sql.page_no) }}">Year <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
                         {%- else %}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_YEAR, order=ORD_DESC, page_no=sql.page_no) }}">Year</a></th>
+                        <th><a href="{{ url_for('shows-pagination', column=COL_YEAR, order=ORD_DESC, page_no=sql.page_no) }}">Year</a></th>
                         {%- endif -%}
                         {% if sql.column == COL_RUNTIME and sql.order == ORD_ASC -%}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_RUNTIME, order=ORD_DESC, page_no=sql.page_no) }}">Runtime (min) <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
+                        <th><a href="{{ url_for('shows-pagination', column=COL_RUNTIME, order=ORD_DESC, page_no=sql.page_no) }}">Runtime (min) <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
                         {%- elif sql.column == COL_RUNTIME and sql.order == ORD_DESC %}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_RUNTIME, order=ORD_ASC, page_no=sql.page_no) }}">Runtime (min) <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
+                        <th><a href="{{ url_for('shows-pagination', column=COL_RUNTIME, order=ORD_ASC, page_no=sql.page_no) }}">Runtime (min) <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
                         {%- else %}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_RUNTIME, order=ORD_DESC, page_no=sql.page_no) }}">Runtime (min)</a></th>
+                        <th><a href="{{ url_for('shows-pagination', column=COL_RUNTIME, order=ORD_DESC, page_no=sql.page_no) }}">Runtime (min)</a></th>
                         {%- endif -%}
-                        {% if sql.column == COL_RATING and sql.order == 'ASC' -%}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_RATING, order=ORD_DESC, page_no=sql.page_no) }}">Rating <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
-                        {%- elif sql.column == COL_RATING and sql.order == 'DESC' %}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_RATING, order=ORD_ASC, page_no=sql.page_no) }}">Rating <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
+                        {% if sql.column == COL_RATING and sql.order == ORD_ASC -%}
+                        <th><a href="{{ url_for('shows-pagination', column=COL_RATING, order=ORD_DESC, page_no=sql.page_no) }}">Rating <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
+                        {%- elif sql.column == COL_RATING and sql.order == ORD_DESC %}
+                        <th><a href="{{ url_for('shows-pagination', column=COL_RATING, order=ORD_ASC, page_no=sql.page_no) }}">Rating <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
                         {%- else %}
-                        <th><a href="{{ url_for('ordered-pagination', column=COL_RATING, order=ORD_DESC, page_no=sql.page_no) }}">Rating</a></th>
+                        <th><a href="{{ url_for('shows-pagination', column=COL_RATING, order=ORD_DESC, page_no=sql.page_no) }}">Rating</a></th>
                         {%- endif %}
                         <th>Genres</th>
                         <th>Trailer</th>
@@ -81,19 +82,19 @@
         <div class="card">
             <div class="pagination">
                 {% if sql.page_no > 1 -%}
-                <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=1) }}">&#10094;&#10094;</a>
-                <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=sql.page_no - 1) }}">&#10094;</a>
+                <a href="{{ url_for('shows-pagination', column=sql.column, order=sql.order, page_no=1) }}">&#10094;&#10094;</a>
+                <a href="{{ url_for('shows-pagination', column=sql.column, order=sql.order, page_no=sql.page_no - 1) }}">&#10094;</a>
                 {%- endif %}
                 {% for key in dict_webpages.keys() -%}
                     {% if key == sql.page_no -%}
-                <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=key) }}" class="active">{{ key }}</a>
+                <a href="{{ url_for('shows-pagination', column=sql.column, order=sql.order, page_no=key) }}" class="active">{{ key }}</a>
                     {%- else -%}
-                <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=key) }}">{{ key }}</a>
+                <a href="{{ url_for('shows-pagination', column=sql.column, order=sql.order, page_no=key) }}">{{ key }}</a>
                     {%- endif %}
                 {% endfor -%}
                 {% if sql.page_no < sql.pages -%}
-                <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=sql.page_no + 1) }}">&#10095;</a>
-                <a href="{{ url_for('ordered-pagination', column=sql.column, order=sql.order, page_no=sql.pages) }}">&#10095;&#10095;</a>
+                <a href="{{ url_for('shows-pagination', column=sql.column, order=sql.order, page_no=sql.page_no + 1) }}">&#10095;</a>
+                <a href="{{ url_for('shows-pagination', column=sql.column, order=sql.order, page_no=sql.pages) }}">&#10095;&#10095;</a>
                 {%- endif %}
             </div>
         </div>

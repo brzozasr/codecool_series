@@ -1,6 +1,6 @@
 __query_all = {
     'shows_select_id_title':
-        """SELECT id, title FROM shows;""",
+        """SELECT id, title FROM shows ORDER BY title;""",
     'shows_count_records':
         """SELECT COUNT(id) FROM shows;""",
     'show_details':
@@ -9,6 +9,14 @@ __query_all = {
     'seasons_by_id_show':
     """SELECT id, season_number, title, overview, show_id FROM seasons 
     WHERE show_id = %s ORDER BY season_number""",
+    'users_select_by_users_login':
+        """SELECT users_id, users_login, users_pass FROM users WHERE users_login = %s;""",
+    'users_insert_new_user':
+        """INSERT INTO users (users_login, users_pass) VALUES (%s, %s);""",
+    'actor_get_by_id':
+    """SELECT id, name, birthday, death, biography FROM actors WHERE id = %s;""",
+    'actors_count_records':
+    """SELECT COUNT(id) FROM actors"""
 }
 
 

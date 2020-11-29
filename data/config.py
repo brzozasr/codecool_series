@@ -2,16 +2,30 @@ from os import urandom
 
 
 """Context variables"""
-# Columns name in table "shows"
+# Columns' name for table "shows" (request for pagination)
 COL_TITLE = 'title'
 COL_YEAR = 'year'
 COL_RUNTIME = 'runtime'
 COL_RATING = 'rating'
+# No of records on the website "shows"
+SHOWS_LIMIT = 15  # This value can not be set on 0 (zero)
+
+
+# No of records limitation for the Homepage (request for pagination)
+HP_LIMIT = 15
+
+
+# Columns' name for table "actors" (request for pagination)
+ACT_COL_NAME = 'name'
+ACT_COL_BIRTHDAY = 'birthday'
+ACT_COL_DEATH = 'death'
+# No of records limitation for the "actors" (request for pagination)
+ACT_LIMIT = 50
+
+
 # Order direction
 ORD_ASC = 'ASC'
 ORD_DESC = 'DESC'
-# No of records on the website
-SHOWS_LIMIT = 15  # This value can not be set on 0 (zero)
 
 
 """Session variables"""

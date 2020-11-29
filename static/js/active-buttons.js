@@ -1,3 +1,5 @@
+import {login} from "./login.js";
+
 export let actBtn = {
 
     buttons: document.querySelectorAll("button"),
@@ -12,8 +14,10 @@ export let actBtn = {
         let objButtons = [
             {"bt-register": actBtn.registerBtn},
             {"bt-login": actBtn.loginBtn},
-            {"menu-btn-back": actBtn.goToHomeBtn},
-            {"menu-btn-shows": actBtn.goToShowsBtn}
+            {"bt-logout": actBtn.logoutBtn},
+            {"menu-btn-back": actBtn.homepageBtn},
+            {"menu-btn-shows": actBtn.showsBtn},
+            {"menu-btn-actors": actBtn.actorsBtn}
         ];
 
         let i = 0;
@@ -28,18 +32,26 @@ export let actBtn = {
     },
 
     loginBtn: function () {
-        console.log('login')
+        login.divLoginShow();
     },
 
     registerBtn: function () {
-        console.log('register')
+        login.divRegisterShow();
     },
 
-    goToShowsBtn: function () {
+    logoutBtn: function () {
+        login.logoutUser();
+    },
+
+    showsBtn: function () {
         window.location.href = "/shows/most-rated/";
     },
 
-    goToHomeBtn: function () {
+    homepageBtn: function () {
         window.location.href = "/";
+    },
+
+    actorsBtn: function () {
+        window.location.href = "/actors/";
     },
 }

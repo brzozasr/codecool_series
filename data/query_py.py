@@ -24,3 +24,35 @@ def get_shows_sql(column=COL_RATING, order=ORD_DESC, offset=0):
         return query
     else:
         return None
+
+
+def get_title_shows_sql(order=ORD_DESC, offset=0):
+    orders = [ORD_ASC, ORD_DESC]
+    if order in orders:
+        query = f"""SELECT 
+                    id, 
+                    title 
+                FROM shows 
+                ORDER BY title {order}
+                LIMIT {HP_LIMIT} OFFSET {offset};"""
+        return query
+    else:
+        return None
+
+
+def get_all_actors_sql(column=ACT_COL_NAME, order=ORD_DESC, offset=0):
+    columns = [ACT_COL_NAME, ACT_COL_BIRTHDAY, ACT_COL_DEATH]
+    orders = [ORD_ASC, ORD_DESC]
+    if column in columns and order in orders:
+        query = f"""SELECT 
+                    id, 
+                    name,
+                    birthday, 
+                    death, 
+                    biography
+                FROM actors 
+                ORDER BY {column} {order}
+                LIMIT {ACT_LIMIT} OFFSET {offset};"""
+        return query
+    else:
+        return None
