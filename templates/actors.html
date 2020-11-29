@@ -1,0 +1,79 @@
+{% extends 'pattern.html' %}
+
+{% set img_desc = 'assets/desc.png' %}
+{% set img_asc = 'assets/asc.png' %}
+
+{% block title %}Actors{% endblock %}
+{% block content %}
+    <div id="top-menu">
+        <button type="button" id="menu-btn-back" class="menu-button">Homepage</button>
+        <button type="button" id="menu-btn-shows" class="menu-button">Shows</button>
+    </div>
+    <section>
+        <h1 class="title text-center">Actors</h1>
+        {% if error -%}
+        <div class="error">{{ error | safe }}</div>
+        {%- endif %}
+        {% if sql and dict_webpages %}
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        {% if sql.column == ACT_COL_NAME and sql.order == ORD_ASC -%}
+                        <th><a href="{{ url_for('actors-pagination', column=ACT_COL_NAME, order=ORD_DESC, page_no=sql.page_no) }}" style="white-space: nowrap;">Name <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
+                        {%- elif sql.column == ACT_COL_NAME and sql.order == ORD_DESC %}
+                        <th><a href="{{ url_for('actors-pagination', column=ACT_COL_NAME, order=ORD_ASC, page_no=sql.page_no) }}" style="white-space: nowrap;">Name <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
+                        {%- else %}
+                        <th><a href="{{ url_for('actors-pagination', column=ACT_COL_NAME, order=ORD_DESC, page_no=sql.page_no) }}" style="white-space: nowrap;">Name</a></th>
+                        {%- endif -%}
+                        {% if sql.column == ACT_COL_BIRTHDAY and sql.order == ORD_ASC -%}
+                        <th><a href="{{ url_for('actors-pagination', column=ACT_COL_BIRTHDAY, order=ORD_DESC, page_no=sql.page_no) }}" style="white-space: nowrap;">Birthday <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
+                        {%- elif sql.column == ACT_COL_BIRTHDAY and sql.order == ORD_DESC %}
+                        <th><a href="{{ url_for('actors-pagination', column=ACT_COL_BIRTHDAY, order=ORD_ASC, page_no=sql.page_no) }}" style="white-space: nowrap;">Birthday <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
+                        {%- else %}
+                        <th><a href="{{ url_for('actors-pagination', column=ACT_COL_BIRTHDAY, order=ORD_DESC, page_no=sql.page_no) }}" style="white-space: nowrap;">Birthday</a></th>
+                        {%- endif -%}
+                        {% if sql.column == ACT_COL_DEATH and sql.order == ORD_ASC -%}
+                        <th><a href="{{ url_for('actors-pagination', column=ACT_COL_DEATH, order=ORD_DESC, page_no=sql.page_no) }}" style="white-space: nowrap;">Died <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
+                        {%- elif sql.column == ACT_COL_DEATH and sql.order == ORD_DESC %}
+                        <th><a href="{{ url_for('actors-pagination', column=ACT_COL_DEATH, order=ORD_ASC, page_no=sql.page_no) }}" style="white-space: nowrap;">Died <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
+                        {%- else %}
+                        <th><a href="{{ url_for('actors-pagination', column=ACT_COL_DEATH, order=ORD_DESC, page_no=sql.page_no) }}" style="white-space: nowrap;">Died</a></th>
+                        {%- endif -%}
+                        <th>Biography</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for show in actors_dict -%}
+                    <tr>
+                        <td><a href="javascript:void(0)" class="popup-link" data-actor-id="{{ show.id }}">{{ show.name }}</a></td>
+                        <td><span style="white-space: nowrap;">{% if show.birthday %}{{ show.birthday }}{% else %}N/A{% endif %}</span></td>
+                        <td><span style="white-space: nowrap;">{% if show.death %}{{ show.death }}{% else %}{% endif %}</span></td>
+                        <td>{% if show.biography | length > 0 %}{{ show.biography }}{% else %}Not available{% endif %}</td>
+                    </tr>
+                    {%- endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <div class="pagination">
+                {% if sql.page_no > 1 -%}
+                <a href="{{ url_for('actors-pagination', column=sql.column, order=sql.order, page_no=1) }}">&#10094;&#10094;</a>
+                <a href="{{ url_for('actors-pagination', column=sql.column, order=sql.order, page_no=sql.page_no - 1) }}">&#10094;</a>
+                {%- endif %}
+                {% for key in dict_webpages.keys() -%}
+                    {% if key == sql.page_no -%}
+                <a href="{{ url_for('actors-pagination', column=sql.column, order=sql.order, page_no=key) }}" class="active">{{ key }}</a>
+                    {%- else -%}
+                <a href="{{ url_for('actors-pagination', column=sql.column, order=sql.order, page_no=key) }}">{{ key }}</a>
+                    {%- endif %}
+                {% endfor -%}
+                {% if sql.page_no < sql.pages -%}
+                <a href="{{ url_for('actors-pagination', column=sql.column, order=sql.order, page_no=sql.page_no + 1) }}">&#10095;</a>
+                <a href="{{ url_for('actors-pagination', column=sql.column, order=sql.order, page_no=sql.pages) }}">&#10095;&#10095;</a>
+                {%- endif %}
+            </div>
+        </div>
+        {% endif %}
+    </section>
+{% endblock %}

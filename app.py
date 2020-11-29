@@ -56,7 +56,7 @@ def index(page_no=1, order=ORD_DESC):
 
 @app.route('/shows/', endpoint='shows')
 @app.route('/shows/most-rated/', endpoint='most-rated')
-@app.route('/shows/<string:column>/<string:order>/<int:page_no>/', endpoint='ordered-pagination')
+@app.route('/shows/<string:column>/<string:order>/<int:page_no>/', endpoint='shows-pagination')
 def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
     error = None
     shows_dict = list()
@@ -115,18 +115,6 @@ def show_detail(show_id):
     genres_dict = get_dict(result[0].get('genres_name'), 'genre_name', sort_dict=True)
 
     actors_dict = get_dict(result[0].get('actors_name'), 'actor_name', sort_dict=True)
-    # if actors_dict:
-    #     actors_str = ''
-    #     counter = 0
-    #     for actor_dict in actors_dict:
-    #         actors_str += f"{actor_dict.get('actor_name')}, "
-    #         # actors_str += f"<a href=\"/actor/{actor_dict.get('actor_id')}/\">{actor_dict.get('actor_name')}</a>, "
-    #         counter += 1
-    #         if counter >= 3:
-    #             break
-    #     actors_str = actors_str[:-2]
-    # else:
-    #     actors_str = None
 
     db_data = {
         'show_id': show_id,
@@ -147,9 +135,44 @@ def show_detail(show_id):
 
 
 @app.route('/actors/')
-def actors():
-    actors_all = db.execute_sql_dict(query.actors_select_all, fetch=True)
-    return render_template('actors.html')
+@app.route('/actors/<string:column>/<string:order>/<int:page_no>/', endpoint='actors-pagination')
+def actors(column=ACT_COL_NAME, order=ORD_ASC, page_no=1):
+    error = None
+    actors_dict = list()
+    sql = dict()
+    dict_webpages = dict()
+
+    records = db.execute_sql(query.actors_count_records)
+    count_records = records[0][0]
+    if not is_positive_int(count_records):
+        error = f'There is a problem with returned records:\n<br>{records}.'
+        return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+
+    dict_webpages = pagination_len(count_records, page_no, ACT_LIMIT, visible_pagination=11)
+    # dict_webpages = pages_dict(count_records, SHOWS_LIMIT)  # all pages
+    offset = dict_webpages.get(page_no)
+    # current_page_no = current_page(count_records, SHOWS_LIMIT, offset)
+    all_pages = pages_number(count_records, ACT_LIMIT)
+
+    if sql_query := get_all_actors_sql(column, order, offset):
+        actors_dict = db.execute_sql_dict(sql_query)
+        if type(actors_dict) != list:
+            error = f'There is a problem with returned data:\n<br>{actors_dict}.'
+            actors_dict = list()
+            return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql,
+                                   dict_webpages=dict_webpages)
+    else:
+        error = f'There is wrong data sent by route.'
+        return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+
+    sql = {
+        'column': column,
+        'order': order,
+        'page_no': page_no,
+        'pages': all_pages
+    }
+
+    return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
 
 @app.route('/actor/<int:actor_id>/')

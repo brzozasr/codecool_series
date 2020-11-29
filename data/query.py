@@ -15,8 +15,8 @@ __query_all = {
         """INSERT INTO users (users_login, users_pass) VALUES (%s, %s);""",
     'actor_get_by_id':
     """SELECT id, name, birthday, death, biography FROM actors WHERE id = %s;""",
-    'actors_select_all':
-    """SELECT id, name, birthday, death, biography FROM actors ORDER BY name"""
+    'actors_count_records':
+    """SELECT COUNT(id) FROM actors"""
 }
 
 

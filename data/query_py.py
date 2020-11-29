@@ -40,9 +40,10 @@ def get_title_shows_sql(order=ORD_DESC, offset=0):
         return None
 
 
-def get_all_actors_sql(order=ORD_DESC, offset=0):
+def get_all_actors_sql(column=ACT_COL_NAME, order=ORD_DESC, offset=0):
+    columns = [ACT_COL_NAME, ACT_COL_BIRTHDAY, ACT_COL_DEATH]
     orders = [ORD_ASC, ORD_DESC]
-    if order in orders:
+    if column in columns and order in orders:
         query = f"""SELECT 
                     id, 
                     name,
@@ -51,7 +52,7 @@ def get_all_actors_sql(order=ORD_DESC, offset=0):
                     biography
                 FROM actors 
                 ORDER BY {column} {order}
-                LIMIT {HP_LIMIT} OFFSET {offset};"""
+                LIMIT {ACT_LIMIT} OFFSET {offset};"""
         return query
     else:
         return None

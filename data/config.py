@@ -20,7 +20,7 @@ ACT_COL_NAME = 'name'
 ACT_COL_BIRTHDAY = 'birthday'
 ACT_COL_DEATH = 'death'
 # No of records limitation for the "actors" (request for pagination)
-ACT_LIMIT = 15
+ACT_LIMIT = 50
 
 
 # Order direction
