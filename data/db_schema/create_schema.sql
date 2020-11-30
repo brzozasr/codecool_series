@@ -112,3 +112,18 @@ CREATE VIEW show_details_view AS
          LEFT JOIN actors ac ON sc.actor_id = ac.id
       GROUP BY sh.id;
 
+
+CREATE VIEW genre_shows_view AS
+    SELECT  sh.id,
+			sh.title,
+			sh."year",
+			sh.overview,
+			sh.runtime,
+			sh.trailer,
+			sh.homepage,
+			ROUND(sh.rating, 1) AS round_rating,
+			ge."name"
+	    FROM shows AS sh
+            INNER JOIN show_genres AS sg ON sh.id = sg.show_id
+            INNER JOIN genres AS ge ON sg.genre_id = ge.id
+

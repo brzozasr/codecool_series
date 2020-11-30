@@ -56,3 +56,29 @@ def get_all_actors_sql(column=ACT_COL_NAME, order=ORD_DESC, offset=0):
         return query
     else:
         return None
+
+
+def get_genre_shows_sql(genre_id, column=GS_COL_RATING, order=ORD_DESC, offset=0):
+    columns = [GS_COL_TITLE, GS_COL_YEAR, GS_COL_RUNTIME, GS_COL_RATING]
+    orders = [ORD_ASC, ORD_DESC]
+    if column in columns and order in orders:
+        query = f"""SELECT 
+                            sh.id, 
+                            sh.title, 
+                            sh."year", 
+                            sh.overview, 
+                            sh.runtime, 
+                            sh.trailer, 
+                            sh.homepage, 
+                            ROUND(sh.rating, 1) AS round_rating, 
+                            ge."name"
+                    FROM shows AS sh
+                        INNER JOIN show_genres AS sg ON sh.id = sg.show_id
+                        INNER JOIN genres AS ge ON sg.genre_id = ge.id
+                        WHERE ge.id = {genre_id}
+                    ORDER BY sh.{column} {order}
+                    LIMIT {GS_LIMIT} OFFSET {offset};"""
+        return query
+    else:
+        return None
+

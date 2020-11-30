@@ -23,6 +23,15 @@ ACT_COL_DEATH = 'death'
 ACT_LIMIT = 50
 
 
+# Columns' name for the shows selected by a genre (request for pagination)
+GS_COL_TITLE = 'title'
+GS_COL_YEAR = 'year'
+GS_COL_RUNTIME = 'runtime'
+GS_COL_RATING = 'rating'
+# No of records on the website "genre_shows"
+GS_LIMIT = 15  # This value can not be set on 0 (zero)
+
+
 # Order direction
 ORD_ASC = 'ASC'
 ORD_DESC = 'DESC'
