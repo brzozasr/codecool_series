@@ -175,7 +175,7 @@ def genres_to_str(genres: list, only_genres=True) -> (str, None):
             if only_genres:
                 genres_str += f"{genre.get('genre_name')}, "
             else:
-                genres_str += f"<a href=\"/genre/{genre.get('genre_id')}/\" data-genre-id=\"{genre.get('actor_id')}\">{genre.get('genre_name')}</a>, "
+                genres_str += f"<a href=\"/genre-shows/{genre.get('genre_id')}/\" data-genre-id=\"{genre.get('actor_id')}\">{genre.get('genre_name')}</a>, "
         return genres_str[:-2]
     else:
         return None
