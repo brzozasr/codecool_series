@@ -13,29 +13,50 @@ export let episodes = {
 
     episodeLinks: document.querySelectorAll('.episodes-link'),
 
-    currentWindowsSize: function () {
-        console.log(window.innerWidth);  // inner window size with scroll
-        console.log(document.documentElement.clientWidth)  // inner window size without scroll
-        console.log(document.body.clientWidth)  // body tag size
-        console.log(window.innerHeight)
-        console.log(document.documentElement.clientHeight)
-        console.log(document.body.clientHeight)
+
+    resizeIframe: function () {
+        let w = document.documentElement.clientWidth || window.innerWidth;
+        let h = document.documentElement.clientHeight || window.innerHeight;
+        let iframe = document.getElementById('episodes-iframe');
+        let iframeLeftCss = iframe.offsetLeft;  // width
+        let iframeTopCss = iframe.offsetTop;  // height
+        let iframeWidth = w - (iframeLeftCss) * 2;
+        let iframeHeight = h - (iframeTopCss) * 2;
+
+        iframe.style.width = '0';
+        iframe.style.width = iframeWidth.toString() + 'px';
+        iframe.style.height = '0';
+        iframe.style.height = iframeHeight.toString() + 'px';
     },
 
-    popupLinksAddListeners: function () {
+    iframeLinksAddListeners: function () {
       episodes.popupLinks.forEach(link => {
-          link.addEventListener('click', episodes.openPopup)
+          link.addEventListener('click', episodes.openEpisodes)
       });
     },
 
-    openEpisodes: function () {
-        // let actId = evt.currentTarget.dataset.actorId;
-        // episodes.divTopBar.insertAdjacentHTML('beforebegin', episodes.episodesMain(`/actor/${actId}/`));
-        episodes.divTopBar.insertAdjacentHTML('beforebegin', episodes.episodesMain(`eee`));
+    openEpisodes: function (evt) {
+        let seasId = evt.currentTarget.dataset.seasonId;
+        episodes.divTopBar.insertAdjacentHTML('beforebegin', episodes.episodesMain(`/episodes/${seasId}/`));
         let episodesDiv = document.getElementById('episodes-main');
         episodesDiv.style.display = 'block';
 
         let closeImage = document.getElementById('episodes-close');
-        closeImage.addEventListener('click', episodes.closePopup);
+        closeImage.addEventListener('click', episodes.closeEpisodes);
+
+        setTimeout(episodes.resizeIframe, 100);
+    },
+
+    closeEpisodes: function () {
+        let episodesDiv = document.getElementById('episodes-main');
+        episodesDiv.style.display = 'none';
+        episodesDiv.remove();
     },
 };
+
+// console.log(window.innerWidth);  // inner window size with 'width' scroll
+// console.log(document.documentElement.clientWidth)  // inner window size 'width' without scroll
+// console.log(document.body.clientWidth)  // body tag size 'width', it could by bigger then window size
+// console.log(window.innerHeight)  // inner window size 'height' with scroll
+// console.log(document.documentElement.clientHeight)  // inner window size 'height' without scroll
+// console.log(document.body.clientHeight) // body tag size 'height', it could by bigger then window size

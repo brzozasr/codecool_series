@@ -8,7 +8,8 @@ import {episodes} from "./episodes.js";
         actBtn.addBtnListeners();
         login.verificationIsUserLogin();
         popup.popupLinksAddListeners();
-        window.addEventListener('resize', episodes.currentWindowsSize);
+        episodes.iframeLinksAddListeners();
+        window.addEventListener('resize', episodes.resizeIframe);
     }
 
     init();
