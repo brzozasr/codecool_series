@@ -134,6 +134,27 @@ def show_detail(show_id):
     return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
 
+@app.route('/episodes/<int:season_id>/')
+def episodes(season_id):
+    error = None
+    episodes_list = list()
+    season_data = list()
+
+    result = db.execute_sql_dict(query.episodes_select_by_season_id, [season_id])
+    if type(result) != list:
+        error = f'There is a problem with returned data:\n<br>{result}.'
+        return render_template('episodes.html', error=error, episodes_list=episodes_list, season_data=season_data)
+
+    season_data = db.execute_sql_dict(query.season_by_id, [season_id])
+    if type(season_data) != list:
+        error = f'There is a problem with returned data:\n<br>{season_data}.'
+        return render_template('episodes.html', error=error, episodes_list=episodes_list, season_data=season_data)
+
+    episodes_list = result
+
+    return render_template('episodes.html', error=error, episodes_list=episodes_list, season_data=season_data)
+
+
 @app.route('/actors/')
 @app.route('/actors/<string:column>/<string:order>/<int:page_no>/', endpoint='actors-pagination')
 def actors(column=ACT_COL_NAME, order=ORD_ASC, page_no=1):
@@ -198,9 +219,20 @@ def actor(actor_id):
     return render_template('actor.html', actor_details=actor_details)
 
 
-@app.route('/design')
-def design():
-    return render_template('design.html')
+@app.route('/genres/')
+def genres():
+    genres_dict = db.execute_sql_dict(query.genres_select_all)
+    if type(genres_dict) != list:
+        error = f'There is a problem with returned data:\n<br>{genres_dict}.'
+        genres_dict = list()
+        return render_template('genres.html', error=error, genres_dict=genres_dict)
+
+    return render_template('genres.html', genres_dict=genres_dict)
+
+
+@app.route('/genre-shows/<int:genre_id>/')
+def genre_shows(genre_id):
+    return render_template('genre_shows.html')
 
 
 @app.route('/user-login', methods=['POST'])
@@ -316,6 +348,11 @@ def user_logout():
         })
 
     return result
+
+
+@app.route('/design')
+def design():
+    return render_template('design.html')
 
 
 def main():

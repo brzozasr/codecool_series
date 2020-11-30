@@ -16,7 +16,17 @@ __query_all = {
     'actor_get_by_id':
     """SELECT id, name, birthday, death, biography FROM actors WHERE id = %s;""",
     'actors_count_records':
-    """SELECT COUNT(id) FROM actors"""
+    """SELECT COUNT(id) FROM actors""",
+    'episodes_select_by_season_id':
+    """SELECT id, title, episode_number, overview, season_id FROM episodes 
+    WHERE season_id = %s ORDER BY episode_number""",
+    'season_by_id':
+    """SELECT se.id, se.season_number, se.title, se.overview, se.show_id, sh.title AS show_title
+    FROM shows AS sh
+    INNER JOIN seasons AS se ON se.show_id = sh.id
+    WHERE se.id = %s""",
+    'genres_select_all':
+    """SELECT id, name FROM genres ORDER BY name;""",
 }
 
 

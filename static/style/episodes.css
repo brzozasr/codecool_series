@@ -1,0 +1,33 @@
+#episodes-main {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: block;
+    position: fixed;
+    margin: auto;
+    z-index: 120;
+    background-color: #b4cee4;
+}
+
+img#episodes-close {
+    position: absolute;
+    right: 26px;
+    top: 28px;
+    cursor: pointer;
+    z-index: 130;
+}
+
+#episodes-iframe {
+    position: relative;
+    top: 45px;
+    left: 45px;
+    display: block;
+    min-width: 400px;
+    min-height: 300px;
+    border: 1px solid black;
+}
+
+.episodes-link {
+
+}

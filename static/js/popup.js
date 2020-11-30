@@ -24,7 +24,6 @@ export let popup = {
         popup.divTopBar.insertAdjacentHTML('beforebegin', popup.popupMain(`/actor/${actId}/`));
         let popupDiv = document.getElementById('popup-main');
         popupDiv.style.display = 'block';
-        popupDiv.style.top = '0';
 
         let closeImage = document.getElementById('popup-close');
         closeImage.addEventListener('click', popup.closePopup);
