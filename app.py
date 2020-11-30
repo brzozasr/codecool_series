@@ -206,9 +206,16 @@ def actors(column=ACT_COL_NAME, order=ORD_ASC, page_no=1):
 
 @app.route('/actor/<int:actor_id>/')
 def actor(actor_id):
-    actor_dict = db.execute_sql_dict(query.actor_get_by_id, [actor_id], fetch=True)
+    actor_dict = db.execute_sql_dict(query.actor_get_by_id, [actor_id])
 
-    print(actor_dict)
+    actor_filmography = db.execute_sql_dict(query.actor_filmography, [actor_id])
+    if type(actor_filmography) == list and len(actor_filmography) > 0:
+        shows_str = ''
+        for show in actor_filmography:
+            shows_str += f"<a href=\"/show/{show.get('sh_id')}/\">{show.get('sh_title')}</a>, "
+        shows_str = shows_str[:-2]
+    else:
+        shows_str = None
 
     name = actor_dict[0].get('name')
     birthday = date_formater(actor_dict[0].get('birthday'))
@@ -216,12 +223,12 @@ def actor(actor_id):
     biography = actor_dict[0].get('biography')
 
     actor_details = {
+        'actor_id': actor_id,
         'name': name,
         'birthday': birthday,
         'death': death,
         'biography': biography,
-
-
+        'filmography': shows_str
     }
 
     return render_template('actor.html', actor_details=actor_details)

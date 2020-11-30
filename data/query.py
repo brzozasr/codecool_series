@@ -30,6 +30,12 @@ __query_all = {
     'count_genre_shows':
     """SELECT COUNT(sh_id)
     FROM genre_shows_view WHERE ge_id = %s""",
+    'actor_filmography':
+    """SELECT sh.id AS sh_id, sh.title AS sh_title, ac.id AS ac_id, ac.name AS ac_name
+    FROM shows AS sh
+    INNER JOIN show_characters AS sc ON sh.id = sc.show_id
+    INNER JOIN actors AS ac ON sc.actor_id = ac.id
+    WHERE ac.id = %s""",
 }
 
 
