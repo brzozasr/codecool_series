@@ -25,6 +25,8 @@ __query_all = {
     FROM shows AS sh
     INNER JOIN seasons AS se ON se.show_id = sh.id
     WHERE se.id = %s""",
+    'genres_select_all':
+    """SELECT id, name FROM genres ORDER BY name;""",
 }
 
 

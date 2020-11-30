@@ -219,9 +219,20 @@ def actor(actor_id):
     return render_template('actor.html', actor_details=actor_details)
 
 
-@app.route('/design')
-def design():
-    return render_template('design.html')
+@app.route('/genres/')
+def genres():
+    genres_dict = db.execute_sql_dict(query.genres_select_all)
+    if type(genres_dict) != list:
+        error = f'There is a problem with returned data:\n<br>{genres_dict}.'
+        genres_dict = list()
+        return render_template('genres.html', error=error, genres_dict=genres_dict)
+
+    return render_template('genres.html', genres_dict=genres_dict)
+
+
+@app.route('/genre-shows/<int:genre_id>/')
+def genre_shows(genre_id):
+    return render_template('genre_shows.html')
 
 
 @app.route('/user-login', methods=['POST'])
@@ -337,6 +348,11 @@ def user_logout():
         })
 
     return result
+
+
+@app.route('/design')
+def design():
+    return render_template('design.html')
 
 
 def main():

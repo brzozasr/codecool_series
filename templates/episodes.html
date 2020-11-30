@@ -34,7 +34,7 @@
                     <tr>
                         <td>{{ episode.episode_number }}</td>
                         <td>{{ episode.title }}</td>
-                        <td>{{ episode.overview }}</td>
+                        <td>{% if episode.overview %}{{ episode.overview }}{% else %}The overview is not available{% endif %}</td>
                     </tr>
                 {%- endfor %}
                 </tbody>

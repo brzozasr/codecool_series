@@ -13,24 +13,27 @@ export let episodes = {
 
     episodeLinks: document.querySelectorAll('.episodes-link'),
 
+    // divEpisodesMain: document.querySelector('#episodes-main'),
 
     resizeIframe: function () {
-        let w = document.documentElement.clientWidth || window.innerWidth;
-        let h = document.documentElement.clientHeight || window.innerHeight;
-        let iframe = document.getElementById('episodes-iframe');
-        let iframeLeftCss = iframe.offsetLeft;  // width
-        let iframeTopCss = iframe.offsetTop;  // height
-        let iframeWidth = w - (iframeLeftCss) * 2;
-        let iframeHeight = h - (iframeTopCss) * 2;
+        let divEpisodesMain = document.querySelector('#episodes-main')
+        if (divEpisodesMain !== null) {
+            let w = document.documentElement.clientWidth || window.innerWidth;
+            let h = document.documentElement.clientHeight || window.innerHeight;
+            let iframe = document.getElementById('episodes-iframe');
+            let iframeLeftCss = iframe.offsetLeft;  // width
+            let iframeTopCss = iframe.offsetTop;  // height
+            let iframeWidth = w - (iframeLeftCss) * 2;
+            let iframeHeight = h - (iframeTopCss) * 2;
 
-        iframe.style.width = '0';
-        iframe.style.width = iframeWidth.toString() + 'px';
-        iframe.style.height = '0';
-        iframe.style.height = iframeHeight.toString() + 'px';
+            iframe.style.width = '0';
+            iframe.style.width = iframeWidth.toString() + 'px';
+            iframe.style.height = '0';
+            iframe.style.height = iframeHeight.toString() + 'px';
+        }
     },
 
     iframeLinksAddListeners: function () {
-        console.log(`length: ${episodes.episodeLinks.length}`)
         if (episodes.episodeLinks.length > 0) {
             episodes.episodeLinks.forEach(link => {
                 link.addEventListener('click', episodes.openEpisodes);
@@ -48,7 +51,6 @@ export let episodes = {
         closeImage.addEventListener('click', episodes.closeEpisodes);
 
         episodes.resizeIframe();
-        // setTimeout(episodes.resizeIframe, 100);
     },
 
     closeEpisodes: function () {
