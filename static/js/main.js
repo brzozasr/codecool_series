@@ -8,7 +8,7 @@ import {episodes} from "./episodes.js";
         actBtn.addBtnListeners();
         login.verificationIsUserLogin();
         popup.popupLinksAddListeners();
-        episodes.iframeLinksAddListeners();
+        // episodes.iframeLinksAddListeners();
         window.addEventListener('resize', episodes.resizeIframe);
     }
 

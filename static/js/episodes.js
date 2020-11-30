@@ -30,9 +30,12 @@ export let episodes = {
     },
 
     iframeLinksAddListeners: function () {
-      episodes.popupLinks.forEach(link => {
-          link.addEventListener('click', episodes.openEpisodes)
-      });
+        console.log(`length: ${episodes.episodeLinks.length}`)
+        if (episodes.episodeLinks.length > 0) {
+            episodes.episodeLinks.forEach(link => {
+                link.addEventListener('click', episodes.openEpisodes);
+            });
+        }
     },
 
     openEpisodes: function (evt) {
@@ -44,7 +47,8 @@ export let episodes = {
         let closeImage = document.getElementById('episodes-close');
         closeImage.addEventListener('click', episodes.closeEpisodes);
 
-        setTimeout(episodes.resizeIframe, 100);
+        episodes.resizeIframe();
+        // setTimeout(episodes.resizeIframe, 100);
     },
 
     closeEpisodes: function () {

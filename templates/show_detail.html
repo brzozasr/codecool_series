@@ -54,7 +54,7 @@
                     {% for season in seasons -%}
                     <tr>
                         <td>{{ season.season_number }}</td>
-                        <td style="white-space: nowrap;">{{ season.title }}</td>
+                        <td style="white-space: nowrap;"><a href="javascript:void(0)" class="episodes-link" data-season-id="{{ season.id }}">{{ season.title }}</a></td>
                         <td>{% if season.overview %}{{ season.overview }}{% else %}The season overview is not available{% endif %}</td>
                     </tr>
                     {%- endfor %}
@@ -63,4 +63,8 @@
         </div>
         {% endif %}
     </section>
+    <script type="module" defer>
+        import {episodes} from "{{ url_for('static', filename='js/episodes.js') }}";
+        episodes.iframeLinksAddListeners();
+    </script>
 {% endblock %}

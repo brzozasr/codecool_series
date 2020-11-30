@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!-- Import Montserrat font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <!-- Normalize.css fixes lot of differences between browsers default styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+    <title>Episodes - CsED</title>
+</head>
+<body>
+<div id="body-wrapper">
+    <section>
+        {% if error -%}
+        <div class="error">{{ error | safe }}</div>
+        {%- endif %}
+        {% if season_data and episodes_list %}
+        <h1 class="title text-center">{{ season_data[0].show_title }} - episodes of the {{ season_data[0].title }}</h1>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Title</th>
+                        <th>Overview</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for episode in episodes_list -%}
+                    <tr>
+                        <td>{{ episode.episode_number }}</td>
+                        <td>{{ episode.title }}</td>
+                        <td>{{ episode.overview }}</td>
+                    </tr>
+                {%- endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </section>
+    <footer>
+        &nbsp;
+    </footer>
+</div>
+<div class="background">
+    <div class="dark-blue-layer"></div>
+    <div class="light-blue-layer"></div>
+</div>
+</body>
+</html>

@@ -134,6 +134,27 @@ def show_detail(show_id):
     return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
 
+@app.route('/episodes/<int:season_id>/')
+def episodes(season_id):
+    error = None
+    episodes_list = list()
+    season_data = list()
+
+    result = db.execute_sql_dict(query.episodes_select_by_season_id, [season_id])
+    if type(result) != list:
+        error = f'There is a problem with returned data:\n<br>{result}.'
+        return render_template('episodes.html', error=error, episodes_list=episodes_list, season_data=season_data)
+
+    season_data = db.execute_sql_dict(query.season_by_id, [season_id])
+    if type(season_data) != list:
+        error = f'There is a problem with returned data:\n<br>{season_data}.'
+        return render_template('episodes.html', error=error, episodes_list=episodes_list, season_data=season_data)
+
+    episodes_list = result
+
+    return render_template('episodes.html', error=error, episodes_list=episodes_list, season_data=season_data)
+
+
 @app.route('/actors/')
 @app.route('/actors/<string:column>/<string:order>/<int:page_no>/', endpoint='actors-pagination')
 def actors(column=ACT_COL_NAME, order=ORD_ASC, page_no=1):
