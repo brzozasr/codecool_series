@@ -27,12 +27,9 @@ __query_all = {
     WHERE se.id = %s""",
     'genres_select_all':
     """SELECT id, name FROM genres ORDER BY name;""",
-    '':
-    """SELECT sh.id, sh.title, sh."year", sh.overview, sh.runtime, sh.trailer, sh.homepage, sh.rating, ge."name"
-    FROM shows AS sh
-    INNER JOIN show_genres AS sg ON sh.id = sg.show_id
-    INNER JOIN genres AS ge ON sg.genre_id = ge.id
-    WHERE ge.id = %s""",
+    'count_genre_shows':
+    """SELECT COUNT(sh_id)
+    FROM genre_shows_view WHERE ge_id = %s""",
 }
 
 

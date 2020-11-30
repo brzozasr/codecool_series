@@ -29,7 +29,12 @@ def inject_variable():
         ACT_COL_NAME=ACT_COL_NAME,
         ACT_COL_BIRTHDAY=ACT_COL_BIRTHDAY,
         ACT_COL_DEATH=ACT_COL_DEATH,
-        ACT_LIMIT=ACT_LIMIT
+        ACT_LIMIT=ACT_LIMIT,
+        GS_COL_TITLE=GS_COL_TITLE,
+        GS_COL_YEAR=GS_COL_YEAR,
+        GS_COL_RUNTIME=GS_COL_RUNTIME,
+        GS_COL_RATING=GS_COL_RATING,
+        GS_LIMIT=GS_LIMIT
     )
 
 
@@ -72,6 +77,8 @@ def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
     dict_webpages = pagination_len(count_records, page_no, SHOWS_LIMIT, visible_pagination=5)
     # dict_webpages = pages_dict(count_records, SHOWS_LIMIT)  # all pages
     offset = dict_webpages.get(page_no)
+    if not is_positive_int(offset):
+        offset = 0
     # current_page_no = current_page(count_records, SHOWS_LIMIT, offset)
     all_pages = pages_number(count_records, SHOWS_LIMIT)
 
@@ -170,9 +177,10 @@ def actors(column=ACT_COL_NAME, order=ORD_ASC, page_no=1):
         return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
     dict_webpages = pagination_len(count_records, page_no, ACT_LIMIT, visible_pagination=11)
-    # dict_webpages = pages_dict(count_records, SHOWS_LIMIT)  # all pages
     offset = dict_webpages.get(page_no)
-    # current_page_no = current_page(count_records, SHOWS_LIMIT, offset)
+    if not is_positive_int(offset):
+        offset = 0
+
     all_pages = pages_number(count_records, ACT_LIMIT)
 
     if sql_query := get_all_actors_sql(column, order, offset):
@@ -230,45 +238,46 @@ def genres():
     return render_template('genres.html', genres_dict=genres_dict)
 
 
-@app.route('/genre-shows/<int:genre_id>/')
+@app.route('/genre-shows/<int:genre_id>/', endpoint='genre-shows-id')
 @app.route('/genre-shows/<string:column>/<string:order>/<int:page_no>/<int:genre_id>/', endpoint='genre-shows-paging')
-def genre_shows(genre_id, column=COL_RATING, order=ORD_DESC, page_no=1):
+def genre_shows(genre_id, column=GS_COL_RATING, order=ORD_DESC, page_no=1):
     error = None
     shows_dict = list()
     sql = dict()
     dict_webpages = dict()
 
-    records = db.execute_sql(query.shows_count_records)
+    records = db.execute_sql(query.count_genre_shows, [genre_id])
     count_records = records[0][0]
     if not is_positive_int(count_records):
         error = f'There is a problem with returned records:\n<br>{records}.'
-        return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+        return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
-    dict_webpages = pagination_len(count_records, page_no, SHOWS_LIMIT, visible_pagination=5)
-    # dict_webpages = pages_dict(count_records, SHOWS_LIMIT)  # all pages
+    dict_webpages = pagination_len(count_records, page_no, GS_LIMIT, visible_pagination=5)
     offset = dict_webpages.get(page_no)
-    # current_page_no = current_page(count_records, SHOWS_LIMIT, offset)
-    all_pages = pages_number(count_records, SHOWS_LIMIT)
+    if not is_positive_int(offset):
+        offset = 0
+    all_pages = pages_number(count_records, GS_LIMIT)
 
-    if sql_query := get_shows_sql(column, order, offset):
+    if sql_query := get_genre_shows_sql(genre_id, column, order, offset):
         shows_dict = db.execute_sql_dict(sql_query)
         if type(shows_dict) != list:
             error = f'There is a problem with returned data:\n<br>{shows_dict}.'
             shows_dict = list()
-            return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql,
+            return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql,
                                    dict_webpages=dict_webpages)
     else:
         error = f'There is wrong data sent by route.'
-        return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+        return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
     sql = {
         'column': column,
         'order': order,
         'page_no': page_no,
-        'pages': all_pages
+        'pages': all_pages,
+        'genre_id': genre_id
     }
 
-    return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+    return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
 
 @app.route('/user-login', methods=['POST'])

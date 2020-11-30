@@ -63,22 +63,20 @@ def get_genre_shows_sql(genre_id, column=GS_COL_RATING, order=ORD_DESC, offset=0
     orders = [ORD_ASC, ORD_DESC]
     if column in columns and order in orders:
         query = f"""SELECT 
-                            sh.id, 
-                            sh.title, 
-                            sh."year", 
-                            sh.overview, 
-                            sh.runtime, 
-                            sh.trailer, 
-                            sh.homepage, 
-                            ROUND(sh.rating, 1) AS round_rating, 
-                            ge."name"
-                    FROM shows AS sh
-                        INNER JOIN show_genres AS sg ON sh.id = sg.show_id
-                        INNER JOIN genres AS ge ON sg.genre_id = ge.id
-                        WHERE ge.id = {genre_id}
-                    ORDER BY sh.{column} {order}
+                        sh_id, 
+                        sh_title, 
+                        sh_year, 
+                        sh_overview, 
+                        sh_runtime, 
+                        sh_trailer, 
+                        sh_homepage, 
+                        sh_rating, 
+                        ge_name, 
+                        ge_id
+                    FROM genre_shows_view 
+                        WHERE ge_id = {genre_id}
+                    ORDER BY {column} {order}
                     LIMIT {GS_LIMIT} OFFSET {offset};"""
         return query
     else:
         return None
-

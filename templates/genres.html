@@ -18,7 +18,7 @@
             <ul>
                 {% for genre in genres_dict -%}
                     <li>
-                        <a href="{{ url_for('genre_shows', genre_id=genre.id) }}">{{ genre.name }}</a>
+                        <a href="{{ url_for('genre-shows-id', genre_id=genre.id) }}">{{ genre.name }}</a>
                     </li>
                 {%- endfor %}
             </ul>

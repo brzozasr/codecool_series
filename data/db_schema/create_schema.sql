@@ -114,16 +114,17 @@ CREATE VIEW show_details_view AS
 
 
 CREATE VIEW genre_shows_view AS
-    SELECT  sh.id,
-			sh.title,
-			sh."year",
-			sh.overview,
-			sh.runtime,
-			sh.trailer,
-			sh.homepage,
-			ROUND(sh.rating, 1) AS round_rating,
-			ge."name"
+    SELECT  sh.id AS sh_id,
+			sh.title AS sh_title,
+			sh."year" AS sh_year,
+			sh.overview AS sh_overview,
+			sh.runtime AS sh_runtime,
+			sh.trailer AS sh_trailer,
+			sh.homepage AS sh_homepage,
+			ROUND(sh.rating, 1) AS sh_rating,
+			ge."name" AS ge_name,
+			ge.id AS ge_id
 	    FROM shows AS sh
             INNER JOIN show_genres AS sg ON sh.id = sg.show_id
-            INNER JOIN genres AS ge ON sg.genre_id = ge.id
+            INNER JOIN genres AS ge ON sg.genre_id = ge.id;
 

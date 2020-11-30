@@ -1,10 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'pattern.html' %}
 
-</body>
-</html>
+{% set img_desc = 'assets/desc.png' %}
+{% set img_asc = 'assets/asc.png' %}
+
+{% if sql and dict_webpages %}
+    {% set g_name = shows_dict[0].ge_name %}
+    {% set empty_db = None %}
+{% else %}
+    {% if shows_dict | length == 0 %}
+        {% set g_name = '' %}
+        {% set empty_db = 'No shows assigned to this genre.' %}
+    {% else %}
+        {% set g_name = 'Error' %}
+        {% set empty_db = None %}
+    {% endif %}
+{% endif %}
+
+{% block title %}{{ g_name }} Genre Shows{% endblock %}
+{% block content %}
+    <div id="top-menu">
+        <button type="button" id="menu-btn-back" class="menu-button">Homepage</button>
+        <button type="button" id="menu-btn-shows" class="menu-button">Shows</button>
+        <button type="button" id="menu-btn-actors" class="menu-button">Actors</button>
+        <button type="button" id="menu-btn-genres" class="menu-button">Genres</button>
+    </div>
+    <section>
+        <h1 class="title text-center">{{ g_name }} Genre Shows</h1>
+        {% if error -%}
+        <div class="error">{{ error | safe }}</div>
+        {%- endif %}
+        {% if empty_db -%}
+        <div class="info">{{ empty_db }}</div>
+        {%- endif %}
+        {% if sql and dict_webpages %}
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        {% if sql.column == GS_COL_TITLE and sql.order == ORD_ASC -%}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_TITLE, order=ORD_DESC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Title <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
+                        {%- elif sql.column == GS_COL_TITLE and sql.order == ORD_DESC %}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_TITLE, order=ORD_ASC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Title <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
+                        {%- else %}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_TITLE, order=ORD_DESC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Title</a></th>
+                        {%- endif -%}
+                        {% if sql.column == GS_COL_YEAR and sql.order == ORD_ASC -%}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_YEAR, order=ORD_DESC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Year <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
+                        {%- elif sql.column == GS_COL_YEAR and sql.order == ORD_DESC %}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_YEAR, order=ORD_ASC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Year <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
+                        {%- else %}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_YEAR, order=ORD_DESC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Year</a></th>
+                        {%- endif -%}
+                        {% if sql.column == GS_COL_RUNTIME and sql.order == ORD_ASC -%}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_RUNTIME, order=ORD_DESC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Runtime (min) <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
+                        {%- elif sql.column == GS_COL_RUNTIME and sql.order == ORD_DESC %}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_RUNTIME, order=ORD_ASC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Runtime (min) <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
+                        {%- else %}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_RUNTIME, order=ORD_DESC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Runtime (min)</a></th>
+                        {%- endif -%}
+                        {% if sql.column == GS_COL_RATING and sql.order == ORD_ASC -%}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_RATING, order=ORD_DESC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Rating <img src="{{ url_for('static', filename=img_asc) }}" alt="{{ ORD_ASC }}"></a></th>
+                        {%- elif sql.column == GS_COL_RATING and sql.order == ORD_DESC %}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_RATING, order=ORD_ASC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Rating <img src="{{ url_for('static', filename=img_desc) }}" alt="{{ ORD_DESC }}"></a></th>
+                        {%- else %}
+                        <th><a href="{{ url_for('genre-shows-paging', column=GS_COL_RATING, order=ORD_DESC, page_no=sql.page_no, genre_id=sql.genre_id) }}">Rating</a></th>
+                        {%- endif %}
+                        <th>Trailer</th>
+                        <th>Homepage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for show in shows_dict -%}
+                    <tr>
+                        <td><a href="{{ url_for('show_detail', show_id=show.sh_id) }}">{{ show.sh_title }}</a></td>
+                        <td>{{ show.sh_year }}</td>
+                        <td>{{ show.sh_runtime }}</td>
+                        <td>{{ show.sh_rating }}</td>
+                        {% if show.sh_trailer -%}
+                        <td><a href="{{ show.sh_trailer }}" target="_blank">Trailer</a></td>
+                        {%- else %}
+                        <td>No URL</td>
+                        {%- endif %}
+                        {% if show.sh_homepage -%}
+                        <td><a href="{{ show.sh_homepage }}" target="_blank">Homepage</a></td>
+                        {%- else %}
+                        <td>No URL</td>
+                        {%- endif %}
+                    </tr>
+                    {%- endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <div class="pagination">
+                {% if sql.page_no > 1 -%}
+                <a href="{{ url_for('genre-shows-paging', column=sql.column, order=sql.order, page_no=1, genre_id=sql.genre_id) }}">&#10094;&#10094;</a>
+                <a href="{{ url_for('genre-shows-paging', column=sql.column, order=sql.order, page_no=sql.page_no - 1, genre_id=sql.genre_id) }}">&#10094;</a>
+                {%- endif %}
+                {% for key in dict_webpages.keys() -%}
+                    {% if key == sql.page_no -%}
+                <a href="{{ url_for('genre-shows-paging', column=sql.column, order=sql.order, page_no=key, genre_id=sql.genre_id) }}" class="active">{{ key }}</a>
+                    {%- else -%}
+                <a href="{{ url_for('genre-shows-paging', column=sql.column, order=sql.order, page_no=key, genre_id=sql.genre_id) }}">{{ key }}</a>
+                    {%- endif %}
+                {% endfor -%}
+                {% if sql.page_no < sql.pages -%}
+                <a href="{{ url_for('genre-shows-paging', column=sql.column, order=sql.order, page_no=sql.page_no + 1, genre_id=sql.genre_id) }}">&#10095;</a>
+                <a href="{{ url_for('genre-shows-paging', column=sql.column, order=sql.order, page_no=sql.pages, genre_id=sql.genre_id) }}">&#10095;&#10095;</a>
+                {%- endif %}
+            </div>
+        </div>
+        {% endif %}
+    </section>
+{% endblock %}
