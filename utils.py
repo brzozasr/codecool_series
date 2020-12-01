@@ -230,7 +230,40 @@ def actors_to_string(actors: list, characters: list = None, html_actors=False, r
         return None
 
 
+def replace_quote(replace_str: str):
+    if replace_str:
+        len_result = len(replace_str)
+        if replace_str.find("{") == 0:
+            replace_str = replace_str[1:-1]
+
+        if replace_str.rfind("}") == len_result - 1:
+            replace_str = replace_str[:-2]
+
+        result_list = replace_str.split('}, {')
+        tmp_list = []
+
+        for result in result_list:
+
+            if result.count('"') == 6:
+                tmp_list.append('{' + result + '}')
+            else:
+                new_list = result.split(': ')
+                len_new_list = len(new_list)
+                if len_new_list > 0:
+                    new_char_name = '"' + new_list[len_new_list - 1].replace('"', '') + '"'
+                    new_list.pop()
+                    new_list.append(new_char_name)
+                    newer_list = ': '.join(new_list)
+                    tmp_list.append('{' + newer_list + '}')
+
+        return ', '.join(tmp_list)
+    else:
+        return None
+
+
 if __name__ == '__main__':
     # print(pages_dict(76, 15))
     # print(pagination_len(76, 6, 15, visible_pagination=5))
-    print(min_to_h_min(70))
+    # print(min_to_h_min(70))
+    dict_str = '{"genre_id": 5, "genre_name": "Com"ed"y"}'
+    print(replace_quote(dict_str))

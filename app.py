@@ -119,9 +119,9 @@ def show_detail(show_id):
         error = f"""There is a problem with returned data:\n<br>{seasons}."""
         return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
-    genres_dict = get_dict(result[0].get('genres_name'), 'genre_name', sort_dict=True)
-    actors_dict = get_dict(result[0].get('actors_name'), 'actor_name', sort_dict=True)
-    characters_dict = get_dict(result[0].get('characters_name'))
+    genres_dict = get_dict(replace_quote(result[0].get('genres_name')), 'genre_name', sort_dict=True)
+    actors_dict = get_dict(replace_quote(result[0].get('actors_name')), 'actor_name', sort_dict=True)
+    characters_dict = get_dict(replace_quote(result[0].get('characters_name')))
 
     db_data = {
         'show_id': show_id,
