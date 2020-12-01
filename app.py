@@ -174,7 +174,8 @@ def actors(column=ACT_COL_NAME, order=ORD_ASC, page_no=1):
     count_records = records[0][0]
     if not is_positive_int(count_records):
         error = f"""There is a problem with returned records:\n<br>{records}."""
-        return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+        return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql,
+                               dict_webpages=dict_webpages)
 
     dict_webpages = pagination_len(count_records, page_no, ACT_LIMIT, visible_pagination=11)
     offset = dict_webpages.get(page_no)
@@ -192,7 +193,8 @@ def actors(column=ACT_COL_NAME, order=ORD_ASC, page_no=1):
                                    dict_webpages=dict_webpages)
     else:
         error = f'There is wrong data sent by route.'
-        return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+        return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql,
+                               dict_webpages=dict_webpages)
 
     sql = {
         'column': column,
@@ -257,7 +259,8 @@ def genre_shows(genre_id, column=GS_COL_RATING, order=ORD_DESC, page_no=1):
     count_records = records[0][0]
     if not is_positive_int(count_records):
         error = f"""There is a problem with returned records:\n<br>{records}."""
-        return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+        return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql,
+                               dict_webpages=dict_webpages)
 
     dict_webpages = pagination_len(count_records, page_no, GS_LIMIT, visible_pagination=5)
     offset = dict_webpages.get(page_no)
@@ -274,7 +277,8 @@ def genre_shows(genre_id, column=GS_COL_RATING, order=ORD_DESC, page_no=1):
                                    dict_webpages=dict_webpages)
     else:
         error = f'There is wrong data sent by route.'
-        return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+        return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql,
+                               dict_webpages=dict_webpages)
 
     sql = {
         'column': column,

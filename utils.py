@@ -20,7 +20,7 @@ def pages_dict(no_of_records, limit):
 
 def pagination_len(no_of_records: int, current_page_no: int, limit: int, visible_pagination=5) -> dict:
     """Shows only part of pagination. The length of pagination depends on param "visible_pagination".
-    :param no_of_records: number of records received from DB
+    :param no_of_records: number of records received from DB,
     :param current_page_no: current page number,
     :param limit: limit of showed records in DB,
     :param visible_pagination: length visible pagination (e.g. for value 5, << 2 3 4 5 6 >>).
