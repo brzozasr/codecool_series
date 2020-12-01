@@ -104,7 +104,8 @@ CREATE VIEW show_details_view AS
 			sh.trailer,
 			sh.homepage,
             string_agg(DISTINCT '{"genre_id": ' || ge.id || ', "genre_name": "' || ge.name || '"}', ', ') AS genres_name,
-            string_agg(DISTINCT '{"actor_id": ' || ac.id || ', "actor_name": "' || ac.name || '"}', ', ') AS actors_name
+            string_agg(DISTINCT '{"actor_id": ' || ac.id || ', "actor_name": "' || ac.name || '"}', ', ') AS actors_name,
+			string_agg(DISTINCT '{"char_id": ' || sc.actor_id || ', "char_name": "' || sc.character_name || '"}', ', ') AS characters_name
        FROM shows sh
          LEFT JOIN show_genres sg ON sh.id = sg.show_id
          LEFT JOIN genres ge ON sg.genre_id = ge.id

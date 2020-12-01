@@ -120,8 +120,8 @@ def show_detail(show_id):
         return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
     genres_dict = get_dict(result[0].get('genres_name'), 'genre_name', sort_dict=True)
-
     actors_dict = get_dict(result[0].get('actors_name'), 'actor_name', sort_dict=True)
+    characters_dict = get_dict(result[0].get('characters_name'))
 
     db_data = {
         'show_id': show_id,
@@ -135,7 +135,7 @@ def show_detail(show_id):
         'show_trailer_id': get_trailer_id(result[0].get('trailer')),
         'show_homepage': result[0].get('homepage'),
         'show_genres': genres_to_str(genres_dict, only_genres=False),
-        'show_actors': actors_to_string(actors_dict, return_no_actors='ALL', only_actors=False),
+        'show_actors': actors_to_string(actors_dict, characters_dict, return_no_actors='ALL', html_actors=True),
     }
 
     return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)

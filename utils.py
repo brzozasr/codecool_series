@@ -181,24 +181,46 @@ def genres_to_str(genres: list, only_genres=True) -> (str, None):
         return None
 
 
-def actors_to_string(actors: list, only_actors=True, return_no_actors=3) -> (str, None):
-    """Changing the list of dictionaries "actors":
-    [{"actor_id": 2, "actor_name": "Jan Nowak"}, {"actor_id": 3, "actor_name": "Ewa Test"},...]
+def actors_to_string(actors: list, characters: list = None, html_actors=False, return_no_actors=3) -> (str, None):
+    """Changing the list of dictionaries "actors" and the list of dictionaries "characters" to string or html string:
     to string: Jan Nowak, Ewa Test,... or HTML string.
-    :param actors: list of dictionaries,
-    :param only_actors: the flag that depend on function returns string of actors or
-    HTML string of actors,
+    :param actors: list of dictionaries with actors [{"actor_id": 2, "actor_name": "Jerzy Stuhr"}, {"actor_id": 3, "actor_name": "Olgierd Łukaszewicz"},...],
+    :param characters: list of dictionaries with characters [{"char_id": 2, "char_name": "Maksymilian Paradys"}, {"char_id": 3, "char_name": "Albert Starski"},...],
+    :param html_actors: the flag that depend on function returns string of actors or
+    HTML string (with links) of actors,
     :param return_no_actors: positive integer pointing how many actors returns or
     if puts string 'ALL' returns all actors.
     """
-    if actors:
+    if actors and characters is None:
         actors_str = ''
         counter = 0
         for actor in actors:
-            if only_actors:
+            if not html_actors:
                 actors_str += f"""{actor.get('actor_name')}, """
             else:
-                actors_str += f"""<a href="javascript:void(0)" class="popup-link" data-actor-id="{actor.get('actor_id')}">{actor.get('actor_name')}</a>, \n"""
+                actors_str += f"""<a href="javascript:void(0)" class="popup-link" data-actor-id="{actor.get('actor_id')}">{actor.get('actor_name')}</a>, """
+            counter += 1
+            if return_no_actors != 'ALL':
+                if counter >= return_no_actors:
+                    break
+        return actors_str[:-2]
+    elif actors and characters:
+        actors_str = ''
+        counter = 0
+        for actor in actors:
+            for character in characters:
+                if not html_actors:
+                    if actor.get('actor_id') == character.get('char_id'):
+                        if character.get('char_name'):
+                            actors_str += f"""{actor.get('actor_name')} (role: {character.get('char_name')}), \n"""
+                        else:
+                            actors_str += f"""{actor.get('actor_name')}, \n"""
+                else:
+                    if actor.get('actor_id') == character.get('char_id'):
+                        if character.get('char_name'):
+                            actors_str += f"""<a href="javascript:void(0)" class="popup-link" data-actor-id="{actor.get('actor_id')}">{actor.get('actor_name')}</a> (role: {character.get('char_name')}), \n"""
+                        else:
+                            actors_str += f"""<a href="javascript:void(0)" class="popup-link" data-actor-id="{actor.get('actor_id')}">{actor.get('actor_name')}</a>, \n"""
             counter += 1
             if return_no_actors != 'ALL':
                 if counter >= return_no_actors:
@@ -212,4 +234,3 @@ if __name__ == '__main__':
     # print(pages_dict(76, 15))
     # print(pagination_len(76, 6, 15, visible_pagination=5))
     print(min_to_h_min(70))
-
