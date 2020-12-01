@@ -71,7 +71,7 @@ def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
     records = db.execute_sql(query.shows_count_records)
     count_records = records[0][0]
     if not is_positive_int(count_records):
-        error = f'There is a problem with returned records:\n<br>{records}.'
+        error = f"""There is a problem with returned records:\n<br>{records}."""
         return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
     dict_webpages = pagination_len(count_records, page_no, SHOWS_LIMIT, visible_pagination=5)
@@ -85,7 +85,7 @@ def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
     if sql_query := get_shows_sql(column, order, offset):
         shows_dict = db.execute_sql_dict(sql_query)
         if type(shows_dict) != list:
-            error = f'There is a problem with returned data:\n<br>{shows_dict}.'
+            error = f"""There is a problem with returned data:\n<br>{shows_dict}."""
             shows_dict = list()
             return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql,
                                    dict_webpages=dict_webpages)
@@ -111,12 +111,12 @@ def show_detail(show_id):
 
     result = db.execute_sql_dict(query.show_details, [show_id])
     if type(result) != list:
-        error = f'There is a problem with returned data:\n<br>{result}.'
+        error = f"""There is a problem with returned data:\n<br>{result}."""
         return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
     seasons = db.execute_sql_dict(query.seasons_by_id_show, [show_id])
     if type(seasons) != list:
-        error = f'There is a problem with returned data:\n<br>{seasons}.'
+        error = f"""There is a problem with returned data:\n<br>{seasons}."""
         return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
     genres_dict = get_dict(result[0].get('genres_name'), 'genre_name', sort_dict=True)
@@ -149,12 +149,12 @@ def episodes(season_id):
 
     result = db.execute_sql_dict(query.episodes_select_by_season_id, [season_id])
     if type(result) != list:
-        error = f'There is a problem with returned data:\n<br>{result}.'
+        error = f"""There is a problem with returned data:\n<br>{result}."""
         return render_template('episodes.html', error=error, episodes_list=episodes_list, season_data=season_data)
 
     season_data = db.execute_sql_dict(query.season_by_id, [season_id])
     if type(season_data) != list:
-        error = f'There is a problem with returned data:\n<br>{season_data}.'
+        error = f"""There is a problem with returned data:\n<br>{season_data}."""
         return render_template('episodes.html', error=error, episodes_list=episodes_list, season_data=season_data)
 
     episodes_list = result
@@ -173,7 +173,7 @@ def actors(column=ACT_COL_NAME, order=ORD_ASC, page_no=1):
     records = db.execute_sql(query.actors_count_records)
     count_records = records[0][0]
     if not is_positive_int(count_records):
-        error = f'There is a problem with returned records:\n<br>{records}.'
+        error = f"""There is a problem with returned records:\n<br>{records}."""
         return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
     dict_webpages = pagination_len(count_records, page_no, ACT_LIMIT, visible_pagination=11)
@@ -186,7 +186,7 @@ def actors(column=ACT_COL_NAME, order=ORD_ASC, page_no=1):
     if sql_query := get_all_actors_sql(column, order, offset):
         actors_dict = db.execute_sql_dict(sql_query)
         if type(actors_dict) != list:
-            error = f'There is a problem with returned data:\n<br>{actors_dict}.'
+            error = f"""There is a problem with returned data:\n<br>{actors_dict}."""
             actors_dict = list()
             return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql,
                                    dict_webpages=dict_webpages)
@@ -212,7 +212,7 @@ def actor(actor_id):
     if type(actor_filmography) == list and len(actor_filmography) > 0:
         shows_str = ''
         for show in actor_filmography:
-            shows_str += f"<a href=\"/show/{show.get('sh_id')}/\">{show.get('sh_title')}</a>, "
+            shows_str += f"""<a href="/show/{show.get('sh_id')}/">{show.get('sh_title')}</a>, """
         shows_str = shows_str[:-2]
     else:
         shows_str = None
@@ -238,7 +238,7 @@ def actor(actor_id):
 def genres():
     genres_dict = db.execute_sql_dict(query.genres_select_all)
     if type(genres_dict) != list:
-        error = f'There is a problem with returned data:\n<br>{genres_dict}.'
+        error = f"""There is a problem with returned data:\n<br>{genres_dict}."""
         genres_dict = list()
         return render_template('genres.html', error=error, genres_dict=genres_dict)
 
@@ -256,7 +256,7 @@ def genre_shows(genre_id, column=GS_COL_RATING, order=ORD_DESC, page_no=1):
     records = db.execute_sql(query.count_genre_shows, [genre_id])
     count_records = records[0][0]
     if not is_positive_int(count_records):
-        error = f'There is a problem with returned records:\n<br>{records}.'
+        error = f"""There is a problem with returned records:\n<br>{records}."""
         return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
     dict_webpages = pagination_len(count_records, page_no, GS_LIMIT, visible_pagination=5)
@@ -268,7 +268,7 @@ def genre_shows(genre_id, column=GS_COL_RATING, order=ORD_DESC, page_no=1):
     if sql_query := get_genre_shows_sql(genre_id, column, order, offset):
         shows_dict = db.execute_sql_dict(sql_query)
         if type(shows_dict) != list:
-            error = f'There is a problem with returned data:\n<br>{shows_dict}.'
+            error = f"""There is a problem with returned data:\n<br>{shows_dict}."""
             shows_dict = list()
             return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql,
                                    dict_webpages=dict_webpages)

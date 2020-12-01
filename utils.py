@@ -173,9 +173,9 @@ def genres_to_str(genres: list, only_genres=True) -> (str, None):
         genres_str = ''
         for genre in genres:
             if only_genres:
-                genres_str += f"{genre.get('genre_name')}, "
+                genres_str += f"""{genre.get('genre_name')}, """
             else:
-                genres_str += f"<a href=\"/genre-shows/{genre.get('genre_id')}/\" data-genre-id=\"{genre.get('actor_id')}\">{genre.get('genre_name')}</a>, "
+                genres_str += f"""<a href="/genre-shows/{genre.get('genre_id')}/" data-genre-id="{genre.get('actor_id')}">{genre.get('genre_name')}</a>, """
         return genres_str[:-2]
     else:
         return None
@@ -196,15 +196,14 @@ def actors_to_string(actors: list, only_actors=True, return_no_actors=3) -> (str
         counter = 0
         for actor in actors:
             if only_actors:
-                actors_str += f"{actor.get('actor_name')}, "
+                actors_str += f"""{actor.get('actor_name')}, """
             else:
-                # actors_str += f"<a href=\"/actor/{actor.get('actor_id')}/\" data-actor-id=\"{actor.get('actor_id')}\">{actor.get('actor_name')}</a>, "
-                actors_str += f"<a href=\"javascript:void(0)\" class=\"popup-link\" data-actor-id=\"{actor.get('actor_id')}\">{actor.get('actor_name')}</a>, "
+                actors_str += f"""<a href="javascript:void(0)" class="popup-link" data-actor-id="{actor.get('actor_id')}">{actor.get('actor_name')}</a>, \n"""
             counter += 1
             if return_no_actors != 'ALL':
                 if counter >= return_no_actors:
                     break
-        return actors_str[:-2]
+        return actors_str[:-3]
     else:
         return None
 
