@@ -23,3 +23,52 @@
     background: #fff;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
 }
+
+.ok-16::after {
+    content: url("../assets/ok-16.png");
+}
+
+.ok-24::after {
+    content: url("../assets/ok-24.png");
+}
+
+.ok-32::after {
+    content: url("../assets/ok-32.png");
+}
+
+.ok-48::after {
+    content: url("../assets/ok-48.png");
+}
+
+.wrong-16::after {
+    content: url("../assets/mark-16.png");
+}
+
+.wrong-24::after {
+    content: url("../assets/mark-24.png");
+}
+
+.wrong-32::after {
+    content: url("../assets/mark-32.png");
+}
+
+.wrong-48::after {
+    content: url("../assets/mark-48.png");
+}
+
+.error-16::after {
+    content: url("../assets/error-16.png");
+}
+
+.error-24::after {
+    content: url("../assets/error-24.png");
+}
+
+.error-32::after {
+    content: url("../assets/error-32.png");
+}
+
+.error-48::after {
+    content: url("../assets/error-48.png");
+}
+

@@ -36,6 +36,13 @@ __query_all = {
     INNER JOIN show_characters AS sc ON sh.id = sc.show_id
     INNER JOIN actors AS ac ON sc.actor_id = ac.id
     WHERE ac.id = %s""",
+    'search_show_title':
+    """SELECT id, title FROM shows WHERE title ILIKE %s ORDER BY lower(title);""",
+    'check_show_title':
+    """SELECT id, title FROM shows WHERE lower(title) = lower(%s);""",
+    'shows_insert_new_show':
+        """INSERT INTO shows (title, year, runtime, rating, overview, trailer, homepage) 
+        VALUES (%s, %s, %s, %s, %s, %s, %s);""",
 }
 
 

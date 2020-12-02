@@ -4,7 +4,6 @@
 // (watch out: when you would like to use a property/function of an object from the
 // object itself then you must use the 'this' keyword before. For example: 'this._data' below)
 export let dataHandler = {
-    _data: {}, // it is a "cache for all data received: boards, cards and statuses. It is not accessed from outside.
     _api_get: function (url, callback) {
         // it is not called from outside
         // loads data from API, parses it and calls the callback with it
@@ -16,6 +15,7 @@ export let dataHandler = {
         .then(response => response.json())  // parse the response as JSON
         .then(json_response => callback(json_response));  // Call the `callback` with the returned object
     },
+
     _api_post: function (url, data, callback) {
         // it is not called from outside
         // sends the data to the API, and calls callback function
@@ -45,6 +45,7 @@ export let dataHandler = {
             console.log(response);
         });
     },
+
     isUserLogin: function (isLogin, callback) {
         this._api_post(`/is-user-login`, isLogin, (response) => {
             // this._data[`allData`] = response;
@@ -52,8 +53,33 @@ export let dataHandler = {
             console.log(response);
         });
     },
+
     userLogout: function (userData, callback) {
         this._api_post(`/user-logout`, userData, (response) => {
+            // this._data[`allData`] = response;
+            callback(response);
+            console.log(response);
+        });
+    },
+
+    checkShowTitle: function (userData, callback) {
+        this._api_post(`/check-show-title/`, userData, (response) => {
+            // this._data[`allData`] = response;
+            callback(response);
+            console.log(response);
+        });
+    },
+
+    searchShowTitle: function (userData, callback) {
+        this._api_post(`/get-show-title/`, userData, (response) => {
+            // this._data[`allData`] = response;
+            callback(response);
+            console.log(response);
+        });
+    },
+
+    addShow: function (userData, callback) {
+        this._api_post(`/add-show/`, userData, (response) => {
             // this._data[`allData`] = response;
             callback(response);
             console.log(response);

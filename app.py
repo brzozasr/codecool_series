@@ -416,6 +416,56 @@ def add():
         return redirect('/user-not-login/')
 
 
+@app.route('/check-show-title/', methods=['POST'])
+def check_show_title():
+    data = request.get_json()
+    title = data['title']
+
+    result = db.execute_sql_dict(query.check_show_title, [title])
+
+    if type(result) == list:
+        if len(result) == 0:
+            result_dict = {"is_title_in_db": 'NO'}
+        else:
+            result_dict = {"is_title_in_db": 'YES'}
+    else:
+        result_dict = {"is_title_in_db": 'ERROR'}
+
+    return jsonify(result_dict)
+
+
+@app.route('/get-show-title/', methods=['POST'])
+def get_show_title():
+    data = request.get_json()
+    phrase = data['phrase']
+    search_phrase = f'{phrase}%'
+
+    result = db.execute_sql_dict(query.search_show_title, [search_phrase])
+
+    return jsonify(result)
+
+
+@app.route('/add-show/', methods=['POST'])
+def add_show():
+    data = request.get_json()
+    title = data['title']
+    year = data['year']
+    runtime = data['runtime']
+    rating = data['rating']
+    overview = data['overview']
+    trailer = data['trailer']
+    homepage = data['homepage']
+
+    result = db.execute_sql(query.shows_insert_new_show, [title, year, runtime, rating, overview, trailer, homepage],
+                            fetch=False)
+    if result is None:
+        response = {"is_show_add": "YES"}
+    else:
+        response = {"is_show_add": "NO"}
+
+    return jsonify(response)
+
+
 @app.route('/user-not-login/')
 def not_login():
     return render_template('not_login.html')
