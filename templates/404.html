@@ -1,0 +1,9 @@
+{% extends 'pattern.html' %}
+{% block title %}Error 404{% endblock %}
+
+{% block content %}
+    <h1 class="title text-center" style="color: #ff0000;">404 Error, Page Not Found!!!</h1>
+    <div class="card text-center">
+        <a href="{{ url_for('index') }}">Go to Homepage</a>
+    </div>
+{% endblock %}

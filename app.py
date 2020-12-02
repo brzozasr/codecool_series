@@ -1,7 +1,7 @@
 # from dotenv import load_dotenv
 
 import bcrypt
-from flask import Flask, render_template, request, session, jsonify
+from flask import Flask, render_template, request, session, jsonify, redirect
 
 from data.database_handler import *
 from data.query import *
@@ -406,6 +406,24 @@ def user_logout():
         })
 
     return result
+
+
+@app.route('/add/')
+def add():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        return render_template('add.html')
+    else:
+        return redirect('/user-not-login/')
+
+
+@app.route('/user-not-login/')
+def not_login():
+    return render_template('not_login.html')
+
+
+# @app.errorhandler(404)
+# def page_not_found():
+#     return render_template('404.html'), 404
 
 
 @app.route('/design')

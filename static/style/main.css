@@ -15,6 +15,7 @@
 @import "login.css";
 @import "popup.css";
 @import "episodes.css";
+@import "popup_form.css";
 
 /*page specific styling*/
 @import "detailed-view.css";

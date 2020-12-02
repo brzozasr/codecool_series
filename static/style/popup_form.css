@@ -1,0 +1,33 @@
+#popup-form-main {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: block;
+    position: fixed;
+    margin: auto;
+    z-index: 110;
+    background-color: #b4cee4;
+}
+
+#popup-form-div {
+    position: absolute;
+    padding: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 120;
+    border: 1px solid black;
+}
+
+.bg-form-div {
+    background: linear-gradient(to top, #cb4b46 5%, #ffffff 5% 95%, #6197c6 95%);
+}
+
+img#popup-form-close {
+    position: absolute;
+    right: -18px;
+    top: -18px;
+    cursor: pointer;
+    z-index: 130;
+}
