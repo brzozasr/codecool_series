@@ -59,6 +59,8 @@ export let login = {
 
     userLoginButton: document.getElementById('bt-user-log'),
 
+    addButton: document.getElementById('menu-btn-add'),
+
     // Checkin that the user is login
     verificationIsUserLogin: function () {
         login.jsIsUserLogin(sessionStorage.getItem('users_login'));
@@ -271,12 +273,14 @@ export let login = {
             login.userLoginButton.innerText = userName;
             login.userLoginButton.style.display = 'inline-block';
             login.logoutButton.style.display = 'inline-block';
+            login.addButton.style.display = 'inline-block';
         } else {
             login.loginButton.style.display = 'inline-block';
             login.registerButton.style.display = 'inline-block';
             login.userLoginButton.innerText = '';
             login.userLoginButton.style.display = 'none';
             login.logoutButton.style.display = 'none';
+            login.addButton.style.display = 'none';
         }
     },
 
