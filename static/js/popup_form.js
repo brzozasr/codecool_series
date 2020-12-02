@@ -156,6 +156,17 @@ export let popupForm = {
         popupFormDiv.remove();
     },
 
+    disableSubmitBtn: function (disabled) {
+        let btnSubmit = document.getElementById('form-show-add');
+        if (disabled === true) {
+            btnSubmit.disabled = true;
+            btnSubmit.style.cursor = 'not-allowed';
+        } else {
+            btnSubmit.disabled = false;
+            btnSubmit.style.cursor = 'pointer'
+        }
+    },
+
     // === BEGIN = ADD SHOW FORM ==========================================
     displayFormShows: function (html) {
         popupForm.divTopBar.insertAdjacentHTML('beforebegin', popupForm.popupFormMain(html));
@@ -173,6 +184,8 @@ export let popupForm = {
 
     showsOnChangeInputTx: function (evt) {
         let inputTxTitle = document.querySelector('#form-show-title').parentNode;
+        let btnSubmit = document.getElementById('form-show-add');
+
         let txt = evt.currentTarget.value;
         if (txt.length > 0) {
             let checkStr = {
@@ -183,17 +196,23 @@ export let popupForm = {
                 if (title_available['is_title_in_db'] === 'NO') {
                     inputTxTitle.removeAttribute('class');
                     inputTxTitle.setAttribute('class', 'form-element ok-16');
+                    popupForm.disableSubmitBtn(false);
+                    // btnSubmit.disabled = false;
                 } else if (title_available['is_title_in_db'] === 'YES') {
                     inputTxTitle.removeAttribute('class');
                     inputTxTitle.setAttribute('class', 'form-element wrong-16');
+                    popupForm.disableSubmitBtn(true);
+                    // btnSubmit.disabled = true;
                 } else {
                     inputTxTitle.removeAttribute('class');
                     inputTxTitle.setAttribute('class', 'form-element error-16');
+                    btnSubmit.disabled = true;
                 }
             });
         } else {
             inputTxTitle.removeAttribute('class');
             inputTxTitle.setAttribute('class', 'form-element');
+            popupForm.disableSubmitBtn(false);
         }
     },
 
