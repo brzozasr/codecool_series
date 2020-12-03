@@ -82,6 +82,19 @@ export let popupForm = {
         </form>
     `,
 
+    formGenres: `
+        <p class="text-center">ADD GENRE:</p>
+        <form action="#" method="post" autocomplete="off" id="form-genre">
+            <p class="form-element">
+                <label class="form-element-label" for="form-genre-name">Genre:</label>
+                <input name="form-genre-name" id="form-genre-name" value="" placeholder="Name of genre" required>
+            </p>
+            <p class="text-center">
+                <button type="button" id="form-genre-submit">Add genre</button>
+            </p>
+        </form>
+    `,
+
     formSeasons: `
         <p class="text-center">ADD SEASON:</p>
         <form action="#" method="post" autocomplete="off" id="form-season">
@@ -147,8 +160,11 @@ export let popupForm = {
                 popupForm.disableSubmitBtn(true, 'form-actor-submit');
                 break;
             case 'form-genres':
-                formHtml = popupForm.formShows;
-                console.log('Bananas are $0.48 a pound.');
+                formHtml = popupForm.formGenres;
+                popupForm.displayPopupForm(formHtml);
+                popupForm.addGenresListeners();
+                popupForm.isEmptyFields('form-genre', 'form-genre-submit', 'form-genre-name');
+                popupForm.disableSubmitBtn(true, 'form-genre-submit');
                 break;
             case 'form-seasons':
                 formHtml = popupForm.formSeasons;
@@ -373,6 +389,72 @@ export let popupForm = {
         popup.remove();
     },
     // === END = ADD ACTOR FORM ==========================================
+
+
+    // === BEGIN = ADD GENRE FORM ==========================================
+    addGenresListeners: function () {
+        let inputTxTitle = document.querySelector('#form-genre-name');
+        let submitBtn = document.querySelector('#form-genre-submit');
+
+        inputTxTitle.addEventListener('input', popupForm.genresOnChangeInputTx);
+        submitBtn.addEventListener('click', popupForm.genresOnSubmit);
+    },
+
+    genresOnChangeInputTx: function (evt) {
+        let inputTxTitle = document.querySelector('#form-genre-name').parentNode;
+
+        let txt = evt.currentTarget.value;
+        if (txt.length > 0) {
+            let checkStr = {
+                "name": txt
+            }
+            dataHandler.checkGenreName(checkStr, function (genre_available) {
+                if (genre_available['is_genre_in_db'] === 'NO') {
+                    inputTxTitle.removeAttribute('class');
+                    inputTxTitle.setAttribute('class', 'form-element ok-16');
+                    popupForm.disableSubmitBtn(false, 'form-genre-submit');
+                } else if (genre_available['is_genre_in_db'] === 'YES') {
+                    inputTxTitle.removeAttribute('class');
+                    inputTxTitle.setAttribute('class', 'form-element error-genre');
+                    popupForm.disableSubmitBtn(true, 'form-genre-submit');
+                } else {
+                    inputTxTitle.removeAttribute('class');
+                    inputTxTitle.setAttribute('class', 'form-element error-genre');
+                    popupForm.disableSubmitBtn(true, 'form-genre-submit');
+                }
+            });
+        } else {
+            inputTxTitle.removeAttribute('class');
+            inputTxTitle.setAttribute('class', 'form-element');
+        }
+    },
+
+    genresOnSubmit: function () {
+        let genreData = {
+            "name": document.getElementById('form-genre-name').value
+        }
+
+        dataHandler.addGenre(genreData, function (confirmation) {
+            if (confirmation['is_genre_add'] === 'YES') {
+                popupForm.removeFromGenre();
+
+                popupForm.addOutput('The genre has been added to the database.');
+                setTimeout(popupForm.removeOutput, 1500);
+            } else {
+                popupForm.removeFromGenre();
+
+                popupForm.addOutput('The genre has not been added to the database.', false);
+                setTimeout(popupForm.removeOutput, 1500);
+            }
+        });
+    },
+
+    removeFromGenre: function () {
+        let popup = document.getElementById('popup-form-main');
+        popup.style.display = 'none';
+        popup.remove();
+    },
+    // === END = ADD GENRE FORM ==========================================
 
 
     // === BEGIN = ADD SEASON FORM ==========================================

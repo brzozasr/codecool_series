@@ -15,6 +15,7 @@
     padding: 20px;
     top: 50%;
     left: 50%;
+    min-width: 450px;
     transform: translate(-50%, -50%);
     z-index: 120;
     border: 1px solid black;
@@ -44,4 +45,11 @@ img#popup-form-close {
     padding-left: 5px;
     font-size: 12px;
     color: #ffa333;
+}
+
+.error-genre::after {
+    content: url("../assets/error-16.png") " Genre exists.";
+    padding-left: 5px;
+    font-size: 12px;
+    color: #ff0000;
 }

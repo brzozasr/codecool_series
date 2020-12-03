@@ -457,6 +457,24 @@ def check_actor_name():
     return jsonify(result_dict)
 
 
+@app.route('/check-genre-name/', methods=['POST'])
+def check_genre_name():
+    data = request.get_json()
+    name = data['name']
+
+    result = db.execute_sql_dict(query.check_genre_name, [name])
+
+    if type(result) == list:
+        if len(result) == 0:
+            result_dict = {"is_genre_in_db": 'NO'}
+        else:
+            result_dict = {"is_genre_in_db": 'YES'}
+    else:
+        result_dict = {"is_genre_in_db": 'ERROR'}
+
+    return jsonify(result_dict)
+
+
 @app.route('/get-show-title/', methods=['POST'])
 def get_show_title():
     data = request.get_json()
@@ -509,6 +527,23 @@ def add_actor():
             response = {"is_actor_add": "YES"}
         else:
             response = {"is_actor_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
+
+
+@app.route('/add-genre/', methods=['POST'])
+def add_genre():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        name = data['name']
+
+        result = db.execute_sql(query.genres_insert_new_genre, [name], fetch=False)
+        if result is None:
+            response = {"is_genre_add": "YES"}
+        else:
+            response = {"is_genre_add": "NO"}
 
         return jsonify(response)
     else:

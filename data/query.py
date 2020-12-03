@@ -51,6 +51,10 @@ __query_all = {
     'actors_insert_new_actor':
         """INSERT INTO actors (name, birthday, death, biography) 
         VALUES (%s, %s, %s, %s);""",
+    'check_genre_name':
+    """SELECT id, name FROM genres WHERE lower(name) = lower(%s);""",
+    'genres_insert_new_genre':
+        """INSERT INTO genres (name) VALUES (%s);""",
 }
 
 

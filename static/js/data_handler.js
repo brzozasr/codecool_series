@@ -72,6 +72,13 @@ export let dataHandler = {
         });
     },
 
+    checkGenreName: function (userData, callback) {
+        this._api_post(`/check-genre-name/`, userData, (response) => {
+            callback(response);
+            console.log(response);
+        });
+    },
+
     searchShowTitle: function (userData, callback) {
         this._api_post(`/get-show-title/`, userData, (response) => {
             callback(response);
@@ -88,6 +95,13 @@ export let dataHandler = {
 
     addActor: function (userData, callback) {
         this._api_post(`/add-actor/`, userData, (response) => {
+            callback(response);
+            console.log(response);
+        });
+    },
+
+    addGenre: function (userData, callback) {
+        this._api_post(`/add-genre/`, userData, (response) => {
             callback(response);
             console.log(response);
         });
