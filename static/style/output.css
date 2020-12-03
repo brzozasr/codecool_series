@@ -1,0 +1,42 @@
+#output-container {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.9;
+    display: none;
+    position: fixed;
+    margin: auto;
+    z-index: 110;
+    background-color: #cccccc;
+}
+
+.output-wrong {
+    position: absolute;
+    display: block;
+    width: 50%;
+    padding: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 120;
+    border: 1px solid #cc0000;
+    background: #ff8080;
+    color: #fff;
+    text-align: center;
+}
+
+.output-ok {
+    position: absolute;
+    display: block;
+    width: 50%;
+    padding: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 120;
+    border: 1px solid #008002;
+    background: #ccffcc;
+    color: #008002;
+    text-align: center;
+}

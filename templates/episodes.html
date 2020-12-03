@@ -33,7 +33,7 @@
                 {% for episode in episodes_list -%}
                     <tr>
                         <td>{{ episode.episode_number }}</td>
-                        <td>{{ episode.title }}</td>
+                        <td style="white-space: nowrap;">{{ episode.title }}</td>
                         <td>{% if episode.overview %}{{ episode.overview }}{% else %}The overview is not available{% endif %}</td>
                     </tr>
                 {%- endfor %}

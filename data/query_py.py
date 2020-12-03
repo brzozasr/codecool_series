@@ -1,4 +1,3 @@
-from utils import *
 from data.config import *
 
 
@@ -6,6 +5,11 @@ def get_shows_sql(column=COL_RATING, order=ORD_DESC, offset=0):
     columns = [COL_TITLE, COL_YEAR, COL_RUNTIME, COL_RATING]
     orders = [ORD_ASC, ORD_DESC]
     if column in columns and order in orders:
+        if column == COL_TITLE:
+            col_order = f"""lower(sh.{column})"""
+        else:
+            col_order = f"""sh.{column}"""
+
         query = f"""SELECT
                     sh.id,
                     sh.title,
@@ -19,7 +23,7 @@ def get_shows_sql(column=COL_RATING, order=ORD_DESC, offset=0):
                     LEFT JOIN show_genres AS sg ON sh.id = sg.show_id
                     LEFT JOIN genres AS ge ON sg.genre_id = ge.id
                 GROUP BY sh.id
-                ORDER BY sh.{column} {order}
+                ORDER BY {col_order} {order}
                 LIMIT {SHOWS_LIMIT} OFFSET {offset};"""
         return query
     else:
@@ -33,7 +37,7 @@ def get_title_shows_sql(order=ORD_DESC, offset=0):
                     id, 
                     title 
                 FROM shows 
-                ORDER BY title {order}
+                ORDER BY lower(title) {order}
                 LIMIT {HP_LIMIT} OFFSET {offset};"""
         return query
     else:
@@ -44,6 +48,9 @@ def get_all_actors_sql(column=ACT_COL_NAME, order=ORD_DESC, offset=0):
     columns = [ACT_COL_NAME, ACT_COL_BIRTHDAY, ACT_COL_DEATH]
     orders = [ORD_ASC, ORD_DESC]
     if column in columns and order in orders:
+        if column == ACT_COL_NAME:
+            column = f"""lower({column})"""
+
         query = f"""SELECT 
                     id, 
                     name,
@@ -53,6 +60,33 @@ def get_all_actors_sql(column=ACT_COL_NAME, order=ORD_DESC, offset=0):
                 FROM actors 
                 ORDER BY {column} {order}
                 LIMIT {ACT_LIMIT} OFFSET {offset};"""
+        return query
+    else:
+        return None
+
+
+def get_genre_shows_sql(genre_id, column=GS_COL_RATING, order=ORD_DESC, offset=0):
+    columns = [GS_COL_TITLE, GS_COL_YEAR, GS_COL_RUNTIME, GS_COL_RATING]
+    orders = [ORD_ASC, ORD_DESC]
+    if column in columns and order in orders:
+        if column == GS_COL_TITLE:
+            column = f"""lower({column})"""
+
+        query = f"""SELECT 
+                        sh_id, 
+                        sh_title, 
+                        sh_year, 
+                        sh_overview, 
+                        sh_runtime, 
+                        sh_trailer, 
+                        sh_homepage, 
+                        sh_rating, 
+                        ge_name, 
+                        ge_id
+                    FROM genre_shows_view 
+                        WHERE ge_id = {genre_id}
+                    ORDER BY {column} {order}
+                    LIMIT {GS_LIMIT} OFFSET {offset};"""
         return query
     else:
         return None

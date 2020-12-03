@@ -24,7 +24,6 @@
     /*position: relative;*/
     min-width: 100%;
     min-height: 500px;
-    pointer-events: none;
     z-index: 120;
     border: none;
 }

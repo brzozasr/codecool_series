@@ -10,6 +10,7 @@
     <!-- Normalize.css fixes lot of differences between browsers default styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+    <base target="_parent">
     <title>{{ actor_details.name }} - CsED</title>
 </head>
 <body>
@@ -26,6 +27,12 @@
             <p><u>Biography:</u><br>{{ actor_details.biography }}</p>
             {%- else %}
             <p><u>Biography:</u><br>Not available</p>
+            {% endif -%}
+            <p></p>
+            {% if actor_details.filmography | length > 0 -%}
+            <p><u>Filmography:</u><br>{{ actor_details.filmography | safe }}</p>
+            {%- else %}
+            <p><u>Filmography:</u><br>Not available</p>
             {% endif -%}
         </div>
     </section>

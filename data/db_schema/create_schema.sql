@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS shows (
-    id       INTEGER PRIMARY KEY NOT NULL,
+    id       SERIAL PRIMARY KEY NOT NULL,
     title    VARCHAR(200)        NOT NULL,
     year     DATE                NULL,
     overview TEXT,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS genres (
 
 
 CREATE TABLE IF NOT EXISTS actors (
-    id        INTEGER PRIMARY KEY NOT NULL,
+    id        SERIAL PRIMARY KEY NOT NULL,
     name      VARCHAR(200)        NOT NULL,
     birthday  DATE,
     death     DATE,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS actors (
 
 
 CREATE TABLE IF NOT EXISTS seasons (
-    id            INTEGER PRIMARY KEY NOT NULL,
+    id            SERIAL PRIMARY KEY NOT NULL,
     season_number SMALLINT            NOT NULL,
     title         VARCHAR(200),
     overview      TEXT,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS show_characters (
 
 
 CREATE TABLE IF NOT EXISTS episodes (
-    id             INTEGER PRIMARY KEY NOT NULL,
+    id             SERIAL PRIMARY KEY NOT NULL,
     title          VARCHAR(200),
     episode_number SMALLINT            NOT NULL,
     overview       TEXT,
@@ -104,7 +104,8 @@ CREATE VIEW show_details_view AS
 			sh.trailer,
 			sh.homepage,
             string_agg(DISTINCT '{"genre_id": ' || ge.id || ', "genre_name": "' || ge.name || '"}', ', ') AS genres_name,
-            string_agg(DISTINCT '{"actor_id": ' || ac.id || ', "actor_name": "' || ac.name || '"}', ', ') AS actors_name
+            string_agg(DISTINCT '{"actor_id": ' || ac.id || ', "actor_name": "' || ac.name || '"}', ', ') AS actors_name,
+			string_agg(DISTINCT '{"char_id": ' || sc.actor_id || ', "char_name": "' || sc.character_name || '"}', ', ') AS characters_name
        FROM shows sh
          LEFT JOIN show_genres sg ON sh.id = sg.show_id
          LEFT JOIN genres ge ON sg.genre_id = ge.id
@@ -112,3 +113,27 @@ CREATE VIEW show_details_view AS
          LEFT JOIN actors ac ON sc.actor_id = ac.id
       GROUP BY sh.id;
 
+
+CREATE VIEW genre_shows_view AS
+    SELECT  sh.id AS sh_id,
+			sh.title AS sh_title,
+			sh."year" AS sh_year,
+			sh.overview AS sh_overview,
+			sh.runtime AS sh_runtime,
+			sh.trailer AS sh_trailer,
+			sh.homepage AS sh_homepage,
+			ROUND(sh.rating, 1) AS sh_rating,
+			ge."name" AS ge_name,
+			ge.id AS ge_id
+	    FROM shows AS sh
+            INNER JOIN show_genres AS sg ON sh.id = sg.show_id
+            INNER JOIN genres AS ge ON sg.genre_id = ge.id;
+
+
+SELECT setval('shows_id_seq', 121107);
+SELECT setval('actors_id_seq', 987437);
+SELECT setval('episodes_id_seq', 2749328);
+SELECT setval('genres_id_seq', 34);
+SELECT setval('seasons_id_seq', 151822);
+SELECT setval('show_characters_id_seq', 8178);
+SELECT setval('show_genres_id_seq', 2550);

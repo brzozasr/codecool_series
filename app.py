@@ -1,7 +1,7 @@
 # from dotenv import load_dotenv
 
 import bcrypt
-from flask import Flask, render_template, request, session, jsonify
+from flask import Flask, render_template, request, session, jsonify, redirect
 
 from data.database_handler import *
 from data.query import *
@@ -29,7 +29,14 @@ def inject_variable():
         ACT_COL_NAME=ACT_COL_NAME,
         ACT_COL_BIRTHDAY=ACT_COL_BIRTHDAY,
         ACT_COL_DEATH=ACT_COL_DEATH,
-        ACT_LIMIT=ACT_LIMIT
+        ACT_LIMIT=ACT_LIMIT,
+        GS_COL_TITLE=GS_COL_TITLE,
+        GS_COL_YEAR=GS_COL_YEAR,
+        GS_COL_RUNTIME=GS_COL_RUNTIME,
+        GS_COL_RATING=GS_COL_RATING,
+        GS_LIMIT=GS_LIMIT,
+        SESSION_USER_ID=SESSION_USER_ID,
+        SESSION_USER_LOGIN=SESSION_USER_LOGIN
     )
 
 
@@ -66,19 +73,21 @@ def get_shows(column=COL_RATING, order=ORD_DESC, page_no=1):
     records = db.execute_sql(query.shows_count_records)
     count_records = records[0][0]
     if not is_positive_int(count_records):
-        error = f'There is a problem with returned records:\n<br>{records}.'
+        error = f"""There is a problem with returned records:\n<br>{records}."""
         return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
     dict_webpages = pagination_len(count_records, page_no, SHOWS_LIMIT, visible_pagination=5)
     # dict_webpages = pages_dict(count_records, SHOWS_LIMIT)  # all pages
     offset = dict_webpages.get(page_no)
+    if not is_positive_int(offset):
+        offset = 0
     # current_page_no = current_page(count_records, SHOWS_LIMIT, offset)
     all_pages = pages_number(count_records, SHOWS_LIMIT)
 
     if sql_query := get_shows_sql(column, order, offset):
         shows_dict = db.execute_sql_dict(sql_query)
         if type(shows_dict) != list:
-            error = f'There is a problem with returned data:\n<br>{shows_dict}.'
+            error = f"""There is a problem with returned data:\n<br>{shows_dict}."""
             shows_dict = list()
             return render_template('shows.html', shows_dict=shows_dict, error=error, sql=sql,
                                    dict_webpages=dict_webpages)
@@ -104,17 +113,17 @@ def show_detail(show_id):
 
     result = db.execute_sql_dict(query.show_details, [show_id])
     if type(result) != list:
-        error = f'There is a problem with returned data:\n<br>{result}.'
+        error = f"""There is a problem with returned data:\n<br>{result}."""
         return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
     seasons = db.execute_sql_dict(query.seasons_by_id_show, [show_id])
     if type(seasons) != list:
-        error = f'There is a problem with returned data:\n<br>{seasons}.'
+        error = f"""There is a problem with returned data:\n<br>{seasons}."""
         return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
 
-    genres_dict = get_dict(result[0].get('genres_name'), 'genre_name', sort_dict=True)
-
-    actors_dict = get_dict(result[0].get('actors_name'), 'actor_name', sort_dict=True)
+    genres_dict = get_dict(replace_quote(result[0].get('genres_name')), 'genre_name', sort_dict=True)
+    actors_dict = get_dict(replace_quote(result[0].get('actors_name')), 'actor_name', sort_dict=True)
+    characters_dict = get_dict(replace_quote(result[0].get('characters_name')))
 
     db_data = {
         'show_id': show_id,
@@ -128,7 +137,7 @@ def show_detail(show_id):
         'show_trailer_id': get_trailer_id(result[0].get('trailer')),
         'show_homepage': result[0].get('homepage'),
         'show_genres': genres_to_str(genres_dict, only_genres=False),
-        'show_actors': actors_to_string(actors_dict, return_no_actors='ALL', only_actors=False),
+        'show_actors': actors_to_string(actors_dict, characters_dict, return_no_actors='ALL', html_actors=True),
     }
 
     return render_template('show_detail.html', error=error, db_data=db_data, seasons=seasons)
@@ -142,12 +151,12 @@ def episodes(season_id):
 
     result = db.execute_sql_dict(query.episodes_select_by_season_id, [season_id])
     if type(result) != list:
-        error = f'There is a problem with returned data:\n<br>{result}.'
+        error = f"""There is a problem with returned data:\n<br>{result}."""
         return render_template('episodes.html', error=error, episodes_list=episodes_list, season_data=season_data)
 
     season_data = db.execute_sql_dict(query.season_by_id, [season_id])
     if type(season_data) != list:
-        error = f'There is a problem with returned data:\n<br>{season_data}.'
+        error = f"""There is a problem with returned data:\n<br>{season_data}."""
         return render_template('episodes.html', error=error, episodes_list=episodes_list, season_data=season_data)
 
     episodes_list = result
@@ -166,25 +175,28 @@ def actors(column=ACT_COL_NAME, order=ORD_ASC, page_no=1):
     records = db.execute_sql(query.actors_count_records)
     count_records = records[0][0]
     if not is_positive_int(count_records):
-        error = f'There is a problem with returned records:\n<br>{records}.'
-        return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+        error = f"""There is a problem with returned records:\n<br>{records}."""
+        return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql,
+                               dict_webpages=dict_webpages)
 
     dict_webpages = pagination_len(count_records, page_no, ACT_LIMIT, visible_pagination=11)
-    # dict_webpages = pages_dict(count_records, SHOWS_LIMIT)  # all pages
     offset = dict_webpages.get(page_no)
-    # current_page_no = current_page(count_records, SHOWS_LIMIT, offset)
+    if not is_positive_int(offset):
+        offset = 0
+
     all_pages = pages_number(count_records, ACT_LIMIT)
 
     if sql_query := get_all_actors_sql(column, order, offset):
         actors_dict = db.execute_sql_dict(sql_query)
         if type(actors_dict) != list:
-            error = f'There is a problem with returned data:\n<br>{actors_dict}.'
+            error = f"""There is a problem with returned data:\n<br>{actors_dict}."""
             actors_dict = list()
             return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql,
                                    dict_webpages=dict_webpages)
     else:
         error = f'There is wrong data sent by route.'
-        return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql, dict_webpages=dict_webpages)
+        return render_template('actors.html', actors_dict=actors_dict, error=error, sql=sql,
+                               dict_webpages=dict_webpages)
 
     sql = {
         'column': column,
@@ -198,9 +210,16 @@ def actors(column=ACT_COL_NAME, order=ORD_ASC, page_no=1):
 
 @app.route('/actor/<int:actor_id>/')
 def actor(actor_id):
-    actor_dict = db.execute_sql_dict(query.actor_get_by_id, [actor_id], fetch=True)
+    actor_dict = db.execute_sql_dict(query.actor_get_by_id, [actor_id])
 
-    print(actor_dict)
+    actor_filmography = db.execute_sql_dict(query.actor_filmography, [actor_id])
+    if type(actor_filmography) == list and len(actor_filmography) > 0:
+        shows_str = ''
+        for show in actor_filmography:
+            shows_str += f"""<a href="/show/{show.get('sh_id')}/">{show.get('sh_title')}</a>, """
+        shows_str = shows_str[:-2]
+    else:
+        shows_str = ''
 
     name = actor_dict[0].get('name')
     birthday = date_formater(actor_dict[0].get('birthday'))
@@ -208,12 +227,12 @@ def actor(actor_id):
     biography = actor_dict[0].get('biography')
 
     actor_details = {
+        'actor_id': actor_id,
         'name': name,
         'birthday': birthday,
         'death': death,
         'biography': biography,
-
-
+        'filmography': shows_str
     }
 
     return render_template('actor.html', actor_details=actor_details)
@@ -223,16 +242,55 @@ def actor(actor_id):
 def genres():
     genres_dict = db.execute_sql_dict(query.genres_select_all)
     if type(genres_dict) != list:
-        error = f'There is a problem with returned data:\n<br>{genres_dict}.'
+        error = f"""There is a problem with returned data:\n<br>{genres_dict}."""
         genres_dict = list()
         return render_template('genres.html', error=error, genres_dict=genres_dict)
 
     return render_template('genres.html', genres_dict=genres_dict)
 
 
-@app.route('/genre-shows/<int:genre_id>/')
-def genre_shows(genre_id):
-    return render_template('genre_shows.html')
+@app.route('/genre-shows/<int:genre_id>/', endpoint='genre-shows-id')
+@app.route('/genre-shows/<string:column>/<string:order>/<int:page_no>/<int:genre_id>/', endpoint='genre-shows-paging')
+def genre_shows(genre_id, column=GS_COL_RATING, order=ORD_DESC, page_no=1):
+    error = None
+    shows_dict = list()
+    sql = dict()
+    dict_webpages = dict()
+
+    records = db.execute_sql(query.count_genre_shows, [genre_id])
+    count_records = records[0][0]
+    if not is_positive_int(count_records):
+        error = f"""There is a problem with returned records:\n<br>{records}."""
+        return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql,
+                               dict_webpages=dict_webpages)
+
+    dict_webpages = pagination_len(count_records, page_no, GS_LIMIT, visible_pagination=5)
+    offset = dict_webpages.get(page_no)
+    if not is_positive_int(offset):
+        offset = 0
+    all_pages = pages_number(count_records, GS_LIMIT)
+
+    if sql_query := get_genre_shows_sql(genre_id, column, order, offset):
+        shows_dict = db.execute_sql_dict(sql_query)
+        if type(shows_dict) != list:
+            error = f"""There is a problem with returned data:\n<br>{shows_dict}."""
+            shows_dict = list()
+            return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql,
+                                   dict_webpages=dict_webpages)
+    else:
+        error = f'There is wrong data sent by route.'
+        return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql,
+                               dict_webpages=dict_webpages)
+
+    sql = {
+        'column': column,
+        'order': order,
+        'page_no': page_no,
+        'pages': all_pages,
+        'genre_id': genre_id
+    }
+
+    return render_template('genre_shows.html', shows_dict=shows_dict, error=error, sql=sql, dict_webpages=dict_webpages)
 
 
 @app.route('/user-login', methods=['POST'])
@@ -348,6 +406,173 @@ def user_logout():
         })
 
     return result
+
+
+@app.route('/user-not-login/')
+def not_login():
+    return render_template('not_login.html')
+
+
+@app.route('/add/')
+def add():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        return render_template('add.html')
+    else:
+        return redirect('/user-not-login/')
+
+
+@app.route('/check-show-title/', methods=['POST'])
+def check_show_title():
+    data = request.get_json()
+    title = data['title']
+
+    result = db.execute_sql_dict(query.check_show_title, [title])
+
+    if type(result) == list:
+        if len(result) == 0:
+            result_dict = {"is_title_in_db": 'NO'}
+        else:
+            result_dict = {"is_title_in_db": 'YES'}
+    else:
+        result_dict = {"is_title_in_db": 'ERROR'}
+
+    return jsonify(result_dict)
+
+
+@app.route('/check-actor-name/', methods=['POST'])
+def check_actor_name():
+    data = request.get_json()
+    name = data['name']
+
+    result = db.execute_sql_dict(query.check_actor_name, [name])
+
+    if type(result) == list:
+        if len(result) == 0:
+            result_dict = {"is_name_in_db": 'NO'}
+        else:
+            result_dict = {"is_name_in_db": 'YES'}
+    else:
+        result_dict = {"is_name_in_db": 'ERROR'}
+
+    return jsonify(result_dict)
+
+
+@app.route('/check-genre-name/', methods=['POST'])
+def check_genre_name():
+    data = request.get_json()
+    name = data['name']
+
+    result = db.execute_sql_dict(query.check_genre_name, [name])
+
+    if type(result) == list:
+        if len(result) == 0:
+            result_dict = {"is_genre_in_db": 'NO'}
+        else:
+            result_dict = {"is_genre_in_db": 'YES'}
+    else:
+        result_dict = {"is_genre_in_db": 'ERROR'}
+
+    return jsonify(result_dict)
+
+
+@app.route('/get-show-title/', methods=['POST'])
+def get_show_title():
+    data = request.get_json()
+    phrase = data['phrase']
+    search_phrase = f'{phrase}%'
+
+    result = db.execute_sql_dict(query.search_show_title, [search_phrase])
+
+    return jsonify(result)
+
+
+@app.route('/add-show/', methods=['POST'])
+def add_show():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        title = data['title']
+        year = data['year']
+        runtime = data['runtime']
+        rating = data['rating']
+        overview = data['overview']
+        trailer = data['trailer']
+        homepage = data['homepage']
+
+        result = db.execute_sql(query.shows_insert_new_show, [title, year, runtime, rating, overview, trailer, homepage],
+                                fetch=False)
+        if result is None:
+            response = {"is_show_add": "YES"}
+        else:
+            response = {"is_show_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
+
+
+@app.route('/add-actor/', methods=['POST'])
+def add_actor():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        name = data['name']
+        birthday = data['birthday']
+        death = data['death']
+        biography = data['biography']
+
+        if death == '':
+            death = None
+
+        result = db.execute_sql(query.actors_insert_new_actor, [name, birthday, death, biography], fetch=False)
+        if result is None:
+            response = {"is_actor_add": "YES"}
+        else:
+            response = {"is_actor_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
+
+
+@app.route('/add-genre/', methods=['POST'])
+def add_genre():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        name = data['name']
+
+        result = db.execute_sql(query.genres_insert_new_genre, [name], fetch=False)
+        if result is None:
+            response = {"is_genre_add": "YES"}
+        else:
+            response = {"is_genre_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
+
+
+@app.route('/add-season/', methods=['POST'])
+def add_season():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        show_id = data['show_id']
+        title = data['title']
+        season_no = data['season_no']
+        overview = data['overview']
+
+        result = db.execute_sql(query.seasons_insert_new_season, [show_id, title, season_no, overview], fetch=False)
+        if result is None:
+            response = {"is_season_add": "YES"}
+        else:
+            response = {"is_season_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
+
+
+# @app.errorhandler(404)
+# def page_not_found():
+#     return render_template('404.html'), 404
 
 
 @app.route('/design')

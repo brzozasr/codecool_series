@@ -1,0 +1,27 @@
+{% extends 'pattern.html' %}
+
+{% block title %}Add data{% endblock %}
+{% block content %}
+    <div id="top-menu">
+        <button type="button" id="menu-btn-back" class="menu-button">Homepage</button>
+        <button type="button" id="menu-btn-shows" class="menu-button">Shows</button>
+        <button type="button" id="menu-btn-actors" class="menu-button">Actors</button>
+        <button type="button" id="menu-btn-genres" class="menu-button">Genres</button>
+        <button type="button" id="menu-btn-add" class="menu-button" style="display: none">Add</button>
+    </div>
+    <section>
+        <h1 class="title text-center">Add data</h1>
+        <div class="card">
+            <h2>Forms:</h2>
+            <ul>
+                <li><a class="link-form-add" href="javascript:void(0)" data-form-id="form-shows">Shows</a></li>
+                <li><a class="link-form-add" href="javascript:void(0)" data-form-id="form-actors">Actors</a></li>
+                <li><a class="link-form-add" href="javascript:void(0)" data-form-id="form-genres">Genres</a></li>
+                <li><a class="link-form-add" href="javascript:void(0)" data-form-id="form-seasons">Seasons</a></li>
+                <li><a class="link-form-add" href="javascript:void(0)" data-form-id="form-episodes">Episodes</a></li>
+                <li><a class="link-form-add" href="javascript:void(0)" data-form-id="form-genre-show">Add genre to Show</a></li>
+                <li><a class="link-form-add" href="javascript:void(0)" data-form-id="form-actor-show">Add actor to Show</a></li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}

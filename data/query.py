@@ -4,8 +4,8 @@ __query_all = {
     'shows_count_records':
         """SELECT COUNT(id) FROM shows;""",
     'show_details':
-        """SELECT id, title, year, round_rating, rating, runtime, overview, trailer, homepage, genres_name, actors_name
-        FROM show_details_view WHERE id = %s""",
+        """SELECT id, title, year, round_rating, rating, runtime, overview, trailer, homepage, genres_name, 
+        actors_name, characters_name FROM show_details_view WHERE id = %s""",
     'seasons_by_id_show':
     """SELECT id, season_number, title, overview, show_id FROM seasons 
     WHERE show_id = %s ORDER BY season_number""",
@@ -27,6 +27,34 @@ __query_all = {
     WHERE se.id = %s""",
     'genres_select_all':
     """SELECT id, name FROM genres ORDER BY name;""",
+    'count_genre_shows':
+    """SELECT COUNT(sh_id)
+    FROM genre_shows_view WHERE ge_id = %s""",
+    'actor_filmography':
+    """SELECT sh.id AS sh_id, sh.title AS sh_title, ac.id AS ac_id, ac.name AS ac_name
+    FROM shows AS sh
+    INNER JOIN show_characters AS sc ON sh.id = sc.show_id
+    INNER JOIN actors AS ac ON sc.actor_id = ac.id
+    WHERE ac.id = %s""",
+    'search_show_title':
+    """SELECT id, title FROM shows WHERE title ILIKE %s ORDER BY lower(title);""",
+    'check_show_title':
+    """SELECT id, title FROM shows WHERE lower(title) = lower(%s);""",
+    'shows_insert_new_show':
+        """INSERT INTO shows (title, year, runtime, rating, overview, trailer, homepage) 
+        VALUES (%s, %s, %s, %s, %s, %s, %s);""",
+    'seasons_insert_new_season':
+        """INSERT INTO seasons (show_id, title, season_number, overview) 
+        VALUES (%s, %s, %s, %s);""",
+    'check_actor_name':
+    """SELECT id, name FROM actors WHERE lower(name) = lower(%s);""",
+    'actors_insert_new_actor':
+        """INSERT INTO actors (name, birthday, death, biography) 
+        VALUES (%s, %s, %s, %s);""",
+    'check_genre_name':
+    """SELECT id, name FROM genres WHERE lower(name) = lower(%s);""",
+    'genres_insert_new_genre':
+        """INSERT INTO genres (name) VALUES (%s);""",
 }
 
 
