@@ -32,7 +32,6 @@ export let dataHandler = {
 
     loginUser: function (userData, callback) {
         this._api_post(`/user-login`, userData, (response) => {
-            // this._data[`allData`] = response;
             callback(response);
             console.log(response);
         });
@@ -40,7 +39,6 @@ export let dataHandler = {
 
     registerUser: function (userData, callback) {
         this._api_post(`/user-register`, userData, (response) => {
-            // this._data[`allData`] = response;
             callback(response);
             console.log(response);
         });
@@ -48,7 +46,6 @@ export let dataHandler = {
 
     isUserLogin: function (isLogin, callback) {
         this._api_post(`/is-user-login`, isLogin, (response) => {
-            // this._data[`allData`] = response;
             callback(response);
             console.log(response);
         });
@@ -56,7 +53,6 @@ export let dataHandler = {
 
     userLogout: function (userData, callback) {
         this._api_post(`/user-logout`, userData, (response) => {
-            // this._data[`allData`] = response;
             callback(response);
             console.log(response);
         });
@@ -64,7 +60,13 @@ export let dataHandler = {
 
     checkShowTitle: function (userData, callback) {
         this._api_post(`/check-show-title/`, userData, (response) => {
-            // this._data[`allData`] = response;
+            callback(response);
+            console.log(response);
+        });
+    },
+
+    checkActorName: function (userData, callback) {
+        this._api_post(`/check-actor-name/`, userData, (response) => {
             callback(response);
             console.log(response);
         });
@@ -72,7 +74,6 @@ export let dataHandler = {
 
     searchShowTitle: function (userData, callback) {
         this._api_post(`/get-show-title/`, userData, (response) => {
-            // this._data[`allData`] = response;
             callback(response);
             // console.log(response);
         });
@@ -80,7 +81,13 @@ export let dataHandler = {
 
     addShow: function (userData, callback) {
         this._api_post(`/add-show/`, userData, (response) => {
-            // this._data[`allData`] = response;
+            callback(response);
+            console.log(response);
+        });
+    },
+
+    addActor: function (userData, callback) {
+        this._api_post(`/add-actor/`, userData, (response) => {
             callback(response);
             console.log(response);
         });
@@ -88,7 +95,6 @@ export let dataHandler = {
 
     addSeason: function (userData, callback) {
         this._api_post(`/add-season/`, userData, (response) => {
-            // this._data[`allData`] = response;
             callback(response);
             console.log(response);
         });

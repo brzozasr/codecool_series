@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS shows (
-    id       INTEGER PRIMARY KEY NOT NULL,
+    id       SERIAL PRIMARY KEY NOT NULL,
     title    VARCHAR(200)        NOT NULL,
     year     DATE                NULL,
     overview TEXT,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS genres (
 
 
 CREATE TABLE IF NOT EXISTS actors (
-    id        INTEGER PRIMARY KEY NOT NULL,
+    id        SERIAL PRIMARY KEY NOT NULL,
     name      VARCHAR(200)        NOT NULL,
     birthday  DATE,
     death     DATE,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS actors (
 
 
 CREATE TABLE IF NOT EXISTS seasons (
-    id            INTEGER PRIMARY KEY NOT NULL,
+    id            SERIAL PRIMARY KEY NOT NULL,
     season_number SMALLINT            NOT NULL,
     title         VARCHAR(200),
     overview      TEXT,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS show_characters (
 
 
 CREATE TABLE IF NOT EXISTS episodes (
-    id             INTEGER PRIMARY KEY NOT NULL,
+    id             SERIAL PRIMARY KEY NOT NULL,
     title          VARCHAR(200),
     episode_number SMALLINT            NOT NULL,
     overview       TEXT,
@@ -129,3 +129,11 @@ CREATE VIEW genre_shows_view AS
             INNER JOIN show_genres AS sg ON sh.id = sg.show_id
             INNER JOIN genres AS ge ON sg.genre_id = ge.id;
 
+
+SELECT setval('shows_id_seq', 121107);
+SELECT setval('actors_id_seq', 987437);
+SELECT setval('episodes_id_seq', 2749328);
+SELECT setval('genres_id_seq', 34);
+SELECT setval('seasons_id_seq', 151822);
+SELECT setval('show_characters_id_seq', 8178);
+SELECT setval('show_genres_id_seq', 2550);

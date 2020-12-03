@@ -61,36 +61,23 @@ export let popupForm = {
         <p class="text-center">ADD ACTOR:</p>
         <form action="#" method="post" autocomplete="off" id="form-actor">
             <p class="form-element">
-                <label class="form-element-label" for="form-show-title">Title:</label>
-                <input name="form-show-title" id="form-show-title" value="" placeholder="Title of show" required>
+                <label class="form-element-label" for="form-actor-name">Name:</label>
+                <input name="form-actor-name" id="form-actor-name" value="" placeholder="Actor's name" required>
             </p>
             <p class="form-element">
-                <label class="form-element-label" for="form-show-year">Release date:</label>
-                <input type="date" name="season" id="form-show-year" value="" required>
+                <label class="form-element-label" for="form-actor-birthday">Birthday:</label>
+                <input type="date" name="form-actor-birthday" id="form-actor-birthday" value="" required>
             </p>
             <p class="form-element">
-                <label class="form-element-label" for="form-show-runtime">Length:</label>
-                <input type="number" name="form-show-runtime" id="form-show-runtime" value="1" min="0" max="999" required>
-                <span>min.</span>
+                <label class="form-element-label" for="form-actor-death">Death:</label>
+                <input type="date" name="form-actor-death" id="form-actor-death" required>
             </p>
             <p class="form-element">
-                <label class="form-element-label" for="form-show-rating">Rating:</label>
-                <input type="number" name="form-show-rating" id="form-show-rating" value="1.0" min="0" max="10" step="0.1" required>
-            </p>
-            <p class="form-element">
-                <label class="form-element-label" for="form-show-overview">Overview:</label>
-                <textarea id="form-show-overview" name="form-show-overview" class="size-textarea" placeholder="Show summary" required></textarea>
-            </p>
-            <p class="form-element">
-                <label class="form-element-label" for="form-show-trailer">Trailer:</label>
-                <input name="form-show-trailer" id="form-show-trailer" value="" placeholder="Link to the trailer">
-            </p>
-            <p class="form-element">
-                <label class="form-element-label" for="form-show-homepage">Homepage:</label>
-                <input name="form-show-homepage" id="form-show-homepage" value="" placeholder="Link to the homepage">
+                <label class="form-element-label" for="form-actor-biography">Biography:</label>
+                <textarea id="form-actor-biography" name="form-actor-biography" class="size-textarea" placeholder="Actor's biography" required></textarea>
             </p>
             <p class="text-center">
-                <button type="button" id="form-actor-add">Submit</button>
+                <button type="button" id="form-actor-submit">Add actor</button>
             </p>
         </form>
     `,
@@ -153,7 +140,11 @@ export let popupForm = {
                 break;
             case 'form-actors':
                 formHtml = popupForm.formActors;
-                console.log('Apples are $0.32 a pound.');
+                popupForm.displayPopupForm(formHtml);
+                popupForm.addActorsListeners();
+                popupForm.isEmptyFields('form-actor', 'form-actor-submit', 'form-actor-name',
+                    'form-actor-birthday', 'form-actor-biography');
+                popupForm.disableSubmitBtn(true, 'form-actor-submit');
                 break;
             case 'form-genres':
                 formHtml = popupForm.formShows;
@@ -244,13 +235,14 @@ export let popupForm = {
         output.remove()
     },
 
+
     // === BEGIN = ADD SHOW FORM ==========================================
     addShowsListeners: function () {
         let inputTxTitle = document.querySelector('#form-show-title');
         let submitBtn = document.querySelector('#form-show-submit');
 
         inputTxTitle.addEventListener('input', popupForm.showsOnChangeInputTx);
-        submitBtn.addEventListener('click', popupForm.showsOnSubmit)
+        submitBtn.addEventListener('click', popupForm.showsOnSubmit);
     },
 
     showsOnChangeInputTx: function (evt) {
@@ -315,6 +307,72 @@ export let popupForm = {
         popup.remove();
     },
     // === END = ADD SHOW FORM ==========================================
+
+
+    // === BEGIN = ADD ACTOR FORM ==========================================
+    addActorsListeners: function () {
+        let inputTxTitle = document.querySelector('#form-actor-name');
+        let submitBtn = document.querySelector('#form-actor-submit');
+
+        inputTxTitle.addEventListener('input', popupForm.actorsOnChangeInputTx);
+        submitBtn.addEventListener('click', popupForm.actorsOnSubmit);
+    },
+
+    actorsOnChangeInputTx: function (evt) {
+        let inputTxTitle = document.querySelector('#form-actor-name').parentNode;
+
+        let txt = evt.currentTarget.value;
+        if (txt.length > 0) {
+            let checkStr = {
+                "name": txt
+            }
+            dataHandler.checkActorName(checkStr, function (name_available) {
+                if (name_available['is_name_in_db'] === 'NO') {
+                    inputTxTitle.removeAttribute('class');
+                    inputTxTitle.setAttribute('class', 'form-element ok-16');
+                } else if (name_available['is_name_in_db'] === 'YES') {
+                    inputTxTitle.removeAttribute('class');
+                    inputTxTitle.setAttribute('class', 'form-element info-name');
+                } else {
+                    inputTxTitle.removeAttribute('class');
+                    inputTxTitle.setAttribute('class', 'form-element info-name');
+                }
+            });
+        } else {
+            inputTxTitle.removeAttribute('class');
+            inputTxTitle.setAttribute('class', 'form-element');
+        }
+    },
+
+    actorsOnSubmit: function () {
+        let actorData = {
+            "name": document.getElementById('form-actor-name').value,
+            "birthday": document.getElementById('form-actor-birthday').value,
+            "death": document.getElementById('form-actor-death').value,
+            "biography": document.getElementById('form-actor-biography').value
+        }
+
+        dataHandler.addActor(actorData, function (confirmation) {
+            if (confirmation['is_actor_add'] === 'YES') {
+                popupForm.removeFromActor();
+
+                popupForm.addOutput('The actor has been added to the database.');
+                setTimeout(popupForm.removeOutput, 1500);
+            } else {
+                popupForm.removeFromActor();
+
+                popupForm.addOutput('The actor has not been added to the database.', false);
+                setTimeout(popupForm.removeOutput, 1500);
+            }
+        });
+    },
+
+    removeFromActor: function () {
+        let popup = document.getElementById('popup-form-main');
+        popup.style.display = 'none';
+        popup.remove();
+    },
+    // === END = ADD ACTOR FORM ==========================================
 
 
     // === BEGIN = ADD SEASON FORM ==========================================

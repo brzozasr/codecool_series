@@ -38,3 +38,10 @@ img#popup-form-close {
     font-size: 12px;
     color: #ffa333;
 }
+
+.info-name::after {
+    content: url("../assets/warning-16.png") " Name exists.";
+    padding-left: 5px;
+    font-size: 12px;
+    color: #ffa333;
+}

@@ -219,7 +219,7 @@ def actor(actor_id):
             shows_str += f"""<a href="/show/{show.get('sh_id')}/">{show.get('sh_title')}</a>, """
         shows_str = shows_str[:-2]
     else:
-        shows_str = None
+        shows_str = ''
 
     name = actor_dict[0].get('name')
     birthday = date_formater(actor_dict[0].get('birthday'))
@@ -439,6 +439,24 @@ def check_show_title():
     return jsonify(result_dict)
 
 
+@app.route('/check-actor-name/', methods=['POST'])
+def check_actor_name():
+    data = request.get_json()
+    name = data['name']
+
+    result = db.execute_sql_dict(query.check_actor_name, [name])
+
+    if type(result) == list:
+        if len(result) == 0:
+            result_dict = {"is_name_in_db": 'NO'}
+        else:
+            result_dict = {"is_name_in_db": 'YES'}
+    else:
+        result_dict = {"is_name_in_db": 'ERROR'}
+
+    return jsonify(result_dict)
+
+
 @app.route('/get-show-title/', methods=['POST'])
 def get_show_title():
     data = request.get_json()
@@ -468,6 +486,29 @@ def add_show():
             response = {"is_show_add": "YES"}
         else:
             response = {"is_show_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
+
+
+@app.route('/add-actor/', methods=['POST'])
+def add_actor():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        name = data['name']
+        birthday = data['birthday']
+        death = data['death']
+        biography = data['biography']
+
+        if death == '':
+            death = None
+
+        result = db.execute_sql(query.actors_insert_new_actor, [name, birthday, death, biography], fetch=False)
+        if result is None:
+            response = {"is_actor_add": "YES"}
+        else:
+            response = {"is_actor_add": "NO"}
 
         return jsonify(response)
     else:

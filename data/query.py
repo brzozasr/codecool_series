@@ -46,6 +46,11 @@ __query_all = {
     'seasons_insert_new_season':
         """INSERT INTO seasons (show_id, title, season_number, overview) 
         VALUES (%s, %s, %s, %s);""",
+    'check_actor_name':
+    """SELECT id, name FROM actors WHERE lower(name) = lower(%s);""",
+    'actors_insert_new_actor':
+        """INSERT INTO actors (name, birthday, death, biography) 
+        VALUES (%s, %s, %s, %s);""",
 }
 
 
