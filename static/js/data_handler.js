@@ -74,7 +74,7 @@ export let dataHandler = {
         this._api_post(`/get-show-title/`, userData, (response) => {
             // this._data[`allData`] = response;
             callback(response);
-            console.log(response);
+            // console.log(response);
         });
     },
 

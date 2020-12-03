@@ -31,3 +31,10 @@ img#popup-form-close {
     cursor: pointer;
     z-index: 130;
 }
+
+.info-title::after {
+    content: url("../assets/warning-16.png") " Title exists.";
+    padding-left: 5px;
+    font-size: 12px;
+    color: #ffa333;
+}

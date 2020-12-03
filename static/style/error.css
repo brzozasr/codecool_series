@@ -72,3 +72,18 @@
     content: url("../assets/error-48.png");
 }
 
+.warning-16::after {
+    content: url("../assets/warning-16.png");
+}
+
+.warning-24::after {
+    content: url("../assets/warning-24.png");
+}
+
+.warning-32::after {
+    content: url("../assets/warning-32.png");
+}
+
+.warning-48::after {
+    content: url("../assets/warning-48.png");
+}
