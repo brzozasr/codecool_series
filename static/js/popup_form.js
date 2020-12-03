@@ -70,7 +70,7 @@ export let popupForm = {
             </p>
             <p class="form-element">
                 <label class="form-element-label" for="form-show-runtime">Length:</label>
-                <input type="number" name="form-show-runtime" id="form-show-runtime" value="1" min="1" max="999" required>
+                <input type="number" name="form-show-runtime" id="form-show-runtime" value="1" min="0" max="999" required>
                 <span>min.</span>
             </p>
             <p class="form-element">
@@ -99,18 +99,21 @@ export let popupForm = {
         <p class="text-center">ADD SEASON:</p>
         <form action="#" method="post" autocomplete="off" id="form-season">
             <div class="form-element">
-                <label class="form-element-label" for="form-season-title">Title:</label>
+                <label class="form-element-label" for="form-season-show-id">Title of show:</label>
                 <div class="form-div-element">
-                    <input type="text" name="form-season-title" id="form-season-title" value="" placeholder="Title of season" required>
+                    <input type="text" name="form-season-show-id" id="form-season-show-id" value="" placeholder="Click to search a title" readonly required>
                     <div class="form-div-dropdown" id="form-season-dropdown">
-                        <input type="text" placeholder="Search..." id="form-search-title">
+                        <input type="text" placeholder="Search..." id="form-season-search">
                     </div>
                 </div>
             </div>
             <p class="form-element">
+                <label class="form-element-label" for="form-season-title">Title of season:</label>
+                <input type="text" name="form-season-title" id="form-season-title" value="" required>
+            </p>
+            <p class="form-element">
                 <label class="form-element-label" for="form-season-number">Season No:</label>
-                <input type="number" name="form-season-number" id="form-season-number" value="1" min="1" max="999" required>
-                <span>min.</span>
+                <input type="number" name="form-season-number" id="form-season-number" value="1" min="0" max="999" required>
             </p>
             <p class="form-element">
                 <label class="form-element-label" for="form-season-overview">Overview:</label>
@@ -160,6 +163,9 @@ export let popupForm = {
                 formHtml = popupForm.formSeasons;
                 popupForm.displayPopupForm(formHtml);
                 popupForm.addSeasonsListeners();
+                popupForm.isEmptyFields('form-season', 'form-season-submit', 'form-season-show-id',
+                    'form-season-title', 'form-season-number');
+                popupForm.disableSubmitBtn(true, 'form-season-submit');
                 break;
             case 'form-episodes':
                 formHtml = popupForm.formShows;
@@ -219,7 +225,7 @@ export let popupForm = {
         });
     },
 
-     addOutput: function (text, isOk = true) {
+    addOutput: function (text, isOk = true) {
         popupForm.divTopBar.insertAdjacentHTML('beforebegin', popupForm.outputDiv);
         let output = document.getElementById('output-container');
         let innerDiv = output.firstElementChild;
@@ -313,38 +319,114 @@ export let popupForm = {
 
     // === BEGIN = ADD SEASON FORM ==========================================
     addSeasonsListeners: function () {
-        let inputTxTitle = document.querySelector('#form-season-title');
+        let inputTxTitle = document.querySelector('#form-season-show-id');
+        let inputTxSearch = document.querySelector('#form-season-search');
         let submitBtn = document.querySelector('#form-season-submit');
 
-        inputTxTitle.addEventListener('input', popupForm.seasonOnChangeInputTx);
+        inputTxTitle.addEventListener('click', popupForm.seasonOnClickInputTx);
+        inputTxSearch.addEventListener('input', popupForm.seasonOnChangeInputTx);
         submitBtn.addEventListener('click', popupForm.seasonOnSubmit);
     },
+
+
+    seasonOnClickInputTx: function () {
+        let dropdownDiv = document.getElementById('form-season-dropdown');
+
+        dropdownDiv.style.display = 'block';
+    },
+
 
     seasonOnChangeInputTx: function (evt) {
         let dropdownDiv = document.getElementById('form-season-dropdown');
         let txt = evt.currentTarget.value;
 
-        if (txt.length > 0) {
-            let data = {
-                "phrase": txt
-            }
-            dataHandler.searchShowTitle(data, function (showTitle) {
-                let link;
-                // dropdownDiv.innerHTML = '';
+        let data = {
+            "phrase": txt
+        }
+        dataHandler.searchShowTitle(data, function (showTitle) {
+            let linksTmp = document.querySelectorAll("#form-season-dropdown > a");
+            if (txt.length > 0) {
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+
                 for (let title of showTitle) {
-                    link = `<a href="${title['id']}">${title['title']}</a>\n`;
+
+                    let link = `<a href="javascript:void(0)" data-show-id="${title.id}" data-show-title="${title.title}">${title['title']}</a>\n`;
                     dropdownDiv.insertAdjacentHTML('beforeend', link);
                 }
+
+                let aLinks = dropdownDiv.querySelectorAll('a');
+                aLinks.forEach(link => {
+                    link.addEventListener('click', popupForm.addToInputTxTitle);
+                });
+
                 dropdownDiv.style.display = 'block';
-            });
-        } else {
-            // dropdownDiv.innerHTML = '';
-            dropdownDiv.style.display = 'none';
-        }
+            } else {
+                dropdownDiv.style.display = 'none';
+
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+            }
+        });
     },
 
-    seasonOnSubmit: function () {
 
+    addToInputTxTitle: function (evt) {
+        let titleSet = evt.currentTarget.dataset;
+        let dropdownDiv = document.getElementById('form-season-dropdown');
+        let inputTxTitle = document.getElementById('form-season-show-id');
+
+        inputTxTitle.value = titleSet.showTitle;
+        inputTxTitle.setAttribute("data-show-id", titleSet.showId);
+        inputTxTitle.setAttribute("data-show-title", titleSet.showTitle);
+        dropdownDiv.style.display = 'none';
+
+        let linksTmp = document.querySelectorAll("#form-season-dropdown > a");
+        if (linksTmp !== null) {
+            linksTmp.forEach(element => {
+                element.remove();
+            });
+        }
+
+        let searchInput = document.querySelector("#form-season-search");
+        searchInput.value = "";
+    },
+
+
+    seasonOnSubmit: function () {
+        let seasonData = {
+            "show_id": document.getElementById('form-season-show-id').dataset.showId,
+            "title": document.getElementById('form-season-title').value,
+            "season_no": document.getElementById('form-season-number').value,
+            "overview": document.getElementById('form-season-overview').value
+        }
+
+        dataHandler.addSeason(seasonData, function (confirmation) {
+            if (confirmation['is_season_add'] === 'YES') {
+                popupForm.removeFromSeason();
+
+                popupForm.addOutput('The season has been added to the database.');
+                setTimeout(popupForm.removeOutput, 1500);
+            } else {
+                popupForm.removeFromSeason();
+
+                popupForm.addOutput('The season has not been added to the database.', false);
+                setTimeout(popupForm.removeOutput, 1500);
+            }
+        });
+    },
+
+
+    removeFromSeason: function () {
+        let popup = document.getElementById('popup-form-main');
+        popup.style.display = 'none';
+        popup.remove();
     },
     // === END = ADD SEASON FORM ==========================================
 }

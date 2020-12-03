@@ -85,4 +85,12 @@ export let dataHandler = {
             console.log(response);
         });
     },
+
+    addSeason: function (userData, callback) {
+        this._api_post(`/add-season/`, userData, (response) => {
+            // this._data[`allData`] = response;
+            callback(response);
+            console.log(response);
+        });
+    },
 };

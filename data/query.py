@@ -43,6 +43,9 @@ __query_all = {
     'shows_insert_new_show':
         """INSERT INTO shows (title, year, runtime, rating, overview, trailer, homepage) 
         VALUES (%s, %s, %s, %s, %s, %s, %s);""",
+    'seasons_insert_new_season':
+        """INSERT INTO seasons (show_id, title, season_number, overview) 
+        VALUES (%s, %s, %s, %s);""",
 }
 
 

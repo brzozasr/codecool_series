@@ -408,6 +408,11 @@ def user_logout():
     return result
 
 
+@app.route('/user-not-login/')
+def not_login():
+    return render_template('not_login.html')
+
+
 @app.route('/add/')
 def add():
     if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
@@ -447,28 +452,46 @@ def get_show_title():
 
 @app.route('/add-show/', methods=['POST'])
 def add_show():
-    data = request.get_json()
-    title = data['title']
-    year = data['year']
-    runtime = data['runtime']
-    rating = data['rating']
-    overview = data['overview']
-    trailer = data['trailer']
-    homepage = data['homepage']
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        title = data['title']
+        year = data['year']
+        runtime = data['runtime']
+        rating = data['rating']
+        overview = data['overview']
+        trailer = data['trailer']
+        homepage = data['homepage']
 
-    result = db.execute_sql(query.shows_insert_new_show, [title, year, runtime, rating, overview, trailer, homepage],
-                            fetch=False)
-    if result is None:
-        response = {"is_show_add": "YES"}
+        result = db.execute_sql(query.shows_insert_new_show, [title, year, runtime, rating, overview, trailer, homepage],
+                                fetch=False)
+        if result is None:
+            response = {"is_show_add": "YES"}
+        else:
+            response = {"is_show_add": "NO"}
+
+        return jsonify(response)
     else:
-        response = {"is_show_add": "NO"}
-
-    return jsonify(response)
+        return redirect('/user-not-login/')
 
 
-@app.route('/user-not-login/')
-def not_login():
-    return render_template('not_login.html')
+@app.route('/add-season/', methods=['POST'])
+def add_season():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        show_id = data['show_id']
+        title = data['title']
+        season_no = data['season_no']
+        overview = data['overview']
+
+        result = db.execute_sql(query.seasons_insert_new_season, [show_id, title, season_no, overview], fetch=False)
+        if result is None:
+            response = {"is_season_add": "YES"}
+        else:
+            response = {"is_season_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
 
 
 # @app.errorhandler(404)
