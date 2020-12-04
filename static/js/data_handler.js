@@ -113,4 +113,18 @@ export let dataHandler = {
             console.log(response);
         });
     },
+
+    addEpisode: function (userData, callback) {
+        this._api_post(`/add-episode/`, userData, (response) => {
+            callback(response);
+            console.log(response);
+        });
+    },
+
+    seasonTitleByShowId: function (userData, callback) {
+        this._api_post(`/get-seasons-title/by/show_id/`, userData, (response) => {
+            callback(response);
+            // console.log(response);
+        });
+    },
 };

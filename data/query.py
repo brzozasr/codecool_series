@@ -55,6 +55,10 @@ __query_all = {
     """SELECT id, name FROM genres WHERE lower(name) = lower(%s);""",
     'genres_insert_new_genre':
         """INSERT INTO genres (name) VALUES (%s);""",
+    'seasons_select_seasons_title_by_show_id':
+    """SELECT id, title FROM seasons WHERE show_id = %s ORDER BY season_number""",
+    'episodes_insert_new_episode':
+        """INSERT INTO episodes (season_id, title, episode_number, overview) VALUES (%s, %s, %s, %s);""",
 }
 
 

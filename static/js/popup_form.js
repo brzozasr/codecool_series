@@ -103,7 +103,7 @@ export let popupForm = {
                 <div class="form-div-element">
                     <input type="text" name="form-season-show-id" id="form-season-show-id" value="" placeholder="Click to search a title" readonly required>
                     <div class="form-div-dropdown" id="form-season-dropdown">
-                        <input type="text" placeholder="Search..." id="form-season-search">
+                        <input type="text" placeholder="Search..." id="form-season-search" class="form-search">
                     </div>
                 </div>
             </div>
@@ -121,6 +121,42 @@ export let popupForm = {
             </p>
             <p class="text-center">
                 <button type="button" id="form-season-submit">Add season</button>
+            </p>
+        </form>
+    `,
+
+    formEpisodes: `
+        <p class="text-center">ADD EPISODE:</p>
+        <form action="#" method="post" autocomplete="off" id="form-episode">
+            <div class="form-element">
+                <label class="form-element-label" for="form-episode-show-id">Title of show:</label>
+                <div class="form-div-element">
+                    <input type="text" name="form-episode-show-id" id="form-episode-show-id" value="" placeholder="Click to search a title" readonly required>
+                    <div class="form-div-dropdown" id="form-episode-dropdown">
+                        <input type="text" placeholder="Search..." id="form-episode-show-search" class="form-search">
+                    </div>
+                </div>
+            </div>
+            <p class="form-element">
+                <label class="form-element-label" for="form-episode-season-title">Title of season:</label>
+                <select name="form-episode-season-title" id="form-episode-season-title" class="select-size" required>
+                    <option value="">Choose a season</option>
+                </select>
+            </p>
+            <p class="form-element">
+                <label class="form-element-label" for="form-episode-title">Title of episode:</label>
+                <input type="text" name="form-episode-title" id="form-episode-title" value="" required>
+            </p>
+            <p class="form-element">
+                <label class="form-element-label" for="form-episode-number">Episode No:</label>
+                <input type="number" name="form-episode-number" id="form-episode-number" value="1" min="0" max="999" required>
+            </p>
+            <p class="form-element">
+                <label class="form-element-label" for="form-episode-overview">Overview:</label>
+                <textarea id="form-episode-overview" name="form-episode-overview" class="size-textarea" placeholder="Episode summary" required></textarea>
+            </p>
+            <p class="text-center">
+                <button type="button" id="form-episode-submit">Add episode</button>
             </p>
         </form>
     `,
@@ -175,8 +211,12 @@ export let popupForm = {
                 popupForm.disableSubmitBtn(true, 'form-season-submit');
                 break;
             case 'form-episodes':
-                formHtml = popupForm.formShows;
-                console.log('ble-ble are $3.00 a pound.');
+                formHtml = popupForm.formEpisodes;
+                popupForm.displayPopupForm(formHtml);
+                popupForm.addEpisodesListeners();
+                popupForm.isEmptyFields('form-episode', 'form-episode-submit', 'form-episode-season-title',
+                    'form-episode-title', 'form-episode-number');
+                popupForm.disableSubmitBtn(true, 'form-episode-submit');
                 break;
             case 'form-genre-show':
                 formHtml = popupForm.formShows;
@@ -252,7 +292,7 @@ export let popupForm = {
     },
 
 
-    // === BEGIN = ADD SHOW FORM ==========================================
+    /** === BEGIN = ADD SHOW FORM ========================================== */
     addShowsListeners: function () {
         let inputTxTitle = document.querySelector('#form-show-title');
         let submitBtn = document.querySelector('#form-show-submit');
@@ -322,10 +362,10 @@ export let popupForm = {
         popup.style.display = 'none';
         popup.remove();
     },
-    // === END = ADD SHOW FORM ==========================================
+    /** === END = ADD SHOW FORM ============================================= */
 
 
-    // === BEGIN = ADD ACTOR FORM ==========================================
+    /** === BEGIN = ADD ACTOR FORM ========================================== */
     addActorsListeners: function () {
         let inputTxTitle = document.querySelector('#form-actor-name');
         let submitBtn = document.querySelector('#form-actor-submit');
@@ -388,10 +428,10 @@ export let popupForm = {
         popup.style.display = 'none';
         popup.remove();
     },
-    // === END = ADD ACTOR FORM ==========================================
+    /** === END = ADD ACTOR FORM ============================================ */
 
 
-    // === BEGIN = ADD GENRE FORM ==========================================
+    /** === BEGIN = ADD GENRE FORM ========================================== */
     addGenresListeners: function () {
         let inputTxTitle = document.querySelector('#form-genre-name');
         let submitBtn = document.querySelector('#form-genre-submit');
@@ -454,10 +494,10 @@ export let popupForm = {
         popup.style.display = 'none';
         popup.remove();
     },
-    // === END = ADD GENRE FORM ==========================================
+    /** === END = ADD GENRE FORM ============================================== */
 
 
-    // === BEGIN = ADD SEASON FORM ==========================================
+    /** === BEGIN = ADD SEASON FORM ========================================== */
     addSeasonsListeners: function () {
         let inputTxTitle = document.querySelector('#form-season-show-id');
         let inputTxSearch = document.querySelector('#form-season-search');
@@ -468,13 +508,11 @@ export let popupForm = {
         submitBtn.addEventListener('click', popupForm.seasonOnSubmit);
     },
 
-
     seasonOnClickInputTx: function () {
         let dropdownDiv = document.getElementById('form-season-dropdown');
 
         dropdownDiv.style.display = 'block';
     },
-
 
     seasonOnChangeInputTx: function (evt) {
         let dropdownDiv = document.getElementById('form-season-dropdown');
@@ -500,7 +538,7 @@ export let popupForm = {
 
                 let aLinks = dropdownDiv.querySelectorAll('a');
                 aLinks.forEach(link => {
-                    link.addEventListener('click', popupForm.addToInputTxTitle);
+                    link.addEventListener('click', popupForm.seasonAddToInputTxTitle);
                 });
 
                 dropdownDiv.style.display = 'block';
@@ -516,8 +554,7 @@ export let popupForm = {
         });
     },
 
-
-    addToInputTxTitle: function (evt) {
+    seasonAddToInputTxTitle: function (evt) {
         let titleSet = evt.currentTarget.dataset;
         let dropdownDiv = document.getElementById('form-season-dropdown');
         let inputTxTitle = document.getElementById('form-season-show-id');
@@ -537,7 +574,6 @@ export let popupForm = {
         let searchInput = document.querySelector("#form-season-search");
         searchInput.value = "";
     },
-
 
     seasonOnSubmit: function () {
         let seasonData = {
@@ -568,5 +604,139 @@ export let popupForm = {
         popup.style.display = 'none';
         popup.remove();
     },
-    // === END = ADD SEASON FORM ==========================================
+    /** === END = ADD SEASON FORM ============================================== */
+
+
+    /** === BEGIN = ADD EPISODE FORM =========================================== */
+    addEpisodesListeners: function () {
+        let inputTxTitle = document.querySelector('#form-episode-show-id');
+        let inputTxSearch = document.querySelector('#form-episode-show-search');
+        let submitBtn = document.querySelector('#form-episode-submit');
+
+        inputTxTitle.addEventListener('click', popupForm.episodeOnClickInputTx);
+        inputTxSearch.addEventListener('input', popupForm.episodeOnChangeInputTx);
+        submitBtn.addEventListener('click', popupForm.episodeOnSubmit);
+    },
+
+    episodeOnClickInputTx: function () {
+        let dropdownDiv = document.getElementById('form-episode-dropdown');
+
+        dropdownDiv.style.display = 'block';
+    },
+
+    episodeOnChangeInputTx: function (evt) {
+        let dropdownDiv = document.getElementById('form-episode-dropdown');
+        let txt = evt.currentTarget.value;
+
+        let data = {
+            "phrase": txt
+        }
+        dataHandler.searchShowTitle(data, function (showTitle) {
+            let linksTmp = document.querySelectorAll("#form-episode-dropdown > a");
+            if (txt.length > 0) {
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+
+                for (let title of showTitle) {
+
+                    let link = `<a href="javascript:void(0)" data-show-id="${title.id}" data-show-title="${title.title}">${title['title']}</a>\n`;
+                    dropdownDiv.insertAdjacentHTML('beforeend', link);
+                }
+
+                let aLinks = dropdownDiv.querySelectorAll('a');
+                aLinks.forEach(link => {
+                    link.addEventListener('click', popupForm.episodeAddToInputTxTitle);
+                });
+
+                dropdownDiv.style.display = 'block';
+            } else {
+                dropdownDiv.style.display = 'none';
+
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+            }
+        });
+    },
+
+    episodeAddToInputTxTitle: function (evt) {
+        let titleSet = evt.currentTarget.dataset;
+        let dropdownDiv = document.getElementById('form-episode-dropdown');
+        let inputTxTitle = document.getElementById('form-episode-show-id');
+
+        inputTxTitle.value = titleSet.showTitle;
+        inputTxTitle.setAttribute("data-show-id", titleSet.showId);
+        inputTxTitle.setAttribute("data-show-title", titleSet.showTitle);
+        dropdownDiv.style.display = 'none';
+
+        let linksTmp = document.querySelectorAll("#form-episode-dropdown > a");
+        if (linksTmp !== null) {
+            linksTmp.forEach(element => {
+                element.remove();
+            });
+        }
+
+        let searchInput = document.querySelector("#form-episode-show-search");
+        searchInput.value = "";
+
+        popupForm.fillSeasonsSelect(titleSet.showId);
+        popupForm.disableSubmitBtn(true, 'form-episode-submit');
+    },
+
+    fillSeasonsSelect: function (show_id) {
+        let seasonsSelect = document.querySelector('#form-episode-season-title');
+        let seasonOption = document.querySelectorAll('#form-episode-season-title > option');
+
+        seasonOption.forEach(option => {
+            if (option.value !== '') {
+                option.remove()
+            }
+        });
+
+        let showID = {
+            "show_id": show_id
+        };
+
+        dataHandler.seasonTitleByShowId(showID, function (seasonsData) {
+            seasonsData.forEach(season => {
+                let option = `<option value="${season.id}">${season.title}</option>`
+                seasonsSelect.insertAdjacentHTML('beforeend', option);
+            });
+        });
+    },
+
+    episodeOnSubmit: function () {
+        let episodeData = {
+            "season_id": document.getElementById('form-episode-season-title').value,
+            "title": document.getElementById('form-episode-title').value,
+            "episode_no": document.getElementById('form-episode-number').value,
+            "overview": document.getElementById('form-episode-overview').value
+        }
+
+        dataHandler.addEpisode(episodeData, function (confirmation) {
+            if (confirmation['is_episode_add'] === 'YES') {
+                popupForm.removeFromEpisode();
+
+                popupForm.addOutput('The episode has been added to the database.');
+                setTimeout(popupForm.removeOutput, 1500);
+            } else {
+                popupForm.removeFromEpisode();
+
+                popupForm.addOutput('The episode has not been added to the database.', false);
+                setTimeout(popupForm.removeOutput, 1500);
+            }
+        });
+    },
+
+    removeFromEpisode: function () {
+        let popup = document.getElementById('popup-form-main');
+        popup.style.display = 'none';
+        popup.remove();
+    },
+    /** === END = ADD EPISODE FORM ============================================= */
 }
