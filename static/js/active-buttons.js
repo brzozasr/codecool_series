@@ -63,5 +63,5 @@ export let actBtn = {
 
     addBtn: function () {
         window.location.href = "/add/";
-    }
+    },
 }

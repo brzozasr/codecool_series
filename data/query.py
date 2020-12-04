@@ -66,6 +66,8 @@ __query_all = {
     'insert_connect_actor_to_show':
         """INSERT INTO show_characters (show_id, actor_id, character_name) 
         VALUES (%s, %s, %s);""",
+    'actors_select_name_all':
+        """SELECT id, name FROM actors ORDER BY name;""",
 }
 
 
