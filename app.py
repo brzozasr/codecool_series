@@ -684,6 +684,13 @@ def get_actors_all():
     return jsonify(result)
 
 
+@app.route('/get/actors/with/genres/', methods=['POST'])
+def get_actors_genres():
+    result = db.execute_sql_dict(query.select_actors_genres)
+
+    return jsonify(result)
+
+
 @app.route('/design')
 def design():
     return render_template('design.html')

@@ -27,12 +27,41 @@ export let pa = {
             case 'display-genres':
                 pa.displayGenres();
                 break;
+            case 'display-actors-genres':
+                pa.displayActorsGenres();
+                break;
             default:
                 console.log(`Sorry, something went wrong.`);
         }
     },
 
     mainContainer: document.querySelector('#main-container'),
+
+    tableActorsGenres: `
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Genres</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    `,
+
+    displayActorsGenres: function () {
+        pa.mainContainer.innerHTML = '';
+        pa.mainContainer.insertAdjacentHTML('beforeend', pa.tableActorsGenres);
+        let tbodyTag = pa.mainContainer.querySelector('tbody');
+
+        dataHandler.getActorsGenres(function (actorsGenres) {
+            for (let actorGenres of actorsGenres) {
+                let trTag = `<tr><td>${actorGenres.act_name}</td><td>${actorGenres.genres_name}</td></tr>`;
+                tbodyTag.insertAdjacentHTML('beforeend', trTag);
+            }
+        });
+    },
 
     displayShowsTitle: function () {
         pa.mainContainer.innerHTML = '';

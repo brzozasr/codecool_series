@@ -183,4 +183,11 @@ export let dataHandler = {
             // console.log(response);
         });
     },
+
+    getActorsGenres: function (callback) {
+        this._api_postOnly(`/get/actors/with/genres/`, (response) => {
+            callback(response);
+            // console.log(response);
+        });
+    },
 };
