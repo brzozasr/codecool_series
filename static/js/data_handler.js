@@ -16,6 +16,20 @@ export let dataHandler = {
         .then(json_response => callback(json_response));  // Call the `callback` with the returned object
     },
 
+    _api_postOnly: function (url, callback) {
+        // it is not called from outside
+        // loads data from API, parses it and calls the callback with it
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())  // parse the response as JSON
+        .then(json_response => callback(json_response));  // Call the `callback` with the returned object
+    },
+
     _api_post: function (url, data, callback) {
         // it is not called from outside
         // sends the data to the API, and calls callback function
@@ -121,8 +135,22 @@ export let dataHandler = {
         });
     },
 
+    addShowGenre: function (userData, callback) {
+        this._api_post(`/add-show-genre/`, userData, (response) => {
+            callback(response);
+            console.log(response);
+        });
+    },
+
     seasonTitleByShowId: function (userData, callback) {
         this._api_post(`/get-seasons-title/by/show_id/`, userData, (response) => {
+            callback(response);
+            // console.log(response);
+        });
+    },
+
+    getGenresName: function (callback) {
+        this._api_postOnly(`/get-genres-name/`, (response) => {
             callback(response);
             // console.log(response);
         });

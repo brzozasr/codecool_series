@@ -59,6 +59,8 @@ __query_all = {
     """SELECT id, title FROM seasons WHERE show_id = %s ORDER BY season_number""",
     'episodes_insert_new_episode':
         """INSERT INTO episodes (season_id, title, episode_number, overview) VALUES (%s, %s, %s, %s);""",
+    'show_genre_insert_new':
+        """INSERT INTO show_genres (show_id, genre_id) VALUES (%s, %s);""",
 }
 
 

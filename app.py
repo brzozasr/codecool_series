@@ -486,6 +486,13 @@ def get_show_title():
     return jsonify(result)
 
 
+@app.route('/get-genres-name/', methods=['POST'])
+def get_genres_name():
+    result = db.execute_sql_dict(query.genres_select_all)
+
+    return jsonify(result)
+
+
 @app.route('/get-seasons-title/by/show_id/', methods=['POST'])
 def get_seasons_title():
     data = request.get_json()
@@ -575,6 +582,26 @@ def add_season():
             response = {"is_season_add": "YES"}
         else:
             response = {"is_season_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
+
+
+@app.route('/add-show-genre/', methods=['POST'])
+def add_show_genre():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        show_id = data['show_id']
+        genre_id = data['genre_id']
+
+        print(show_id, genre_id)
+
+        result = db.execute_sql(query.show_genre_insert_new, [show_id, genre_id], fetch=False)
+        if result is None:
+            response = {"is_show_genre_add": "YES"}
+        else:
+            response = {"is_show_genre_add": "NO"}
 
         return jsonify(response)
     else:
