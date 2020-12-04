@@ -30,7 +30,7 @@
     background-color: #ddd;
 }
 
-#form-season-search {
+.form-search {
     box-sizing: border-box;
     width: 100%;
     background-image: url('../assets/search.png');
@@ -40,6 +40,7 @@
     border: none;
     border-bottom: 1px solid #ddd;
 }
+
 
 .form-element-label {
     font-weight: bold;
@@ -67,9 +68,17 @@ form textarea {
     -webkit-appearance: none;
 }
 
+.select-size {
+    width: 180px;
+}
+
 .size-textarea {
     width: 300px;
     height: 80px;
+    vertical-align: top;
+}
+
+.v-align {
     vertical-align: top;
 }
 

@@ -486,6 +486,35 @@ def get_show_title():
     return jsonify(result)
 
 
+@app.route('/get-genres-name/', methods=['POST'])
+def get_genres_name():
+    result = db.execute_sql_dict(query.genres_select_all)
+
+    return jsonify(result)
+
+
+@app.route('/get-actors-name/', methods=['POST'])
+def get_actors_name():
+    data = request.get_json()
+    phrase = data['phrase']
+    search_phrase = f'{phrase}%'
+
+    result = db.execute_sql_dict(query.search_actor_name, [search_phrase])
+
+    return jsonify(result)
+
+
+@app.route('/get-seasons-title/by/show_id/', methods=['POST'])
+def get_seasons_title():
+    data = request.get_json()
+    show_id = data['show_id']
+
+    result = db.execute_sql_dict(query.seasons_select_seasons_title_by_show_id, [show_id])
+    print(result)
+
+    return jsonify(result)
+
+
 @app.route('/add-show/', methods=['POST'])
 def add_show():
     if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
@@ -533,6 +562,25 @@ def add_actor():
         return redirect('/user-not-login/')
 
 
+@app.route('/add-show-actor/', methods=['POST'])
+def add_show_actor():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        show_id = data['show_id']
+        actor_id = data['actor_id']
+        character_name = data['character_name']
+
+        result = db.execute_sql(query.insert_connect_actor_to_show, [show_id, actor_id, character_name], fetch=False)
+        if result is None:
+            response = {"is_show_char_add": "YES"}
+        else:
+            response = {"is_show_char_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
+
+
 @app.route('/add-genre/', methods=['POST'])
 def add_genre():
     if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
@@ -564,6 +612,46 @@ def add_season():
             response = {"is_season_add": "YES"}
         else:
             response = {"is_season_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
+
+
+@app.route('/add-show-genre/', methods=['POST'])
+def add_show_genre():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        show_id = data['show_id']
+        genre_id = data['genre_id']
+
+        print(show_id, genre_id)
+
+        result = db.execute_sql(query.show_genre_insert_new, [show_id, genre_id], fetch=False)
+        if result is None:
+            response = {"is_show_genre_add": "YES"}
+        else:
+            response = {"is_show_genre_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
+
+
+@app.route('/add-episode/', methods=['POST'])
+def add_episode():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        season_id = data['season_id']
+        title = data['title']
+        episode_no = data['episode_no']
+        overview = data['overview']
+
+        result = db.execute_sql(query.episodes_insert_new_episode, [season_id, title, episode_no, overview], fetch=False)
+        if result is None:
+            response = {"is_episode_add": "YES"}
+        else:
+            response = {"is_episode_add": "NO"}
 
         return jsonify(response)
     else:

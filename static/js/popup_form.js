@@ -101,9 +101,9 @@ export let popupForm = {
             <div class="form-element">
                 <label class="form-element-label" for="form-season-show-id">Title of show:</label>
                 <div class="form-div-element">
-                    <input type="text" name="form-season-show-id" id="form-season-show-id" value="" placeholder="Click to search a title" readonly required>
+                    <input type="text" name="form-season-show-id" id="form-season-show-id" style="background-color: #d9d9d9;" value="" placeholder="Click to search a title" readonly required>
                     <div class="form-div-dropdown" id="form-season-dropdown">
-                        <input type="text" placeholder="Search..." id="form-season-search">
+                        <input type="text" placeholder="Search..." id="form-season-search" class="form-search">
                     </div>
                 </div>
             </div>
@@ -121,6 +121,98 @@ export let popupForm = {
             </p>
             <p class="text-center">
                 <button type="button" id="form-season-submit">Add season</button>
+            </p>
+        </form>
+    `,
+
+    formEpisodes: `
+        <p class="text-center">ADD EPISODE:</p>
+        <form action="#" method="post" autocomplete="off" id="form-episode">
+            <div class="form-element">
+                <label class="form-element-label" for="form-episode-show-id">Title of show:</label>
+                <div class="form-div-element">
+                    <input type="text" name="form-episode-show-id" id="form-episode-show-id" style="background-color: #d9d9d9;" value="" placeholder="Click to search a title" readonly required>
+                    <div class="form-div-dropdown" id="form-episode-dropdown">
+                        <input type="text" placeholder="Search..." id="form-episode-show-search" class="form-search">
+                    </div>
+                </div>
+            </div>
+            <p class="form-element">
+                <label class="form-element-label" for="form-episode-season-title">Title of season:</label>
+                <select name="form-episode-season-title" id="form-episode-season-title" class="select-size" required>
+                    <option value="">Choose a season</option>
+                </select>
+            </p>
+            <p class="form-element">
+                <label class="form-element-label" for="form-episode-title">Title of episode:</label>
+                <input type="text" name="form-episode-title" id="form-episode-title" value="" required>
+            </p>
+            <p class="form-element">
+                <label class="form-element-label" for="form-episode-number">Episode No:</label>
+                <input type="number" name="form-episode-number" id="form-episode-number" value="1" min="0" max="999" required>
+            </p>
+            <p class="form-element">
+                <label class="form-element-label" for="form-episode-overview">Overview:</label>
+                <textarea id="form-episode-overview" name="form-episode-overview" class="size-textarea" placeholder="Episode summary" required></textarea>
+            </p>
+            <p class="text-center">
+                <button type="button" id="form-episode-submit">Add episode</button>
+            </p>
+        </form>
+    `,
+
+    formShowGenre: `
+        <p class="text-center">ADD GENRE TO SHOW:</p>
+        <form action="#" method="post" autocomplete="off" id="form-show-genre">
+            <div class="form-element">
+                <label class="form-element-label" for="form-show-genre-show-id">Title of show:</label>
+                <div class="form-div-element">
+                    <input type="text" name="form-show-genre-show-id" id="form-show-genre-show-id" style="background-color: #d9d9d9;" value="" placeholder="Click to search a title" readonly required>
+                    <div class="form-div-dropdown" id="form-show-genre-dropdown">
+                        <input type="text" placeholder="Search..." id="form-show-genre-show-search" class="form-search">
+                    </div>
+                </div>
+            </div>
+            <p class="form-element">
+                <label class="form-element-label" for="form-show-genre-genre-name">Genre:</label>
+                <select name="form-show-genre-genre-name" id="form-show-genre-genre-name" class="select-size v-align" size="10" required>
+                </select>
+            </p>
+            <p class="text-center">
+                <button type="button" id="form-show-genre-submit">Add</button>
+            </p>
+        </form>
+    `,
+
+    formShowChar: `
+        <p class="text-center">ADD ACTOR TO SHOW:</p>
+        <form action="#" method="post" autocomplete="off" id="form-show-char">
+            <div class="form-element">
+                <label class="form-element-label" for="form-show-char-show-id">Title of show:</label>
+                <div class="form-div-element">
+                    <input type="text" name="form-show-char-show-id" id="form-show-char-show-id" style="background-color: #d9d9d9;" value="" placeholder="Click to search a title" readonly required>
+                    <div class="form-div-dropdown" id="form-show-char-show-dropdown">
+                        <input type="text" placeholder="Search..." id="form-show-char-show-search" class="form-search">
+                    </div>
+                </div>
+            </div>
+            <p class="form-element">
+                <div class="form-element">
+                    <label class="form-element-label" for="form-show-char-actor-id">Actor's name:</label>
+                    <div class="form-div-element">
+                        <input type="text" name="form-show-char-actor-id" id="form-show-char-actor-id" style="background-color: #d9d9d9;" value="" placeholder="Click to search a title" readonly required>
+                        <div class="form-div-dropdown" id="form-show-char-actor-dropdown">
+                            <input type="text" placeholder="Search..." id="form-show-char-actor-search" class="form-search">
+                        </div>
+                    </div>
+                </div>
+            </p>
+            <p class="form-element">
+                <label class="form-element-label" for="form-show-char-name">Character name:</label>
+                <input type="text" name="form-show-char-name" id="form-show-char-name" value="" required>
+            </p>
+            <p class="text-center">
+                <button type="button" id="form-show-char-submit">Add</button>
             </p>
         </form>
     `,
@@ -175,16 +267,29 @@ export let popupForm = {
                 popupForm.disableSubmitBtn(true, 'form-season-submit');
                 break;
             case 'form-episodes':
-                formHtml = popupForm.formShows;
-                console.log('ble-ble are $3.00 a pound.');
+                formHtml = popupForm.formEpisodes;
+                popupForm.displayPopupForm(formHtml);
+                popupForm.addEpisodesListeners();
+                popupForm.isEmptyFields('form-episode', 'form-episode-submit', 'form-episode-season-title',
+                    'form-episode-title', 'form-episode-number');
+                popupForm.disableSubmitBtn(true, 'form-episode-submit');
                 break;
             case 'form-genre-show':
-                formHtml = popupForm.formShows;
-                console.log('Mangoes and papayas are $2.79 a pound.');
+                formHtml = popupForm.formShowGenre;
+                popupForm.displayPopupForm(formHtml);
+                popupForm.addShowGenreListeners();
+                popupForm.fillShowGenreSelect();
+                popupForm.isEmptyFields('form-show-genre', 'form-show-genre-submit',
+                    'form-show-genre-show-id', 'form-show-genre-genre-name');
+                popupForm.disableSubmitBtn(true, 'form-show-genre-submit');
                 break;
             case 'form-actor-show':
-                formHtml = popupForm.formShows;
-                console.log('BBBBB and papayas are $2.79 a pound.');
+                formHtml = popupForm.formShowChar;
+                popupForm.displayPopupForm(formHtml);
+                popupForm.addShowCharListeners();
+                popupForm.isEmptyFields('form-show-char', 'form-show-char-submit',
+                    'form-show-char-show-id', 'form-show-char-actor-id', 'form-show-char-name');
+                popupForm.disableSubmitBtn(true, 'form-show-char-submit');
                 break;
             default:
                 formHtml = '';
@@ -224,12 +329,20 @@ export let popupForm = {
                 let field = document.getElementById(idField);
                 if (field.value.length === 0) {
                     popupForm.disableSubmitBtn(true, idSubmitBtn);
+                    console.log('if block')
                     break;
                 } else {
                     popupForm.disableSubmitBtn(false, idSubmitBtn);
+                    console.log('else unblock')
                 }
             }
         });
+    },
+
+    simulateInputEvent: function (element) {
+        let event = document.createEvent('Event');
+        event.initEvent('input', true, true);
+        element.dispatchEvent(event);
     },
 
     addOutput: function (text, isOk = true) {
@@ -252,7 +365,7 @@ export let popupForm = {
     },
 
 
-    // === BEGIN = ADD SHOW FORM ==========================================
+    /** === BEGIN = ADD SHOW FORM ========================================== */
     addShowsListeners: function () {
         let inputTxTitle = document.querySelector('#form-show-title');
         let submitBtn = document.querySelector('#form-show-submit');
@@ -322,10 +435,10 @@ export let popupForm = {
         popup.style.display = 'none';
         popup.remove();
     },
-    // === END = ADD SHOW FORM ==========================================
+    /** === END = ADD SHOW FORM ============================================= */
 
 
-    // === BEGIN = ADD ACTOR FORM ==========================================
+    /** === BEGIN = ADD ACTOR FORM ========================================== */
     addActorsListeners: function () {
         let inputTxTitle = document.querySelector('#form-actor-name');
         let submitBtn = document.querySelector('#form-actor-submit');
@@ -388,10 +501,10 @@ export let popupForm = {
         popup.style.display = 'none';
         popup.remove();
     },
-    // === END = ADD ACTOR FORM ==========================================
+    /** === END = ADD ACTOR FORM ============================================ */
 
 
-    // === BEGIN = ADD GENRE FORM ==========================================
+    /** === BEGIN = ADD GENRE FORM ========================================== */
     addGenresListeners: function () {
         let inputTxTitle = document.querySelector('#form-genre-name');
         let submitBtn = document.querySelector('#form-genre-submit');
@@ -454,10 +567,10 @@ export let popupForm = {
         popup.style.display = 'none';
         popup.remove();
     },
-    // === END = ADD GENRE FORM ==========================================
+    /** === END = ADD GENRE FORM ============================================== */
 
 
-    // === BEGIN = ADD SEASON FORM ==========================================
+    /** === BEGIN = ADD SEASON FORM ========================================== */
     addSeasonsListeners: function () {
         let inputTxTitle = document.querySelector('#form-season-show-id');
         let inputTxSearch = document.querySelector('#form-season-search');
@@ -468,13 +581,11 @@ export let popupForm = {
         submitBtn.addEventListener('click', popupForm.seasonOnSubmit);
     },
 
-
     seasonOnClickInputTx: function () {
         let dropdownDiv = document.getElementById('form-season-dropdown');
 
         dropdownDiv.style.display = 'block';
     },
-
 
     seasonOnChangeInputTx: function (evt) {
         let dropdownDiv = document.getElementById('form-season-dropdown');
@@ -500,7 +611,7 @@ export let popupForm = {
 
                 let aLinks = dropdownDiv.querySelectorAll('a');
                 aLinks.forEach(link => {
-                    link.addEventListener('click', popupForm.addToInputTxTitle);
+                    link.addEventListener('click', popupForm.seasonAddToInputTxTitle);
                 });
 
                 dropdownDiv.style.display = 'block';
@@ -516,8 +627,7 @@ export let popupForm = {
         });
     },
 
-
-    addToInputTxTitle: function (evt) {
+    seasonAddToInputTxTitle: function (evt) {
         let titleSet = evt.currentTarget.dataset;
         let dropdownDiv = document.getElementById('form-season-dropdown');
         let inputTxTitle = document.getElementById('form-season-show-id');
@@ -536,8 +646,9 @@ export let popupForm = {
 
         let searchInput = document.querySelector("#form-season-search");
         searchInput.value = "";
-    },
 
+        popupForm.simulateInputEvent(inputTxTitle);
+    },
 
     seasonOnSubmit: function () {
         let seasonData = {
@@ -568,5 +679,452 @@ export let popupForm = {
         popup.style.display = 'none';
         popup.remove();
     },
-    // === END = ADD SEASON FORM ==========================================
+    /** === END = ADD SEASON FORM ============================================== */
+
+
+    /** === BEGIN = ADD EPISODE FORM =========================================== */
+    addEpisodesListeners: function () {
+        let inputTxTitle = document.querySelector('#form-episode-show-id');
+        let inputTxSearch = document.querySelector('#form-episode-show-search');
+        let submitBtn = document.querySelector('#form-episode-submit');
+
+        inputTxTitle.addEventListener('click', popupForm.episodeOnClickInputTx);
+        inputTxSearch.addEventListener('input', popupForm.episodeOnChangeInputTx);
+        submitBtn.addEventListener('click', popupForm.episodeOnSubmit);
+    },
+
+    episodeOnClickInputTx: function () {
+        let dropdownDiv = document.getElementById('form-episode-dropdown');
+
+        dropdownDiv.style.display = 'block';
+    },
+
+    episodeOnChangeInputTx: function (evt) {
+        let dropdownDiv = document.getElementById('form-episode-dropdown');
+        let txt = evt.currentTarget.value;
+
+        let data = {
+            "phrase": txt
+        }
+        dataHandler.searchShowTitle(data, function (showTitle) {
+            let linksTmp = document.querySelectorAll("#form-episode-dropdown > a");
+            if (txt.length > 0) {
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+
+                for (let title of showTitle) {
+
+                    let link = `<a href="javascript:void(0)" data-show-id="${title.id}" data-show-title="${title.title}">${title['title']}</a>\n`;
+                    dropdownDiv.insertAdjacentHTML('beforeend', link);
+                }
+
+                let aLinks = dropdownDiv.querySelectorAll('a');
+                aLinks.forEach(link => {
+                    link.addEventListener('click', popupForm.episodeAddToInputTxTitle);
+                });
+
+                dropdownDiv.style.display = 'block';
+            } else {
+                dropdownDiv.style.display = 'none';
+
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+            }
+        });
+    },
+
+    episodeAddToInputTxTitle: function (evt) {
+        let titleSet = evt.currentTarget.dataset;
+        let dropdownDiv = document.getElementById('form-episode-dropdown');
+        let inputTxTitle = document.getElementById('form-episode-show-id');
+
+        inputTxTitle.value = titleSet.showTitle;
+        inputTxTitle.setAttribute("data-show-id", titleSet.showId);
+        inputTxTitle.setAttribute("data-show-title", titleSet.showTitle);
+        dropdownDiv.style.display = 'none';
+
+        let linksTmp = document.querySelectorAll("#form-episode-dropdown > a");
+        if (linksTmp !== null) {
+            linksTmp.forEach(element => {
+                element.remove();
+            });
+        }
+
+        let searchInput = document.querySelector("#form-episode-show-search");
+        searchInput.value = "";
+
+        popupForm.fillSeasonsSelect(titleSet.showId);
+        popupForm.disableSubmitBtn(true, 'form-episode-submit');
+    },
+
+    fillSeasonsSelect: function (show_id) {
+        let seasonsSelect = document.querySelector('#form-episode-season-title');
+        let seasonOption = document.querySelectorAll('#form-episode-season-title > option');
+
+        seasonOption.forEach(option => {
+            if (option.value !== '') {
+                option.remove()
+            }
+        });
+
+        let showID = {
+            "show_id": show_id
+        };
+
+        dataHandler.seasonTitleByShowId(showID, function (seasonsData) {
+            seasonsData.forEach(season => {
+                let option = `<option value="${season.id}">${season.title}</option>`
+                seasonsSelect.insertAdjacentHTML('beforeend', option);
+            });
+        });
+    },
+
+    episodeOnSubmit: function () {
+        let episodeData = {
+            "season_id": document.getElementById('form-episode-season-title').value,
+            "title": document.getElementById('form-episode-title').value,
+            "episode_no": document.getElementById('form-episode-number').value,
+            "overview": document.getElementById('form-episode-overview').value
+        }
+
+        dataHandler.addEpisode(episodeData, function (confirmation) {
+            if (confirmation['is_episode_add'] === 'YES') {
+                popupForm.removeFromEpisode();
+
+                popupForm.addOutput('The episode has been added to the database.');
+                setTimeout(popupForm.removeOutput, 1500);
+            } else {
+                popupForm.removeFromEpisode();
+
+                popupForm.addOutput('The episode has not been added to the database.', false);
+                setTimeout(popupForm.removeOutput, 1500);
+            }
+        });
+    },
+
+    removeFromEpisode: function () {
+        let popup = document.getElementById('popup-form-main');
+        popup.style.display = 'none';
+        popup.remove();
+    },
+    /** === END = ADD EPISODE FORM ============================================= */
+
+
+    /** === BEGIN = ADD GENRE TO SHOW FORM =========================================== */
+    addShowGenreListeners: function () {
+        let inputTxTitle = document.querySelector('#form-show-genre-show-id');
+        let inputTxSearch = document.querySelector('#form-show-genre-show-search');
+        let submitBtn = document.querySelector('#form-show-genre-submit');
+
+        inputTxTitle.addEventListener('click', popupForm.showGenreOnClickInputTx);
+        inputTxSearch.addEventListener('input', popupForm.showGenreOnChangeInputTx);
+        submitBtn.addEventListener('click', popupForm.showGenreOnSubmit);
+    },
+
+    showGenreOnClickInputTx: function () {
+        let dropdownDiv = document.getElementById('form-show-genre-dropdown');
+
+        dropdownDiv.style.display = 'block';
+    },
+
+    showGenreOnChangeInputTx: function (evt) {
+        let dropdownDiv = document.getElementById('form-show-genre-dropdown');
+        let txt = evt.currentTarget.value;
+
+        let data = {
+            "phrase": txt
+        }
+        dataHandler.searchShowTitle(data, function (showTitle) {
+            let linksTmp = document.querySelectorAll("#form-show-genre-dropdown > a");
+            if (txt.length > 0) {
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+
+                for (let title of showTitle) {
+
+                    let link = `<a href="javascript:void(0)" data-show-id="${title.id}" data-show-title="${title.title}">${title['title']}</a>\n`;
+                    dropdownDiv.insertAdjacentHTML('beforeend', link);
+                }
+
+                let aLinks = dropdownDiv.querySelectorAll('a');
+                aLinks.forEach(link => {
+                    link.addEventListener('click', popupForm.showGenreAddToInputTxTitle);
+                });
+
+                dropdownDiv.style.display = 'block';
+            } else {
+                dropdownDiv.style.display = 'none';
+
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+            }
+        });
+    },
+
+    showGenreAddToInputTxTitle: function (evt) {
+        let titleSet = evt.currentTarget.dataset;
+        let dropdownDiv = document.getElementById('form-show-genre-dropdown');
+        let inputTxTitle = document.getElementById('form-show-genre-show-id');
+
+        inputTxTitle.value = titleSet.showTitle;
+        inputTxTitle.setAttribute("data-show-id", titleSet.showId);
+        inputTxTitle.setAttribute("data-show-title", titleSet.showTitle);
+        dropdownDiv.style.display = 'none';
+
+        let linksTmp = document.querySelectorAll("#form-show-genre-dropdown > a");
+        if (linksTmp !== null) {
+            linksTmp.forEach(element => {
+                element.remove();
+            });
+        }
+
+        let searchInput = document.querySelector("#form-show-genre-show-search");
+        searchInput.value = "";
+
+        popupForm.simulateInputEvent(inputTxTitle);
+    },
+
+    fillShowGenreSelect: function () {
+        let seasonsSelect = document.querySelector('#form-show-genre-genre-name');
+        let seasonOption = document.querySelectorAll('#form-show-genre-genre-name > option');
+
+        seasonOption.forEach(option => {
+            option.remove()
+        });
+
+        dataHandler.getGenresName(function (genresData) {
+            genresData.forEach(genre => {
+                let option = `<option value="${genre.id}">${genre.name}</option>`
+                seasonsSelect.insertAdjacentHTML('beforeend', option);
+            });
+        });
+    },
+
+    showGenreOnSubmit: function () {
+        let showGenreData = {
+            "show_id": document.getElementById('form-show-genre-show-id').dataset.showId,
+            "genre_id": document.getElementById('form-show-genre-genre-name').value
+        }
+
+        dataHandler.addShowGenre(showGenreData, function (confirmation) {
+            if (confirmation['is_show_genre_add'] === 'YES') {
+                popupForm.removeFromShowGenre();
+
+                popupForm.addOutput('The genre has been added to the show.');
+                setTimeout(popupForm.removeOutput, 1500);
+            } else {
+                popupForm.removeFromShowGenre();
+
+                popupForm.addOutput('The genre has not been added to the show.', false);
+                setTimeout(popupForm.removeOutput, 1500);
+            }
+        });
+    },
+
+    removeFromShowGenre: function () {
+        let popup = document.getElementById('popup-form-main');
+        popup.style.display = 'none';
+        popup.remove();
+    },
+    /** === END = ADD GENRE TO SHOW FORM ============================================= */
+
+
+    /** === BEGIN = ADD ACTOR TO SHOW FORM =========================================== */
+    addShowCharListeners: function () {
+        let inputTxTitle = document.querySelector('#form-show-char-show-id');
+        let inputTxSearch = document.querySelector('#form-show-char-show-search');
+
+        let inputTxTitleActor = document.querySelector('#form-show-char-actor-id');
+        let inputTxSearchActor = document.querySelector('#form-show-char-actor-search')
+
+        let submitBtn = document.querySelector('#form-show-char-submit');
+
+        inputTxTitle.addEventListener('click', popupForm.showCharOnClickInputTx);
+        inputTxSearch.addEventListener('input', popupForm.showCharOnChangeInputTx);
+
+        inputTxTitleActor.addEventListener('click', popupForm.showCharOnClickInputTxActor);
+        inputTxSearchActor.addEventListener('input', popupForm.showCharOnChangeInputTxActor);
+
+        submitBtn.addEventListener('click', popupForm.showCharOnSubmit);
+    },
+
+    showCharOnClickInputTx: function () {
+        let dropdownDiv = document.getElementById('form-show-char-show-dropdown');
+
+        dropdownDiv.style.display = 'block';
+    },
+
+    showCharOnClickInputTxActor: function () {
+        let dropdownDiv = document.getElementById('form-show-char-actor-dropdown');
+
+        dropdownDiv.style.display = 'block';
+    },
+
+    showCharOnChangeInputTx: function (evt) {
+        let dropdownDiv = document.getElementById('form-show-char-show-dropdown');
+        let txt = evt.currentTarget.value;
+
+        let data = {
+            "phrase": txt
+        }
+        dataHandler.searchShowTitle(data, function (showTitle) {
+            let linksTmp = document.querySelectorAll("#form-show-char-show-dropdown > a");
+            if (txt.length > 0) {
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+
+                for (let title of showTitle) {
+
+                    let link = `<a href="javascript:void(0)" data-show-id="${title.id}" data-show-title="${title.title}">${title['title']}</a>\n`;
+                    dropdownDiv.insertAdjacentHTML('beforeend', link);
+                }
+
+                let aLinks = dropdownDiv.querySelectorAll('a');
+                aLinks.forEach(link => {
+                    link.addEventListener('click', popupForm.showCharAddToInputTxTitle);
+                });
+
+                dropdownDiv.style.display = 'block';
+            } else {
+                dropdownDiv.style.display = 'none';
+
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+            }
+        });
+    },
+
+    showCharOnChangeInputTxActor: function (evt) {
+        let dropdownDiv = document.getElementById('form-show-char-actor-dropdown');
+        let txt = evt.currentTarget.value;
+
+        let data = {
+            "phrase": txt
+        }
+        dataHandler.searchActorName(data, function (showName) {
+            let linksTmp = document.querySelectorAll("#form-show-char-actor-dropdown > a");
+            if (txt.length > 0) {
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+
+                for (let actor of showName) {
+
+                    let link = `<a href="javascript:void(0)" data-actor-id="${actor.id}" data-actor-name="${actor.name}">${actor.name}</a>\n`;
+                    dropdownDiv.insertAdjacentHTML('beforeend', link);
+                }
+
+                let aLinks = dropdownDiv.querySelectorAll('a');
+                aLinks.forEach(link => {
+                    link.addEventListener('click', popupForm.showCharAddToInputTxTitleActor);
+                });
+
+                dropdownDiv.style.display = 'block';
+            } else {
+                dropdownDiv.style.display = 'none';
+
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+            }
+        });
+    },
+
+    showCharAddToInputTxTitle: function (evt) {
+        let titleSet = evt.currentTarget.dataset;
+        let dropdownDiv = document.getElementById('form-show-char-show-dropdown');
+        let inputTxTitle = document.getElementById('form-show-char-show-id');
+
+        inputTxTitle.value = titleSet.showTitle;
+        inputTxTitle.setAttribute("data-show-id", titleSet.showId);
+        inputTxTitle.setAttribute("data-show-title", titleSet.showTitle);
+        dropdownDiv.style.display = 'none';
+
+        let linksTmp = document.querySelectorAll("#form-show-char-show-dropdown > a");
+        if (linksTmp !== null) {
+            linksTmp.forEach(element => {
+                element.remove();
+            });
+        }
+
+        let searchInput = document.querySelector("#form-show-char-show-search");
+        searchInput.value = "";
+
+        popupForm.simulateInputEvent(inputTxTitle);
+    },
+
+    showCharAddToInputTxTitleActor: function (evt) {
+        let nameSet = evt.currentTarget.dataset;
+        let dropdownDiv = document.getElementById('form-show-char-actor-dropdown');
+        let inputTxTitle = document.getElementById('form-show-char-actor-id');
+
+        inputTxTitle.value = nameSet.actorName;
+        inputTxTitle.setAttribute("data-actor-id", nameSet.actorId);
+        inputTxTitle.setAttribute("data-actor-name", nameSet.actorName);
+        dropdownDiv.style.display = 'none';
+
+        let linksTmp = document.querySelectorAll("#form-show-char-actor-dropdown > a");
+        if (linksTmp !== null) {
+            linksTmp.forEach(element => {
+                element.remove();
+            });
+        }
+
+        let searchInput = document.querySelector("#form-show-char-actor-search");
+        searchInput.value = "";
+
+        popupForm.simulateInputEvent(inputTxTitle);
+    },
+
+    showCharOnSubmit: function () {
+        let showGenreData = {
+            "show_id": document.getElementById('form-show-char-show-id').dataset.showId,
+            "actor_id": document.getElementById('form-show-char-actor-id').dataset.actorId,
+            "character_name": document.getElementById('form-show-char-name').value
+
+        };
+
+        dataHandler.addShowChar(showGenreData, function (confirmation) {
+            if (confirmation['is_show_char_add'] === 'YES') {
+                popupForm.removeFromShowChar();
+
+                popupForm.addOutput('The actor has been added to the show.');
+                setTimeout(popupForm.removeOutput, 1500);
+            } else {
+                popupForm.removeFromShowChar();
+
+                popupForm.addOutput('The actor has not been added to the show.', false);
+                setTimeout(popupForm.removeOutput, 1500);
+            }
+        });
+    },
+
+    removeFromShowChar: function () {
+        let popup = document.getElementById('popup-form-main');
+        popup.style.display = 'none';
+        popup.remove();
+    },
+    /** === END = ADD ACTOR TO SHOW FORM ============================================= */
 }

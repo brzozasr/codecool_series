@@ -55,6 +55,17 @@ __query_all = {
     """SELECT id, name FROM genres WHERE lower(name) = lower(%s);""",
     'genres_insert_new_genre':
         """INSERT INTO genres (name) VALUES (%s);""",
+    'seasons_select_seasons_title_by_show_id':
+    """SELECT id, title FROM seasons WHERE show_id = %s ORDER BY season_number""",
+    'episodes_insert_new_episode':
+        """INSERT INTO episodes (season_id, title, episode_number, overview) VALUES (%s, %s, %s, %s);""",
+    'show_genre_insert_new':
+        """INSERT INTO show_genres (show_id, genre_id) VALUES (%s, %s);""",
+    'search_actor_name':
+    """SELECT id, name FROM actors WHERE name ILIKE %s ORDER BY lower(name);""",
+    'insert_connect_actor_to_show':
+        """INSERT INTO show_characters (show_id, actor_id, character_name) 
+        VALUES (%s, %s, %s);""",
 }
 
 

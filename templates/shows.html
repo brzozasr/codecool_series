@@ -58,7 +58,7 @@
                     {% for show in shows_dict -%}
                     <tr>
                         <td><a href="{{ url_for('show_detail', show_id=show.id) }}">{{ show.title }}</a></td>
-                        <td>{{ show.year }}</td>
+                        <td style="white-space: nowrap;">{{ show.year }}</td>
                         <td>{{ show.runtime }}</td>
                         <td>{{ show.round_rating }}</td>
                         {% if show.genres_name -%}
