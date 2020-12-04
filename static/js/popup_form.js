@@ -339,6 +339,12 @@ export let popupForm = {
         });
     },
 
+    simulateInputEvent: function (element) {
+        let event = document.createEvent('Event');
+        event.initEvent('input', true, true);
+        element.dispatchEvent(event);
+    },
+
     addOutput: function (text, isOk = true) {
         popupForm.divTopBar.insertAdjacentHTML('beforebegin', popupForm.outputDiv);
         let output = document.getElementById('output-container');
@@ -640,6 +646,8 @@ export let popupForm = {
 
         let searchInput = document.querySelector("#form-season-search");
         searchInput.value = "";
+
+        popupForm.simulateInputEvent(inputTxTitle);
     },
 
     seasonOnSubmit: function () {
@@ -884,6 +892,8 @@ export let popupForm = {
 
         let searchInput = document.querySelector("#form-show-genre-show-search");
         searchInput.value = "";
+
+        popupForm.simulateInputEvent(inputTxTitle);
     },
 
     fillShowGenreSelect: function () {
@@ -1061,6 +1071,8 @@ export let popupForm = {
 
         let searchInput = document.querySelector("#form-show-char-show-search");
         searchInput.value = "";
+
+        popupForm.simulateInputEvent(inputTxTitle);
     },
 
     showCharAddToInputTxTitleActor: function (evt) {
@@ -1082,13 +1094,15 @@ export let popupForm = {
 
         let searchInput = document.querySelector("#form-show-char-actor-search");
         searchInput.value = "";
+
+        popupForm.simulateInputEvent(inputTxTitle);
     },
 
     showCharOnSubmit: function () {
         let showGenreData = {
             "show_id": document.getElementById('form-show-char-show-id').dataset.showId,
             "actor_id": document.getElementById('form-show-char-actor-id').dataset.actorId,
-            "char_name": document.getElementById('form-show-char-name').value
+            "character_name": document.getElementById('form-show-char-name').value
 
         };
 

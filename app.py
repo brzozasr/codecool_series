@@ -562,6 +562,25 @@ def add_actor():
         return redirect('/user-not-login/')
 
 
+@app.route('/add-show-actor/', methods=['POST'])
+def add_show_actor():
+    if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):
+        data = request.get_json()
+        show_id = data['show_id']
+        actor_id = data['actor_id']
+        character_name = data['character_name']
+
+        result = db.execute_sql(query.insert_connect_actor_to_show, [show_id, actor_id, character_name], fetch=False)
+        if result is None:
+            response = {"is_show_char_add": "YES"}
+        else:
+            response = {"is_show_char_add": "NO"}
+
+        return jsonify(response)
+    else:
+        return redirect('/user-not-login/')
+
+
 @app.route('/add-genre/', methods=['POST'])
 def add_genre():
     if session.get(SESSION_USER_ID) and session.get(SESSION_USER_LOGIN):

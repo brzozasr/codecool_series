@@ -63,6 +63,9 @@ __query_all = {
         """INSERT INTO show_genres (show_id, genre_id) VALUES (%s, %s);""",
     'search_actor_name':
     """SELECT id, name FROM actors WHERE name ILIKE %s ORDER BY lower(name);""",
+    'insert_connect_actor_to_show':
+        """INSERT INTO show_characters (show_id, actor_id, character_name) 
+        VALUES (%s, %s, %s);""",
 }
 
 
