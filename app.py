@@ -493,6 +493,17 @@ def get_genres_name():
     return jsonify(result)
 
 
+@app.route('/get-actors-name/', methods=['POST'])
+def get_actors_name():
+    data = request.get_json()
+    phrase = data['phrase']
+    search_phrase = f'{phrase}%'
+
+    result = db.execute_sql_dict(query.search_actor_name, [search_phrase])
+
+    return jsonify(result)
+
+
 @app.route('/get-seasons-title/by/show_id/', methods=['POST'])
 def get_seasons_title():
     data = request.get_json()

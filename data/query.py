@@ -61,6 +61,8 @@ __query_all = {
         """INSERT INTO episodes (season_id, title, episode_number, overview) VALUES (%s, %s, %s, %s);""",
     'show_genre_insert_new':
         """INSERT INTO show_genres (show_id, genre_id) VALUES (%s, %s);""",
+    'search_actor_name':
+    """SELECT id, name FROM actors WHERE name ILIKE %s ORDER BY lower(name);""",
 }
 
 

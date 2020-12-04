@@ -179,7 +179,7 @@ export let popupForm = {
                 </select>
             </p>
             <p class="text-center">
-                <button type="button" id="form-show-genre-submit">Add genre</button>
+                <button type="button" id="form-show-genre-submit">Add</button>
             </p>
         </form>
     `,
@@ -196,21 +196,23 @@ export let popupForm = {
                     </div>
                 </div>
             </div>
-            <div class="form-element">
-                <label class="form-element-label" for="form-show-char-actor-id">Actor's name:</label>
-                <div class="form-div-element">
-                    <input type="text" name="form-show-char-actor-id" id="form-show-char-actor-id" style="background-color: #d9d9d9;" value="" placeholder="Click to search a title" readonly required>
-                    <div class="form-div-dropdown" id="form-show-char-actor-dropdown">
-                        <input type="text" placeholder="Search..." id="form-show-char-actor-search" class="form-search">
+            <p class="form-element">
+                <div class="form-element">
+                    <label class="form-element-label" for="form-show-char-actor-id">Actor's name:</label>
+                    <div class="form-div-element">
+                        <input type="text" name="form-show-char-actor-id" id="form-show-char-actor-id" style="background-color: #d9d9d9;" value="" placeholder="Click to search a title" readonly required>
+                        <div class="form-div-dropdown" id="form-show-char-actor-dropdown">
+                            <input type="text" placeholder="Search..." id="form-show-char-actor-search" class="form-search">
+                        </div>
                     </div>
                 </div>
-            </div>
+            </p>
             <p class="form-element">
                 <label class="form-element-label" for="form-show-char-name">Character name:</label>
                 <input type="text" name="form-show-char-name" id="form-show-char-name" value="" required>
             </p>
             <p class="text-center">
-                <button type="button" id="form-show-char-submit">Add genre</button>
+                <button type="button" id="form-show-char-submit">Add</button>
             </p>
         </form>
     `,
@@ -282,8 +284,12 @@ export let popupForm = {
                 popupForm.disableSubmitBtn(true, 'form-show-genre-submit');
                 break;
             case 'form-actor-show':
-                formHtml = popupForm.formShows;
-                console.log('BBBBB and papayas are $2.79 a pound.');
+                formHtml = popupForm.formShowChar;
+                popupForm.displayPopupForm(formHtml);
+                popupForm.addShowCharListeners();
+                popupForm.isEmptyFields('form-show-char', 'form-show-char-submit',
+                    'form-show-char-show-id', 'form-show-char-actor-id', 'form-show-char-name');
+                popupForm.disableSubmitBtn(true, 'form-show-char-submit');
                 break;
             default:
                 formHtml = '';
@@ -323,9 +329,11 @@ export let popupForm = {
                 let field = document.getElementById(idField);
                 if (field.value.length === 0) {
                     popupForm.disableSubmitBtn(true, idSubmitBtn);
+                    console.log('if block')
                     break;
                 } else {
                     popupForm.disableSubmitBtn(false, idSubmitBtn);
+                    console.log('else unblock')
                 }
             }
         });
@@ -902,17 +910,207 @@ export let popupForm = {
 
         dataHandler.addShowGenre(showGenreData, function (confirmation) {
             if (confirmation['is_show_genre_add'] === 'YES') {
-                popupForm.removeFromEpisode();
+                popupForm.removeFromShowGenre();
 
                 popupForm.addOutput('The genre has been added to the show.');
                 setTimeout(popupForm.removeOutput, 1500);
             } else {
-                popupForm.removeFromEpisode();
+                popupForm.removeFromShowGenre();
 
                 popupForm.addOutput('The genre has not been added to the show.', false);
                 setTimeout(popupForm.removeOutput, 1500);
             }
         });
     },
+
+    removeFromShowGenre: function () {
+        let popup = document.getElementById('popup-form-main');
+        popup.style.display = 'none';
+        popup.remove();
+    },
     /** === END = ADD GENRE TO SHOW FORM ============================================= */
+
+
+    /** === BEGIN = ADD ACTOR TO SHOW FORM =========================================== */
+    addShowCharListeners: function () {
+        let inputTxTitle = document.querySelector('#form-show-char-show-id');
+        let inputTxSearch = document.querySelector('#form-show-char-show-search');
+
+        let inputTxTitleActor = document.querySelector('#form-show-char-actor-id');
+        let inputTxSearchActor = document.querySelector('#form-show-char-actor-search')
+
+        let submitBtn = document.querySelector('#form-show-char-submit');
+
+        inputTxTitle.addEventListener('click', popupForm.showCharOnClickInputTx);
+        inputTxSearch.addEventListener('input', popupForm.showCharOnChangeInputTx);
+
+        inputTxTitleActor.addEventListener('click', popupForm.showCharOnClickInputTxActor);
+        inputTxSearchActor.addEventListener('input', popupForm.showCharOnChangeInputTxActor);
+
+        submitBtn.addEventListener('click', popupForm.showCharOnSubmit);
+    },
+
+    showCharOnClickInputTx: function () {
+        let dropdownDiv = document.getElementById('form-show-char-show-dropdown');
+
+        dropdownDiv.style.display = 'block';
+    },
+
+    showCharOnClickInputTxActor: function () {
+        let dropdownDiv = document.getElementById('form-show-char-actor-dropdown');
+
+        dropdownDiv.style.display = 'block';
+    },
+
+    showCharOnChangeInputTx: function (evt) {
+        let dropdownDiv = document.getElementById('form-show-char-show-dropdown');
+        let txt = evt.currentTarget.value;
+
+        let data = {
+            "phrase": txt
+        }
+        dataHandler.searchShowTitle(data, function (showTitle) {
+            let linksTmp = document.querySelectorAll("#form-show-char-show-dropdown > a");
+            if (txt.length > 0) {
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+
+                for (let title of showTitle) {
+
+                    let link = `<a href="javascript:void(0)" data-show-id="${title.id}" data-show-title="${title.title}">${title['title']}</a>\n`;
+                    dropdownDiv.insertAdjacentHTML('beforeend', link);
+                }
+
+                let aLinks = dropdownDiv.querySelectorAll('a');
+                aLinks.forEach(link => {
+                    link.addEventListener('click', popupForm.showCharAddToInputTxTitle);
+                });
+
+                dropdownDiv.style.display = 'block';
+            } else {
+                dropdownDiv.style.display = 'none';
+
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+            }
+        });
+    },
+
+    showCharOnChangeInputTxActor: function (evt) {
+        let dropdownDiv = document.getElementById('form-show-char-actor-dropdown');
+        let txt = evt.currentTarget.value;
+
+        let data = {
+            "phrase": txt
+        }
+        dataHandler.searchActorName(data, function (showName) {
+            let linksTmp = document.querySelectorAll("#form-show-char-actor-dropdown > a");
+            if (txt.length > 0) {
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+
+                for (let actor of showName) {
+
+                    let link = `<a href="javascript:void(0)" data-actor-id="${actor.id}" data-actor-name="${actor.name}">${actor.name}</a>\n`;
+                    dropdownDiv.insertAdjacentHTML('beforeend', link);
+                }
+
+                let aLinks = dropdownDiv.querySelectorAll('a');
+                aLinks.forEach(link => {
+                    link.addEventListener('click', popupForm.showCharAddToInputTxTitleActor);
+                });
+
+                dropdownDiv.style.display = 'block';
+            } else {
+                dropdownDiv.style.display = 'none';
+
+                if (linksTmp !== null) {
+                    linksTmp.forEach(element => {
+                        element.remove();
+                    });
+                }
+            }
+        });
+    },
+
+    showCharAddToInputTxTitle: function (evt) {
+        let titleSet = evt.currentTarget.dataset;
+        let dropdownDiv = document.getElementById('form-show-char-show-dropdown');
+        let inputTxTitle = document.getElementById('form-show-char-show-id');
+
+        inputTxTitle.value = titleSet.showTitle;
+        inputTxTitle.setAttribute("data-show-id", titleSet.showId);
+        inputTxTitle.setAttribute("data-show-title", titleSet.showTitle);
+        dropdownDiv.style.display = 'none';
+
+        let linksTmp = document.querySelectorAll("#form-show-char-show-dropdown > a");
+        if (linksTmp !== null) {
+            linksTmp.forEach(element => {
+                element.remove();
+            });
+        }
+
+        let searchInput = document.querySelector("#form-show-char-show-search");
+        searchInput.value = "";
+    },
+
+    showCharAddToInputTxTitleActor: function (evt) {
+        let nameSet = evt.currentTarget.dataset;
+        let dropdownDiv = document.getElementById('form-show-char-actor-dropdown');
+        let inputTxTitle = document.getElementById('form-show-char-actor-id');
+
+        inputTxTitle.value = nameSet.actorName;
+        inputTxTitle.setAttribute("data-actor-id", nameSet.actorId);
+        inputTxTitle.setAttribute("data-actor-name", nameSet.actorName);
+        dropdownDiv.style.display = 'none';
+
+        let linksTmp = document.querySelectorAll("#form-show-char-actor-dropdown > a");
+        if (linksTmp !== null) {
+            linksTmp.forEach(element => {
+                element.remove();
+            });
+        }
+
+        let searchInput = document.querySelector("#form-show-char-actor-search");
+        searchInput.value = "";
+    },
+
+    showCharOnSubmit: function () {
+        let showGenreData = {
+            "show_id": document.getElementById('form-show-char-show-id').dataset.showId,
+            "actor_id": document.getElementById('form-show-char-actor-id').dataset.actorId,
+            "char_name": document.getElementById('form-show-char-name').value
+
+        };
+
+        dataHandler.addShowChar(showGenreData, function (confirmation) {
+            if (confirmation['is_show_char_add'] === 'YES') {
+                popupForm.removeFromShowChar();
+
+                popupForm.addOutput('The actor has been added to the show.');
+                setTimeout(popupForm.removeOutput, 1500);
+            } else {
+                popupForm.removeFromShowChar();
+
+                popupForm.addOutput('The actor has not been added to the show.', false);
+                setTimeout(popupForm.removeOutput, 1500);
+            }
+        });
+    },
+
+    removeFromShowChar: function () {
+        let popup = document.getElementById('popup-form-main');
+        popup.style.display = 'none';
+        popup.remove();
+    },
+    /** === END = ADD ACTOR TO SHOW FORM ============================================= */
 }

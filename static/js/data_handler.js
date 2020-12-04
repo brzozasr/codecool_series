@@ -100,6 +100,13 @@ export let dataHandler = {
         });
     },
 
+    searchActorName: function (userData, callback) {
+        this._api_post(`/get-actors-name/`, userData, (response) => {
+            callback(response);
+            // console.log(response);
+        });
+    },
+
     addShow: function (userData, callback) {
         this._api_post(`/add-show/`, userData, (response) => {
             callback(response);
@@ -137,6 +144,13 @@ export let dataHandler = {
 
     addShowGenre: function (userData, callback) {
         this._api_post(`/add-show-genre/`, userData, (response) => {
+            callback(response);
+            console.log(response);
+        });
+    },
+
+    addShowChar: function (userData, callback) {
+        this._api_post(`/add-show-actor/`, userData, (response) => {
             callback(response);
             console.log(response);
         });
