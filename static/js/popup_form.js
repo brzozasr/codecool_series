@@ -604,7 +604,6 @@ export let popupForm = {
                 }
 
                 for (let title of showTitle) {
-
                     let link = `<a href="javascript:void(0)" data-show-id="${title.id}" data-show-title="${title.title}">${title['title']}</a>\n`;
                     dropdownDiv.insertAdjacentHTML('beforeend', link);
                 }

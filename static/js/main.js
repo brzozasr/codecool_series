@@ -3,6 +3,7 @@ import {login} from "./login.js";
 import {popup} from "./popup.js";
 import {episodes} from "./episodes.js";
 import {popupForm} from "./popup_form.js";
+import {pa} from "./pa.js"
 
 (function () {
     function init() {
@@ -11,6 +12,7 @@ import {popupForm} from "./popup_form.js";
         popup.popupLinksAddListeners();
         window.addEventListener('resize', episodes.resizeIframe);
         popupForm.formLinksEventListener();
+        pa.paLinksEventListener();
     }
 
     init();

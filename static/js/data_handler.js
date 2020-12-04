@@ -169,4 +169,25 @@ export let dataHandler = {
             // console.log(response);
         });
     },
+
+    getShowsAll: function (callback) {
+        this._api_postOnly(`/get/shows/title/all/`, (response) => {
+            callback(response);
+            // console.log(response);
+        });
+    },
+
+    getActorsAll: function (callback) {
+        this._api_postOnly(`/get/actors/name/all/`, (response) => {
+            callback(response);
+            // console.log(response);
+        });
+    },
+
+    getActorsGenres: function (callback) {
+        this._api_postOnly(`/get/actors/with/genres/`, (response) => {
+            callback(response);
+            // console.log(response);
+        });
+    },
 };

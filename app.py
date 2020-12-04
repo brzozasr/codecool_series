@@ -527,7 +527,8 @@ def add_show():
         trailer = data['trailer']
         homepage = data['homepage']
 
-        result = db.execute_sql(query.shows_insert_new_show, [title, year, runtime, rating, overview, trailer, homepage],
+        result = db.execute_sql(query.shows_insert_new_show,
+                                [title, year, runtime, rating, overview, trailer, homepage],
                                 fetch=False)
         if result is None:
             response = {"is_show_add": "YES"}
@@ -647,7 +648,8 @@ def add_episode():
         episode_no = data['episode_no']
         overview = data['overview']
 
-        result = db.execute_sql(query.episodes_insert_new_episode, [season_id, title, episode_no, overview], fetch=False)
+        result = db.execute_sql(query.episodes_insert_new_episode, [season_id, title, episode_no, overview],
+                                fetch=False)
         if result is None:
             response = {"is_episode_add": "YES"}
         else:
@@ -658,9 +660,35 @@ def add_episode():
         return redirect('/user-not-login/')
 
 
-# @app.errorhandler(404)
-# def page_not_found():
-#     return render_template('404.html'), 404
+"""+---------------------+"""
+"""| PERSONAL ASSESSMENT |"""
+"""+---------------------+"""
+
+
+@app.route('/pa/')
+def personal_assessment():
+    return render_template('pa.html')
+
+
+@app.route('/get/shows/title/all/', methods=['POST'])
+def get_shows_title():
+    result = db.execute_sql_dict(query.shows_select_id_title)
+
+    return jsonify(result)
+
+
+@app.route('/get/actors/name/all/', methods=['POST'])
+def get_actors_all():
+    result = db.execute_sql_dict(query.actors_select_name_all)
+
+    return jsonify(result)
+
+
+@app.route('/get/actors/with/genres/', methods=['POST'])
+def get_actors_genres():
+    result = db.execute_sql_dict(query.select_actors_genres)
+
+    return jsonify(result)
 
 
 @app.route('/design')
