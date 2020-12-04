@@ -260,10 +260,24 @@ export let login = {
         dataHandler.isUserLogin(dataLogin, function (dataLogin) {
             if (dataLogin['is_login'] === true) {
                 login.topBarBtnAppearance(true, userName);
+
+                let currentUrl = window.location.pathname;
+                if (currentUrl === '/user-not-login/') {
+                    let text = document.querySelector('div.info');
+                    console.log(text)
+                    text.style.color = '#0052cc';
+                    text.innerHTML = 'Now, you are logged in.';
+                    setTimeout(login.goToUrl, 2000);
+                }
+
             } else {
                 login.topBarBtnAppearance(false, '');
             }
         });
+    },
+
+    goToUrl: function () {
+        window.location.href = '/';
     },
 
     topBarBtnAppearance: function (isLogin, userName) {
