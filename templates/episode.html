@@ -10,16 +10,13 @@
     <!-- Normalize.css fixes lot of differences between browsers default styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
-    <title>Episodes - CsED</title>
+    <title>Episode - CsED</title>
 </head>
 <body>
 <div id="body-wrapper">
     <section>
-        {% if error -%}
-        <div class="error">{{ error | safe }}</div>
-        {%- endif %}
-        {% if season_data and episodes_list %}
-        <h1 class="title text-center">{{ season_data[0].show_title }} - episodes of the {{ season_data[0].title }}</h1>
+
+        <h1 class="title text-center">{{ result[0].title }}</h1>
         <div class="card">
             <table>
                 <thead>
@@ -30,17 +27,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for episode in episodes_list -%}
                     <tr>
-                        <td>{{ episode.episode_number }}</td>
-                        <td style="white-space: nowrap;"><a href="{{ url_for('episode', episode_id=episode.id) }}">{{ episode.title }}</a></td>
-                        <td>{% if episode.overview %}{{ episode.overview }}{% else %}The overview is not available{% endif %}</td>
+                        <td>{{ result[0].episode_number }}</td>
+                        <td style="white-space: nowrap;">{{ result[0].title }}</td>
+                        <td>{% if result[0].overview %}{{ result[0].overview }}{% else %}The overview is not available{% endif %}</td>
                     </tr>
-                {%- endfor %}
                 </tbody>
             </table>
         </div>
-        {% endif %}
     </section>
     <footer>
         &nbsp;

@@ -190,4 +190,11 @@ export let dataHandler = {
             // console.log(response);
         });
     },
+
+    actorsCharactersByShowId: function (userData, callback) {
+        this._api_post(`/actors/with/characters/by/show/`, userData, (response) => {
+            callback(response);
+            // console.log(response);
+        });
+    },
 };
