@@ -85,6 +85,9 @@ __query_all = {
     INNER JOIN shows AS sh ON sc.show_id = sh.id
     WHERE sh.id = %s
     ORDER BY ac.name;""",
+    'shows_select_limit':
+        """SELECT id, title FROM shows ORDER BY title
+        LIMIT %s OFFSET %s;""",
 }
 
 

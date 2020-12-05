@@ -19,7 +19,8 @@ export let actBtn = {
             {"menu-btn-shows": actBtn.showsBtn},
             {"menu-btn-actors": actBtn.actorsBtn},
             {"menu-btn-genres": actBtn.genresBtn},
-            {"menu-btn-add": actBtn.addBtn}
+            {"menu-btn-add": actBtn.addBtn},
+            {"menu-btn-pa": actBtn.paBtn}
         ];
 
         let i = 0;
@@ -63,5 +64,9 @@ export let actBtn = {
 
     addBtn: function () {
         window.location.href = "/add/";
+    },
+
+    paBtn: function () {
+        window.location.href = "/pa/";
     },
 }

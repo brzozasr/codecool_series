@@ -688,9 +688,21 @@ def personal_assessment():
 
 @app.route('/get/shows/title/all/', methods=['POST'])
 def get_shows_title():
-    result = db.execute_sql_dict(query.shows_select_id_title)
+    data = request.get_json()
+    page_no = data['page_no']
+    limit = data['limit']
+    offset = int(data['offset'])
 
-    return jsonify(result)
+    records = db.execute_sql(query.shows_count_records)
+    result = db.execute_sql_dict(query.shows_select_limit, [limit, offset])
+    current_page_no = (offset / limit) + 1
+    data_dict = {
+        "records_no": records,
+        "current_page": current_page_no,
+        "db_data": result
+    }
+
+    return jsonify(data_dict)
 
 
 @app.route('/get/actors/name/all/', methods=['POST'])
