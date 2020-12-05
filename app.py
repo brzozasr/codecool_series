@@ -510,7 +510,6 @@ def get_seasons_title():
     show_id = data['show_id']
 
     result = db.execute_sql_dict(query.seasons_select_seasons_title_by_show_id, [show_id])
-    print(result)
 
     return jsonify(result)
 
@@ -658,6 +657,23 @@ def add_episode():
         return jsonify(response)
     else:
         return redirect('/user-not-login/')
+
+
+@app.route('/episode/<int:episode_id>')
+def episode(episode_id):
+    result = db.execute_sql_dict(query.select_one_episode, [episode_id])
+
+    return render_template('episode.html', result=result)
+
+
+@app.route('/actors/with/characters/by/show/', methods=['POST'])
+def actors_characters():
+    data = request.get_json()
+    show_id = data['show_id']
+
+    result = db.execute_sql_dict(query.actors_characters_by_show_id, [show_id])
+
+    return jsonify(result)
 
 
 """+---------------------+"""

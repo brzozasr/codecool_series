@@ -76,6 +76,15 @@ __query_all = {
         LEFT JOIN show_genres AS sg ON sh.id = sg.show_id
         LEFT JOIN genres AS ge ON sg.genre_id = ge.id
         GROUP BY ac.id ORDER BY lower(ac.name);""",
+    'select_one_episode':
+    """SELECT id, title, episode_number, overview, season_id FROM episodes WHERE id = %s;""",
+    'actors_characters_by_show_id':
+    """SELECT ac.id, ac.name, sc.character_name
+    FROM actors AS ac
+    INNER JOIN show_characters AS sc ON ac.id = sc.actor_id
+    INNER JOIN shows AS sh ON sc.show_id = sh.id
+    WHERE sh.id = %s
+    ORDER BY ac.name;""",
 }
 
 
