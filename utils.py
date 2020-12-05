@@ -58,7 +58,6 @@ def pagination_len(no_of_records: int, current_page_no: int, limit: int, visible
             return pages
 
 
-# Not used
 def current_page(no_of_records, limit, offset):
     """Returns the current webpage number according offset or None."""
     if is_positive_int(offset):

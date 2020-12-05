@@ -19,19 +19,23 @@ export let pa = {
 
         switch (funcId) {
             case 'display-shows':
+                pa.clearPagination();
                 pa.displayShowsTitle();
-                // pa.pagination(1006, 15, 68, 6)
                 break;
             case 'display-actors':
+                pa.clearPagination();
                 pa.displayActors();
                 break;
             case 'display-genres':
+                pa.clearPagination();
                 pa.displayGenres();
                 break;
             case 'display-actors-genres':
+                pa.clearPagination();
                 pa.displayActorsGenres();
                 break;
             case 'display-actors-characters':
+                pa.clearPagination();
                 pa.displayActorsCharacters();
                 break;
             default:
@@ -54,9 +58,13 @@ export let pa = {
         </table>
     `,
 
+    clearPagination: function () {
+        let paginationDiv = document.querySelector('#pagination_js');
+        paginationDiv.innerHTML = '';
+    },
+
     displayActorsCharacters: function (evt) {
         let show_id = evt.currentTarget.dataset.showId;
-
         pa.mainContainer.innerHTML = '';
         pa.mainContainer.insertAdjacentHTML('beforeend', '<ul>');
         let ulTag = pa.mainContainer.querySelector('ul');
@@ -65,7 +73,7 @@ export let pa = {
             "show_id": show_id
         }
 
-        dataHandler.actorsCharactersByShowId(showId,function (astors) {
+        dataHandler.actorsCharactersByShowId(showId, function (astors) {
             for (let actor of astors) {
                 let liTag = `<li>${actor.name} (role: ${actor.character_name})</li>`;
                 ulTag.insertAdjacentHTML('beforeend', liTag);
@@ -73,20 +81,38 @@ export let pa = {
         });
     },
 
-     displayShowsTitle: function () {
+    displayShowsTitle: function (evt) {
+        let showData;
+        const LIMIT = 15;
+        if (evt !== undefined) {
+            let evtData = evt.currentTarget.dataset;
+            showData = {
+                "page_no": evtData.pageNo,
+                "limit": LIMIT,
+                "offset": evtData.offset
+            }
+        } else {
+            showData = {
+                "page_no": 1,
+                "limit": LIMIT,
+                "offset": 0
+            }
+        }
+
         pa.mainContainer.innerHTML = '';
         pa.mainContainer.insertAdjacentHTML('beforeend', '<ul>');
         let ulTag = pa.mainContainer.querySelector('ul');
 
-        dataHandler.getShowsAll(function (showTitles) {
-            for (let title of showTitles) {
+        dataHandler.getShowsPaging(showData, function (showTitles) {
+            for (let title of showTitles.db_data) {
                 // let liTag = `<li><a href="/show/${title.id}/">${title.title}</a></li>`;
                 let liTag = `<li><a href="javascript:void(0)" data-show-id="${title.id}">${title.title}</a></li>`;
                 ulTag.insertAdjacentHTML('beforeend', liTag);
             }
+            pa.pagination(showTitles.records_no, showTitles.current_page, LIMIT);
         });
 
-        setTimeout(pa.actorsGenresAddEventListener, 1000)
+        setTimeout(pa.actorsGenresAddEventListener, 1000);
     },
 
     actorsGenresAddEventListener: function () {
@@ -108,7 +134,6 @@ export let pa = {
             }
         });
     },
-
 
 
     displayActors: function () {
@@ -146,12 +171,11 @@ export let pa = {
         });
     },
 
-
-    // Not working correctly
-    pagination: function (recordsNo, limit, currentPage, visiblePages = 5) {
-        let paginationDiv = document.querySelector('.pagination');
+    pagination: function (recordsNo, currentPage, limit = 15, visiblePages = 5) {
+        let paginationDiv = document.querySelector('#pagination_js');
+        paginationDiv.innerHTML = '';
         let allPagesArr = [];
-        let paginationArr = [];
+        let paginationSet = new Set();
         let pagesNo = Math.ceil(recordsNo / limit);
         if (pagesNo > 1) {
             let middlePaginationPage = Math.ceil(visiblePages / 2);
@@ -159,26 +183,20 @@ export let pa = {
             let offset = 0;
             let page = 1;
             for (let i = 0; i < pagesNo; i++) {
-                let pageLink = `<a href="javascript:void(0)" data-page-no="${page}" data-offset="${offset}">${page}</a>`;
+                let pageLink = `<a href="javascript:void(0)" class="pagination-func" data-page-no="${page}" data-offset="${offset}">${page}</a>`;
                 allPagesArr.push(pageLink);
                 offset += limit;
                 page++;
             }
 
             let counter = currentPage - middlePaginationPage;
-            console.log(counter)
-            while (paginationArr.length < visiblePages) {
-                console.log(allPagesArr[counter])
+            while (paginationSet.size < visiblePages) {
                 if (allPagesArr[counter] !== undefined) {
-                    paginationArr.push(allPagesArr[counter]);
+                    paginationSet.add(allPagesArr[counter]);
                 } else if (allPagesArr[counter] === undefined && counter > pagesNo) {
-                    console.log('rrrr')
                     if (allPagesArr[(allPagesArr.length - 1) - middlePaginationPage] !== undefined) {
-                        paginationArr.push(allPagesArr[(allPagesArr.length - 1) - middlePaginationPage]);
-                        console.log(allPagesArr[(allPagesArr.length - 1) - middlePaginationPage])
+                        paginationSet.add(allPagesArr[(allPagesArr.length - 1) - middlePaginationPage]);
                         allPagesArr.pop();
-                        // paginationArr.push(allPagesArr[(allPagesArr.length - 1) - middlePaginationPage]);
-
                     }
                 }
                 counter++;
@@ -188,16 +206,43 @@ export let pa = {
                 }
             }
 
-            paginationArr.sort()
-
-            console.log(paginationArr)
+            let paginationArr = Array.from(paginationSet).sort();
 
             paginationArr.forEach(page => {
-                let link = document.createRange().createContextualFragment(page);
-                let no = link.querySelector('a');
-                paginationDiv.insertAdjacentHTML('beforeend', page);
+                let strToLink = document.createRange().createContextualFragment(page);
+                let link = strToLink.querySelector('a');
+                let no = link.dataset.pageNo
 
+                if (parseInt(no, 10) === currentPage) {
+                    link.classList.add('active');  // class name to highlight current page number
+                }
+                paginationDiv.insertAdjacentElement('beforeend', link);
+            });
 
+            if (visiblePages < pagesNo) {
+                let lastOffset = (pagesNo * limit) - limit;
+                let currentOffset = (currentPage * limit) - limit;
+                let goFirst = `<a href="javascript:void(0)" class="pagination-func" data-page-no="1" data-offset="0">&#10094;&#10094;</a>`;
+                let goOneLess = `<a href="javascript:void(0)" class="pagination-func" data-page-no="${currentPage - 1}" data-offset="${currentOffset - limit}">&#10094;</a>`;
+                let goLast = `<a href="javascript:void(0)" class="pagination-func" data-page-no="${pagesNo}" data-offset="${lastOffset}">&#10095;&#10095;</a>`
+                let goOneMore = `<a href="javascript:void(0)" class="pagination-func" data-page-no="${currentPage + 1}" data-offset="${currentOffset + limit}">&#10095;</a>`;
+
+                if (currentPage > 1 && currentPage < pagesNo) {
+                    paginationDiv.insertAdjacentHTML('afterbegin', goOneLess);
+                    paginationDiv.insertAdjacentHTML('afterbegin', goFirst);
+                    paginationDiv.insertAdjacentHTML('beforeend', goOneMore);
+                    paginationDiv.insertAdjacentHTML('beforeend', goLast);
+                } else if (currentPage === 1) {
+                    paginationDiv.insertAdjacentHTML('beforeend', goOneMore);
+                    paginationDiv.insertAdjacentHTML('beforeend', goLast);
+                } else if (currentPage === pagesNo) {
+                    paginationDiv.insertAdjacentHTML('afterbegin', goOneLess);
+                    paginationDiv.insertAdjacentHTML('afterbegin', goFirst);
+                }
+            }
+            let pagesLinks = document.querySelectorAll('.pagination-func');
+            pagesLinks.forEach(page => {
+                page.addEventListener('click', pa.displayShowsTitle);
             });
         }
     },

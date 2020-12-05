@@ -170,8 +170,8 @@ export let dataHandler = {
         });
     },
 
-    getShowsAll: function (callback) {
-        this._api_postOnly(`/get/shows/title/all/`, (response) => {
+    getShowsPaging: function (userData, callback) {
+        this._api_post(`/get/shows/title/all/`, userData, (response) => {
             callback(response);
             // console.log(response);
         });
